@@ -22,6 +22,8 @@ We demonstrate that vision transformers (ViTs) can be used for end-to-end percep
 
 Note that if you'd only like to train models, and *not* test in simulation, you can skip straight to section Train.
 
+For Flightmare simulator installation, additional details can be found on [this page](https://github.com/uzh-rpg/agile_flight), though we also include a `requirements.txt` for your reference.
+
 #### (optional) Set up a catkin workspace
 
 If you'd like to start a new catkin workspace, then a typical workflow is (note that this code has only been tested with ROS Noetic and Ubuntu 20.04):
