@@ -63,13 +63,15 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     # command.velocity = [1.0, 0.0, 0.0]
     command.yawrate = 0.0
     command.mode = 2
-    
+
     ###############
     ## Load data ##
     ###############
+    # Get the device (CPU or GPU) where the model is located
+    device = next(trained_model.parameters()).device
 
     q = np.array([state.att[0], state.att[1], state.att[2], state.att[3]])
-    
+
     h, w = (60, 90)
     img = cv2.resize(orig_img, (w, h))
     img2 = orig_img.copy() # used for generating debugimg
@@ -87,18 +89,30 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
             trained_model.lstm.hidden_size = 200
         else:
             raise Exception ("Incorrect Model specified!!")
-        if state.pos[0] < 0.5 or hidden_state is None: 
-            hidden_state = (torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float(), torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float())
+
+        # Initialize or move hidden_state to the correct device
+        if state.pos[0] < 0.5 or hidden_state is None:
+            hidden_state = (torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float().to(device),
+                            torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float().to(device))
+        else:
+            hidden_state = (hidden_state[0].to(device), hidden_state[1].to(device))
+
         with torch.no_grad():
-            x, hidden_state = trained_model([img.view(1, 1, h, w), torch.tensor(desiredVel).view(1, 1).float(), torch.tensor(q).view(1,-1).float() ,hidden_state])
+            # Move all input tensors to the model's device before inference
+            x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
+                                             torch.tensor(desiredVel).view(1, 1).float().to(device),
+                                             torch.tensor(q).view(1,-1).float().to(device),
+                                             hidden_state])
 
     else:
-
         with torch.no_grad():
-            x, hidden_state = trained_model([img.view(1, 1, h, w), torch.tensor(desiredVel).view(1, 1).float(), torch.tensor(q).view(1,-1).float()])
+            # Move all input tensors to the model's device before inference
+            x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
+                                             torch.tensor(desiredVel).view(1, 1).float().to(device),
+                                             torch.tensor(q).view(1,-1).float().to(device)])
 
-
-    x = x.squeeze().detach().numpy()
+    # Move the output tensor back to CPU before converting to numpy
+    x = x.squeeze().cpu().detach().numpy()
     x[0] = np.clip(x[0], -1, 1)
     x = x/np.linalg.norm(x)
     command.velocity = x*desiredVel
@@ -108,21 +122,20 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     hardcoded_ctl_threshold = 2.0
     if state.pos[0] < hardcoded_ctl_threshold:
         command.velocity[0] = max(min_xvel_cmd, (state.pos[0]/hardcoded_ctl_threshold)*desiredVel)
-    
+
 
     # creating debug images,
-    # debugimg1 of the stabilized, cropped image with a velocity vector, and 
+    # debugimg1 of the stabilized, cropped image with a velocity vector, and
     # debugimg2 of the original image with the four points used for stabilization
 
     h, w = img2.shape
-    arrow_start = (int(w/2), int(h/2))    
+    arrow_start = (int(w/2), int(h/2))
     arrow_end = (int(w/2-command.velocity[1]*(w/3)), int(h/2-command.velocity[2]*(h/3)))
     debugimg1 = cv2.arrowedLine( img2, arrow_start, arrow_end, (0, 0, 255), 10, )
 
     debugimg2 = orig_img.copy()
 
     return command, (debugimg1, debugimg2), hidden_state
-
 # helper function for vectorized expert policy (method_id = 1)
 def find_closest_zero_index(arr):
     center = np.array(arr.shape) // 2  # find the center point of the array
@@ -247,7 +260,7 @@ def compute_command_state_based(state, obstacles, desiredVel, rl_policy=None, ke
                         break
                 if found_valid_pt:
                     break
-        
+
         # simplest controller: waypoint --PID--> linear velocity command
         yvel = 1.25 * (wpts_2d[wpt_idx][1])
         # x_scale_down_factor = (grid_center_offset - np.abs(yvel))/grid_center_offset
@@ -273,7 +286,7 @@ def compute_command_state_based(state, obstacles, desiredVel, rl_policy=None, ke
             print(f'[EXPERT] No collision-free path found')
             xvel = 0.5
             yvel = 0
-            zvel = 0.25            
+            zvel = 0.25
         else:
             wpt_idx = find_closest_zero_index(collisions)
             wpt = wpts_2d[wpt_idx[0], wpt_idx[1]]
@@ -324,7 +337,7 @@ def compute_command_state_based(state, obstacles, desiredVel, rl_policy=None, ke
     hardcoded_ctl_threshold = 2.0
     if state.pos[0] < hardcoded_ctl_threshold:
         command.velocity[0] = max(min_xvel_cmd, (state.pos[0]/hardcoded_ctl_threshold)*desiredVel)
-        
+
 
     ################################################
     # !!! End !!!

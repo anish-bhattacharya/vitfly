@@ -1,5 +1,5 @@
 device = cuda
-basedir = /home/anish/vitfly_ws/src/vitfly
+basedir = /root/catkin_ws/src/vitfly
 logdir = training/logs
 datadir = training/datasets
 
