@@ -1,0 +1,16 @@
+[LearnerLSTM init] Making workspace /root/catkin_ws/src/vitfly/training/logs/d03_23_t01_09
+[DATALOADER] Loading from /root/catkin_ws/src/vitfly/training/datasets/data
+[DATALOADER] Dataloading done | train images (68514, 60, 90), val images (16594, 60, 90)
+[DATALOADER] Preloading into device cpu done
+[SETUP] Establishing model and optimizer.
+[TRAIN] Training for 5 epochs
+[VAL] Validating for val set of size 16594 images
+[VAL] Completed validation, val_loss = 10792.199219, time taken = 3.66 s
+[TRAIN] Completed epoch 1/5, ep_loss = 0.030468, time = 57.67s, time/epoch = 57.67s
+[TRAIN] Completed epoch 2/5, ep_loss = 0.024977, time = 124.60s, time/epoch = 62.30s
+[TRAIN] Completed epoch 3/5, ep_loss = 0.024249, time = 198.02s, time/epoch = 66.01s
+[TRAIN] Completed epoch 4/5, ep_loss = 0.024477, time = 275.84s, time/epoch = 68.96s
+[TRAIN] Completed epoch 5/5, ep_loss = 0.022965, time = 358.14s, time/epoch = 71.63s
+[TRAIN] Training complete, total time = 358.14s
+[SAVE] Saving model at epoch 4
+[SAVE] Model saved at /root/catkin_ws/src/vitfly/training/logs/d03_23_t01_09

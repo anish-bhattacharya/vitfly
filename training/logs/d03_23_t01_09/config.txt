@@ -1,0 +1,19 @@
+device = cpu
+basedir = /home/vitfly
+logdir = training/logs
+datadir = training/datasets
+
+dataset = data
+short = 0
+val_split = 0.2
+
+model_type = DroneMamba
+load_checkpoint = False
+checkpoint_path = ''
+
+lr = 1e-4
+N_eps = 100
+lr_warmup_epochs = 5
+lr_decay = False
+save_model_freq = 25
+val_freq = 10

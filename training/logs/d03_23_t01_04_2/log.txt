@@ -1,0 +1,3 @@
+[LearnerLSTM init] Making workspace /root/catkin_ws/src/vitfly/training/logs/d03_23_t01_04_2
+[DATALOADER] Loading from /root/catkin_ws/src/vitfly/training/datasets/data
+[DATALOADER] Dataloading done | train images (67944, 60, 90), val images (17164, 60, 90)

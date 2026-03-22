@@ -1,0 +1,2 @@
+[LearnerLSTM init] Making workspace /root/catkin_ws/src/vitfly/training/logs/d03_23_t01_04
+[DATALOADER] Loading from /root/catkin_ws/src/vitfly/envtest/ros/train_set/data
