@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 @authors: A Bhattacharya, et. al
 @organization: GRASP Lab, University of Pennsylvania
@@ -14,6 +15,7 @@ import torch.nn.functional as F
 from torch.nn import LSTM
 import torch.nn.utils.spectral_norm as spectral_norm
 from ViTsubmodules import *
+from mamba_submodules import SimplifiedSSM, SimplifiedSSMBlock, OverlapPatchMerging
 
 def refine_inputs(X):
 
@@ -185,6 +187,140 @@ class ViT(nn.Module):
 
         return out, None
 
+
+class DroneMamba(nn.Module):
+    """
+    轻量化 Mamba 混合架构 for UAV 避障
+    参数量目标：~2.8M (比 ViT 少 10%, 比 ViT+LSTM 少 21%)
+    
+    架构设计:
+    - Stage 1: CNN 特征提取 (2 层)
+    - Stage 2: Mamba Encoder (2 层 Simplified-SSM Block)
+    - Stage 3: 特征融合与解码
+    - Stage 4: 时序建模 (Lightweight LSTM 或 Temporal-SSM)
+    """
+    
+    def __init__(self, use_temporal_ssm=False, d_state=8, hidden_size=128):
+        """
+        :param use_temporal_ssm: 是否使用时序 SSM 代替 LSTM
+        :param d_state: SSM 的状态维度
+        :param hidden_size: LSTM/SSM 的隐藏层大小
+        """
+        super().__init__()
+        
+        # Stage 1: CNN 特征提取
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=7, stride=4, padding=3)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1)
+        self.gelu = nn.GELU()
+        self.norm1 = nn.LayerNorm(32)
+        self.norm2 = nn.LayerNorm(64)
+        
+        # Stage 2: Mamba Encoder (2 层 SSM Block)
+        self.mamba_block1 = SimplifiedSSMBlock(32, d_state=d_state, expansion_factor=4, drop_path=0.1)
+        self.mamba_block2 = SimplifiedSSMBlock(64, d_state=d_state, expansion_factor=4, drop_path=0.1)
+        
+        # Patch merging layers
+        self.patch_merge1 = OverlapPatchMerging(1, 32, patch_size=7, stride=4, padding=3)
+        self.patch_merge2 = OverlapPatchMerging(32, 64, patch_size=3, stride=2, padding=1)
+        
+        # Stage 3: 特征融合与解码
+        self.pixel_shuffle = nn.PixelShuffle(upscale_factor=2)
+        self.upsample = nn.Upsample(size=(8, 12), mode='bilinear', align_corners=True)
+        self.fusion_conv = nn.Conv2d(80, 64, kernel_size=3, padding=1)
+        self.global_pool = nn.AdaptiveAvgPool2d((1, 1))
+        self.decoder = spectral_norm(nn.Linear(64, 512))
+        
+        # Stage 4: 时序建模
+        self.use_temporal_ssm = use_temporal_ssm
+        if use_temporal_ssm:
+            # 使用时序 SSM
+            self.temporal_ssm = SimplifiedSSM(517, d_state=4, bidirectional=False)
+            self.fc_out = nn.Linear(517, 3)
+        else:
+            # 使用轻量 LSTM
+            self.lstm = nn.LSTM(input_size=517, hidden_size=hidden_size,
+                               num_layers=2, dropout=0.1)
+            self.fc_out = spectral_norm(nn.Linear(hidden_size, 3))
+    
+    def forward(self, X):
+        # 处理时序批次输入：[T, B, C, H, W] -> 重塑为 [T*B, C, H, W]
+        x = X[0]
+        is_sequence = (len(x.shape) == 5)
+        
+        if is_sequence:
+            T, B_seq = x.shape[:2]
+            # 重塑为 [T*B, C, H, W]
+            x = x.reshape(T * B_seq, *x.shape[2:])
+            desvel = X[1].reshape(T * B_seq, -1) if len(X[1].shape) > 1 else X[1]
+            currquat = X[2].reshape(T * B_seq, -1) if len(X[2].shape) > 1 else X[2]
+        else:
+            B_seq = x.shape[0]
+            desvel = X[1]
+            currquat = X[2]
+        
+        X_processed = [x, desvel, currquat]
+        X_processed = refine_inputs(X_processed)
+        x = X_processed[0]  # 深度图像 (B, 1, 60, 90) or (T*B, 1, 60, 90)
+        
+        B = x.shape[0]
+        
+        # Stage 1: CNN + Patch Merging
+        # Layer 1
+        x, H1, W1 = self.patch_merge1(x)  # (B, N1, 32), N1 = H1 * W1 = 15 * 22 = 330
+        x = self.mamba_block1(x, H1, W1)  # Mamba Block 1
+        
+        # Layer 2
+        x = x.transpose(1, 2).reshape(B, 32, H1, W1)  # (B, 32, 15, 22)
+        x, H2, W2 = self.patch_merge2(x)  # (B, N2, 64), N2 = H2 * W2 = 8 * 11 = 88
+        x = self.mamba_block2(x, H2, W2)  # Mamba Block 2
+        
+        # Stage 3: 特征融合与解码
+        x = x.transpose(1, 2).reshape(B, 64, H2, W2)  # (B, 64, 8, 11)
+        
+        # 多尺度特征融合（类似 ViT 的设计）
+        # 这里简化处理，直接使用全局池化
+        x = self.global_pool(x).flatten(1)  # (B, 64)
+        x = self.decoder(x)  # (B, 512)
+        
+        # Stage 4: 时序建模
+        x = torch.cat([x, X_processed[1]/10, X_processed[2]], dim=1)  # (B, 517)
+        
+        if is_sequence and self.use_temporal_ssm:
+            # 恢复时序维度：[T*B, 517] -> [T, B, 517]
+            x = x.reshape(T, B_seq, 517)
+            # 使用时序 SSM，沿时间维度处理
+            outputs = []
+            for t in range(T):
+                x_t = x[t:t+1]  # [1, B, 517]
+                x_t = self.temporal_ssm(x_t, 1, 1).squeeze(1)  # [B, 517]
+                out_t = self.fc_out(x_t)  # [B, 3]
+                outputs.append(out_t)
+            x = torch.stack(outputs, dim=0)  # [T, B, 3]
+            h = None
+        elif self.use_temporal_ssm:
+            # 单帧处理
+            x = x.unsqueeze(1)  # (B, 1, 517)
+            x = self.temporal_ssm(x, 1, 1).squeeze(1)
+            x = self.fc_out(x)
+            h = None
+        else:
+            # 使用 LSTM
+            if is_sequence:
+                # [T, B, 517] -> LSTM 处理
+                x, h = self.lstm(x)
+                x = self.fc_out(x)  # [T, B, 3]
+            else:
+                if len(X) > 3:
+                    x, h = self.lstm(x.unsqueeze(0), X[3])
+                    x = x.squeeze(0)
+                else:
+                    x, h = self.lstm(x.unsqueeze(0))
+                    x = x.squeeze(0)
+                x = self.fc_out(x)
+        
+        return x, h
+
+
 class UNetConvLSTMNet(nn.Module):
     """
     UNet+LSTM Network 
@@ -282,4 +418,12 @@ if __name__ == '__main__':
 
     model = LSTMNetVIT().float()
     print("VITLSTM: ")
+    print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+    
+    model = DroneMamba().float()
+    print("DroneMamba (LSTM): ")
+    print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+    
+    model = DroneMamba(use_temporal_ssm=True).float()
+    print("DroneMamba (SSM): ")
     print(sum(p.numel() for p in model.parameters() if p.requires_grad))

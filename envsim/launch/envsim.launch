@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!-- DroneMamba 仿真环境启动文件 -->
+
+<launch>
+    <arg name="quad_name" default="kingfisher"/>
+    <arg name="world_name" default="spheres"/>
+    <arg name="render" default="False"/>
+    <arg name="gui" default="False"/>
+    <arg name="rviz" default="True"/>
+    <arg name="real_time_factor" default="1.0"/>
+
+    <param name="/use_sim_time" value="True"/>
+
+    <!-- 启动 DroneMamba 仿真器 -->
+    <group ns="$(arg quad_name)">
+        <node name="dodgeros_pilot" pkg="envsim" type="visionsim_node" output="screen">
+            <param name="agi_param_dir" value="$(find dodgelib)/params"/>
+            <param name="ros_param_dir" value="$(find envsim)/parameters"/>
+            <param name="pilot_config" value="simple_sim_pilot.yaml"/>
+            <param name="real_time_factor" value="$(arg real_time_factor)"/>
+            <param name="low_level_controller" value="Simple"/>
+            <param name="camera_config" value="$(find envsim)/parameters/camera_config.yaml"/>
+            <param name="render" value="$(arg render)"/>
+            <param name="world_name" value="$(arg world_name)"/>
+        </node>
+
+        <!-- 深度图像中继节点 - 将仿真深度图转发到评估节点需要的话题 -->
+        <node name="depth_image_relay" pkg="topic_tools" type="relay" 
+              args="/$(arg quad_name)/dodgeros_pilot/unity/depth /$(arg quad_name)/depth_image"
+              output="screen"/>
+    </group>
+
+    <!-- RViz 可视化 -->
+    <node pkg="rviz" type="rviz" name="viz_face" args="-d $(find envsim)/resources/rviz/envsim.rviz"
+          ns="$(arg quad_name)" if="$(arg rviz)"/>
+
+    <!-- GUI (可选) -->
+    <node name="dodgeros_gui" pkg="rqt_gui" type="rqt_gui"
+          args="-s dodgeros_gui.basic_flight.BasicFlight --args --quad_name $(arg quad_name)" output="screen"
+          if="$(arg gui)"/>
+
+    <!-- Flightmare 渲染器 (可选) -->
+    <node name="flight_render" pkg="flightrender" type="vitfly-unity.x86_64" 
+          args="-batchmode" if="$(arg render)"/>
+</launch>

@@ -1,0 +1,16 @@
+topics:
+  quad_name: "kingfisher"
+  state: "dodgeros_pilot/state"
+  obstacles: "dodgeros_pilot/groundtruth/obstacles"
+  start: "start_navigation"
+  finish: "finish_navigation"
+
+target: 60 # goal distance in x-direction, must be INTEGER
+timeout: 15  # 7m/s speed, 60m needs ~8.5s, timeout 15s for safety
+bounding_box: [-5, 65, -10, 10, 0, 10] # when exiting this bounding box, the episode is considered a failure
+
+# if you really don't want the cool plots, put this to False
+plots: True
+
+# 7m/s high-speed configuration
+desired_velocity: 7.0  # m/s

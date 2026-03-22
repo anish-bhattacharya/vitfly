@@ -77,8 +77,8 @@ class AgilePilotNode:
         self.data_collection_xrange = [2, 60]
 
         # make the folder for the epoch
-        self.folder = f"train_set/{int(time.time()*100)}" 
-        os.mkdir(self.folder)
+        self.folder = f"train_set/{int(time.time()*100)}"
+        os.makedirs(self.folder, exist_ok=True)
 
         self.desiredVel = desVel #self.readVel("velocity.txt") #np.random.uniform(low=2.0, high=3.0)
         print()
@@ -98,7 +98,10 @@ class AgilePilotNode:
             elif model_type == 'ViT':
                 self.model = ViT().to(self.device).float()
             elif model_type == 'ViTLSTM':
-                self.model = LSTMNetVIT().to(self.device).float()                
+                self.model = LSTMNetVIT().to(self.device).float()
+            elif model_type == 'DroneMamba':
+                self.model = DroneMamba(use_temporal_ssm=True, d_state=8).to(self.device).float()
+                print(f"[RUN_COMPETITION] DroneMamba (SSM 版本) 已加载")                
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()
@@ -456,7 +459,10 @@ class AgilePilotNode:
             vel_msg.twist.angular.z = command.yawrate
             if self.publish_commands:
                 self.linvel_pub.publish(vel_msg)
+                print(f"[RUN_COMPETITION] Published velocity: {command.velocity}")
                 return
+            else:
+                print(f"[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: {command.velocity}")
         else:
             assert False, "Unknown command mode specified"
 
