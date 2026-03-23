@@ -1,0 +1,125 @@
+# 分支 A: VMamba + LSTM 消融实验配置
+
+# 实验元信息
+experiment:
+  name: "Branch_A_VMamba_LSTM_Ablation"
+  version: "v1.0"
+  date: "2026-03-23"
+  baseline: "ViT-LSTM (3.56M)"
+
+# 硬件环境
+hardware:
+  gpu: "CPU-only (可迁移至 CUDA)"
+  memory: "8GB+"
+  pytorch: ">=1.13"
+
+# 数据集配置
+dataset:
+  type: "flightmare_depth"
+  input_shape: [1, 60, 90]  # (C, H, W)
+  state_dim: 7  # 3 (vel) + 4 (quat)
+  output_dim: 3  # 3D 线速度
+
+# 消融参数搜索空间
+ablation_search:
+  # VSS Block 层数
+  depth: [2, 4, 6, 12]
+  # 嵌入维度
+  embed_dim: [48, 64, 96]
+  # SSM 状态维度
+  d_state: [8, 16, 32]
+
+# 固定超参数
+fixed_params:
+  lstm_hidden: 128
+  lstm_layers: 2
+  dropout: 0.1
+  output_dim: 512
+  batch_size: 32
+  learning_rate: 1e-3
+  epochs: 50
+
+# 实验配置列表
+experiments:
+  # 轻量版 (目标：<500K 参数)
+  - id: "A_exp01_light"
+    vmamba:
+      embed_dim: 48
+      depth: 2
+      d_state: 8
+    lstm:
+      hidden: 128
+      layers: 2
+    expected_params: ~400K
+    priority: 1
+
+  # 标准版 (目标：500K-1M 参数)
+  - id: "A_exp02_standard"
+    vmamba:
+      embed_dim: 64
+      depth: 4
+      d_state: 16
+    lstm:
+      hidden: 128
+      layers: 2
+    expected_params: ~700K
+    priority: 2
+
+  # 大容量版 (目标：1-2M 参数)
+  - id: "A_exp03_large"
+    vmamba:
+      embed_dim: 96
+      depth: 6
+      d_state: 32
+    lstm:
+      hidden: 128
+      layers: 2
+    expected_params: ~1.1M
+    priority: 3
+
+  # 深度变体 (目标：验证深度影响)
+  - id: "A_exp04_deep"
+    vmamba:
+      embed_dim: 64
+      depth: 12
+      d_state: 16
+    lstm:
+      hidden: 128
+      layers: 2
+    expected_params: ~1.5M
+    priority: 4
+
+  # 高状态维度变体
+  - id: "A_exp05_high_state"
+    vmamba:
+      embed_dim: 64
+      depth: 4
+      d_state: 32
+    lstm:
+      hidden: 128
+      layers: 2
+    expected_params: ~800K
+    priority: 5
+
+# 评估指标
+metrics:
+  - name: "success_rate"
+    target: ">0.7"
+  - name: "collision_rate"
+    target: "<0.3"
+  - name: "completion_time"
+    target: "<15s"
+  - name: "inference_latency"
+    target: "<5ms"
+  - name: "parameter_count"
+    target: "<5M"
+
+# 训练配置
+training:
+  optimizer: "AdamW"
+  lr_scheduler: "CosineAnnealing"
+  warmup_epochs: 5
+  grad_clip: 1.0
+  val_split: 0.2
+  save_freq: 10
+  log_freq: 100
