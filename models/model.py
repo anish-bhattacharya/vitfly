@@ -123,7 +123,7 @@ class LSTMNetVIT(nn.Module):
         ])
 
         self.decoder = spectral_norm(nn.Linear(4608, 512))
-        self.lstm = (nn.LSTM(input_size=517, hidden_size=128,
+        self.lstm = (nn.LSTM(input_size=519, hidden_size=128,
                          num_layers=3, dropout=0.1))
         self.nn_fc2 = spectral_norm(nn.Linear(128, 3))
 
@@ -238,7 +238,7 @@ class DroneMamba(nn.Module):
             self.fc_out = nn.Linear(517, 3)
         else:
             # 使用轻量 LSTM
-            self.lstm = nn.LSTM(input_size=517, hidden_size=hidden_size,
+            self.lstm = nn.LSTM(input_size=519, hidden_size=hidden_size,
                                num_layers=2, dropout=0.1)
             self.fc_out = spectral_norm(nn.Linear(hidden_size, 3))
     
@@ -283,15 +283,15 @@ class DroneMamba(nn.Module):
         x = self.decoder(x)  # (B, 512)
         
         # Stage 4: 时序建模
-        x = torch.cat([x, X_processed[1]/10, X_processed[2]], dim=1)  # (B, 517)
+        x = torch.cat([x, X_processed[1]/10, X_processed[2]], dim=1)  # (B, 519)
         
         if is_sequence and self.use_temporal_ssm:
-            # 恢复时序维度：[T*B, 517] -> [T, B, 517]
-            x = x.reshape(T, B_seq, 517)
+            # 恢复时序维度：[T*B, 517] -> [T, B, 519]
+            x = x.reshape(T, B_seq, 519)
             # 使用时序 SSM，沿时间维度处理
             outputs = []
             for t in range(T):
-                x_t = x[t:t+1]  # [1, B, 517]
+                x_t = x[t:t+1]  # [1, B, 519]
                 x_t = self.temporal_ssm(x_t, 1, 1).squeeze(1)  # [B, 517]
                 out_t = self.fc_out(x_t)  # [B, 3]
                 outputs.append(out_t)
@@ -299,14 +299,14 @@ class DroneMamba(nn.Module):
             h = None
         elif self.use_temporal_ssm:
             # 单帧处理
-            x = x.unsqueeze(1)  # (B, 1, 517)
+            x = x.unsqueeze(1)  # (B, 1, 519)
             x = self.temporal_ssm(x, 1, 1).squeeze(1)
             x = self.fc_out(x)
             h = None
         else:
             # 使用 LSTM
             if is_sequence:
-                # [T, B, 517] -> LSTM 处理
+                # [T, B, 519] -> LSTM 处理
                 x, h = self.lstm(x)
                 x = self.fc_out(x)  # [T, B, 3]
             else:
