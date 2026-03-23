@@ -1,4 +1,4 @@
-device = cuda
+device = cpu
 basedir = /home/vitfly
 logdir = training/logs
 datadir = training/datasets

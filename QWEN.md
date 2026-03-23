@@ -218,3 +218,40 @@ export FLIGHTMARE_PATH=$PWD/flightmare
 
 ## Qwen Added Memories
 - 启动 flightmare 模拟器前必须先杀掉所有相关进程：killall -9 roscore rosmaster rosout gzserver gzclient RPG_Flightmare. visionsim_node，否则会导致进程冲突和崩溃
+- Always run tests after modifying model inference code or simulation-related files.
+- Before starting environment setup, check for existing installations and document what's already configured.
+- Commit work incrementally after completing each major setup step (ROS installation, vitfly config, simulation running)
+
+## Mamba/DroMamba Notes
+
+### Architecture
+- **DroneMamba**: Simplified-SSM + CNN hybrid for UAV obstacle avoidance
+- **Parameters**: ~452K (85% smaller than ViT)
+- **Key Components**:
+  - SimplifiedSSM: Diagonal SSM with bidirectional scanning
+  - SimplifiedSSMBlock: SSM + MLP + gating mechanisms
+  - OverlapPatchMerging: Multi-scale feature extraction
+
+### Training Configuration (CPU)
+```txt
+device = cpu
+model_type = DroneMamba
+lr = 1e-3
+N_eps = 50
+```
+
+### Known Issues
+- Inference dimension mismatch (519 vs 517) in temporal_ssm path
+- Requires fix in `models/model.py` forward() method
+
+### Training Results (5 epochs)
+| Epoch | Loss | Time/epoch |
+|-------|------|-----------|
+| 1 | 0.0305 | 57.67s |
+| 5 | 0.0230 | 71.63s |
+
+### Files
+- `models/mamba_submodules.py` - SSM implementations
+- `models/model.py` - DroneMamba class definition
+- `training/config/train_mamba.txt` - Training config
+- `envtest/ros/run_mamba_competition.py` - Evaluation script
