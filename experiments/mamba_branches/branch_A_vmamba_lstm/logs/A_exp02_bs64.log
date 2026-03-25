@@ -1,0 +1,131 @@
+
+使用设备: cpu
+
+加载数据...
+[DATALOADER] Loading folder 170743205912, folder # 1/100, time elapsed 0.00s
+[DATALOADER] Extra image found at end of data, cutting it from 170743205912
+[DATALOADER] Number of images and telemetry still do not match in 170743205912, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700369348
+[DATALOADER] Extra image found at end of data, cutting it from 170725978329
+[DATALOADER] Number of images and telemetry still do not match in 170725507255, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700246399
+[DATALOADER] Loading folder 170725566753, folder # 11/100, time elapsed 3.85s
+[DATALOADER] Extra image found at end of data, cutting it from 170725566753
+[DATALOADER] Extra image found at end of data, cutting it from 170726878203
+[DATALOADER] Extra image found at end of data, cutting it from 170726689120
+[DATALOADER] Extra image found at end of data, cutting it from 170700236906
+[DATALOADER] Number of images and telemetry still do not match in 170727078390, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692344508
+[DATALOADER] Extra image found at end of data, cutting it from 170725687425
+[DATALOADER] Number of images and telemetry still do not match in 170725687425, skipping
+[DATALOADER] Loading folder 170699897724, folder # 21/100, time elapsed 7.65s
+[DATALOADER] Number of images and telemetry still do not match in 170699897724, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725532836
+[DATALOADER] Extra image found at end of data, cutting it from 170726473577
+[DATALOADER] Extra image found at end of data, cutting it from 170725631541
+[DATALOADER] Extra image found at end of data, cutting it from 170700346766
+[DATALOADER] Extra image found at end of data, cutting it from 170725403764
+[DATALOADER] Extra image found at end of data, cutting it from 170726131920
+[DATALOADER] Loading folder 170725293151, folder # 31/100, time elapsed 10.45s
+[DATALOADER] Extra image found at end of data, cutting it from 170692602150
+[DATALOADER] Extra image found at end of data, cutting it from 170726723228
+[DATALOADER] Extra image found at end of data, cutting it from 170692670033
+[DATALOADER] Extra image found at end of data, cutting it from 170727028448
+[DATALOADER] Number of images and telemetry still do not match in 170725674343, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725366886
+[DATALOADER] Extra image found at end of data, cutting it from 170726164683
+[DATALOADER] Loading folder 170725419842, folder # 41/100, time elapsed 14.27s
+[DATALOADER] Extra image found at end of data, cutting it from 170692335583
+[DATALOADER] Extra image found at end of data, cutting it from 170726361198
+[DATALOADER] Extra image found at end of data, cutting it from 170700378855
+[DATALOADER] Loading folder 170726264087, folder # 51/100, time elapsed 18.24s
+[DATALOADER] Extra image found at end of data, cutting it from 170726264087
+[DATALOADER] Extra image found at end of data, cutting it from 170726432552
+[DATALOADER] Extra image found at end of data, cutting it from 170702024385
+[DATALOADER] Extra image found at end of data, cutting it from 170725430539
+[DATALOADER] Extra image found at end of data, cutting it from 170702092133
+[DATALOADER] Extra image found at end of data, cutting it from 170727033217
+[DATALOADER] Extra image found at end of data, cutting it from 170692361160
+[DATALOADER] Loading folder 170700324166, folder # 61/100, time elapsed 21.47s
+[DATALOADER] Extra image found at end of data, cutting it from 170700324166
+[DATALOADER] Extra image found at end of data, cutting it from 170725479254
+[DATALOADER] Extra image found at end of data, cutting it from 170726254574
+[DATALOADER] Extra image found at end of data, cutting it from 170700387766
+[DATALOADER] Extra image found at end of data, cutting it from 170726084299
+[DATALOADER] Loading folder 170726408142, folder # 71/100, time elapsed 24.52s
+[DATALOADER] Extra image found at end of data, cutting it from 170726408142
+[DATALOADER] Extra image found at end of data, cutting it from 170743321068
+[DATALOADER] Extra image found at end of data, cutting it from 170726744508
+[DATALOADER] Extra image found at end of data, cutting it from 170725588169
+[DATALOADER] Extra image found at end of data, cutting it from 170726939308
+[DATALOADER] Extra image found at end of data, cutting it from 170726249215
+[DATALOADER] Number of images and telemetry still do not match in 170726249215, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726468225
+[DATALOADER] Number of images and telemetry still do not match in 170726778115, skipping
+[DATALOADER] Loading folder 170726969542, folder # 81/100, time elapsed 28.39s
+[DATALOADER] Extra image found at end of data, cutting it from 170726969542
+[DATALOADER] Extra image found at end of data, cutting it from 170726244458
+[DATALOADER] Extra image found at end of data, cutting it from 170726436703
+[DATALOADER] Extra image found at end of data, cutting it from 170726217679
+[DATALOADER] Extra image found at end of data, cutting it from 170692579559
+[DATALOADER] Extra image found at end of data, cutting it from 170726893003
+[DATALOADER] Number of images and telemetry still do not match in 170726893003, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692341541
+[DATALOADER] Loading folder 170699814715, folder # 91/100, time elapsed 31.30s
+[DATALOADER] Extra image found at end of data, cutting it from 170699814715
+[DATALOADER] Extra image found at end of data, cutting it from 170726801133
+[DATALOADER] Number of images and telemetry still do not match in 170726801133, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692610493
+[DATALOADER] Extra image found at end of data, cutting it from 170726985004
+[DATALOADER] Extra image found at end of data, cutting it from 170725517367
+10 2848
+0 0
+[ANALYZER] Analyzing the data....
+训练集样本数: 13023
+验证集样本数: 3104
+训练集: 13023, 验证集: 3104
+
+创建模型...
+
+模型参数量:
+  VMamba: 222,208
+  LSTM: 462,336
+  总计: 684,931
+
+开始训练 (20 epochs)...
+Error importing huggingface_hub.hf_api: module 'lib' has no attribute 'X509_V_FLAG_NOTIFY_POLICY'
+Error importing huggingface_hub.hf_api: module 'lib' has no attribute 'X509_V_FLAG_NOTIFY_POLICY'
+  Epoch 1, Batch 0/204, Loss: 18.7228
+  Epoch 1, Batch 50/204, Loss: 1.5643
+  Epoch 1, Batch 100/204, Loss: 1.0028
+  Epoch 1, Batch 150/204, Loss: 0.9913
+  Epoch 1, Batch 200/204, Loss: 1.1551
+Epoch 1/20 - Train Loss: 3.4633, Val Loss: 0.5424, LR: 0.000994, Time: 51.5s
+  ✓ 保存最佳模型到 /root/catkin_ws/src/vitfly/experiments/mamba_branches/branch_A_vmamba_lstm/logs/A_exp02_bs64_best.pth
+  Epoch 2, Batch 0/204, Loss: 1.2301
+  Epoch 2, Batch 50/204, Loss: 0.7851
+  Epoch 2, Batch 100/204, Loss: 0.9908
+  Epoch 2, Batch 150/204, Loss: 1.1709
+  Epoch 2, Batch 200/204, Loss: 0.8514
+Epoch 2/20 - Train Loss: 1.0318, Val Loss: 0.5503, LR: 0.000976, Time: 51.5s
+  Epoch 3, Batch 0/204, Loss: 0.9094
+  Epoch 3, Batch 50/204, Loss: 0.9019
+  Epoch 3, Batch 100/204, Loss: 1.0455
+  Epoch 3, Batch 150/204, Loss: 1.1275
+  Epoch 3, Batch 200/204, Loss: 1.1089
+Epoch 3/20 - Train Loss: 1.0151, Val Loss: 0.5421, LR: 0.000946, Time: 49.4s
+  ✓ 保存最佳模型到 /root/catkin_ws/src/vitfly/experiments/mamba_branches/branch_A_vmamba_lstm/logs/A_exp02_bs64_best.pth
+  Epoch 4, Batch 0/204, Loss: 0.8900
+  Epoch 4, Batch 50/204, Loss: 0.9675
+  Epoch 4, Batch 100/204, Loss: 1.2763
+  Epoch 4, Batch 150/204, Loss: 0.9944
+  Epoch 4, Batch 200/204, Loss: 0.9821
+Epoch 4/20 - Train Loss: 1.0090, Val Loss: 0.5570, LR: 0.000905, Time: 38.9s
+  Epoch 5, Batch 0/204, Loss: 0.8950
+  Epoch 5, Batch 50/204, Loss: 0.8647
+  Epoch 5, Batch 100/204, Loss: 0.7413
+  Epoch 5, Batch 150/204, Loss: 0.7518
+  Epoch 5, Batch 200/204, Loss: 0.8787
+Epoch 5/20 - Train Loss: 1.0107, Val Loss: 0.5399, LR: 0.000854, Time: 53.7s
+  ✓ 保存最佳模型到 /root/catkin_ws/src/vitfly/experiments/mamba_branches/branch_A_vmamba_lstm/logs/A_exp02_bs64_best.pth
+  Epoch 6, Batch 0/204, Loss: 1.0192

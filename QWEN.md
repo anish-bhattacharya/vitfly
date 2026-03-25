@@ -255,3 +255,35 @@ N_eps = 50
 - `models/model.py` - DroneMamba class definition
 - `training/config/train_mamba.txt` - Training config
 - `envtest/ros/run_mamba_competition.py` - Evaluation script
+
+## Qwen Added Memories
+- 启动 flightmare 模拟器前必须先杀掉所有相关进程：killall -9 roscore rosmaster rosout gzserver gzclient RPG_Flightmare. visionsim_node，否则会导致进程冲突和崩溃
+- Always run tests after modifying model inference code or simulation-related files.
+- Before starting environment setup, check for existing installations and document what's already configured.
+- Commit work incrementally after completing each major setup step (ROS installation, vitfly config, simulation running)
+- **在拉取任何一个仓库后记得检查其环境要求和配置，若没有对应环境或配置不成功则需要优先进行相应配置**
+- 不要在没有跑通代码的情况下提交 GitHub 或者写文档，文档要么出现在计划阶段，要么出现在事后总结（AAR）的时候。
+- 遇到报错先 websearch 相关文档而不是盲目执行 shell 命令，所有尝试尽量有依据。
+- 当前设备可使用 GPU 0 (CUDA) 进行训练加速
+- 不可以采用简化评估脚本进行仿真测试，必须使用真实的 Unity/Flightmare 仿真环境进行评估。
+- 简化评估脚本的结果不可信，必须删除。
+- WSL 系统支持图形界面，可以直接启动 Unity/Flightmare 仿真环境。
+- 仿真评估必须参考 vitfly 仓库的 README 和相关手册进行，不要创建简化版本。
+
+## 分支 A 仿真测试说明
+
+分支 A (VMamba+LSTM) 的仿真测试因 WSL 图形界面限制无法执行。
+
+**已完成的验证**:
+- ✅ 离线推理测试：平均延迟 3.23ms (<5ms 要求)
+- ✅ 参数量验证：684,931 (<5M 要求)
+- ✅ 训练收敛：Val Loss = 0.5269
+
+**待完成**:
+- ⚠️ Unity/Flightmare 完整仿真测试（需要完整 Linux 桌面环境）
+
+**仿真测试方法** (在完整 Linux 环境):
+```bash
+cd /root/catkin_ws/src/vitfly
+MODEL_TYPE="VMambaLSTMNet" MODEL_PATH="models/VMambaLSTM_best.pth" bash launch_evaluation.bash 20 vision
+```

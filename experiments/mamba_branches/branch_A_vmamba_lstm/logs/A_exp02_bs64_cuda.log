@@ -1,0 +1,213 @@
+
+使用设备：cuda
+
+加载数据...
+[DATALOADER] Loading folder 170743205912, folder # 1/100, time elapsed 0.00s
+[DATALOADER] Extra image found at end of data, cutting it from 170743205912
+[DATALOADER] Number of images and telemetry still do not match in 170743205912, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700369348
+[DATALOADER] Extra image found at end of data, cutting it from 170725978329
+[DATALOADER] Number of images and telemetry still do not match in 170725507255, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700246399
+[DATALOADER] Loading folder 170725566753, folder # 11/100, time elapsed 4.12s
+[DATALOADER] Extra image found at end of data, cutting it from 170725566753
+[DATALOADER] Extra image found at end of data, cutting it from 170726878203
+[DATALOADER] Extra image found at end of data, cutting it from 170726689120
+[DATALOADER] Extra image found at end of data, cutting it from 170700236906
+[DATALOADER] Number of images and telemetry still do not match in 170727078390, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692344508
+[DATALOADER] Extra image found at end of data, cutting it from 170725687425
+[DATALOADER] Number of images and telemetry still do not match in 170725687425, skipping
+[DATALOADER] Loading folder 170699897724, folder # 21/100, time elapsed 8.09s
+[DATALOADER] Number of images and telemetry still do not match in 170699897724, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725532836
+[DATALOADER] Extra image found at end of data, cutting it from 170726473577
+[DATALOADER] Extra image found at end of data, cutting it from 170725631541
+[DATALOADER] Extra image found at end of data, cutting it from 170700346766
+[DATALOADER] Extra image found at end of data, cutting it from 170725403764
+[DATALOADER] Extra image found at end of data, cutting it from 170726131920
+[DATALOADER] Loading folder 170725293151, folder # 31/100, time elapsed 11.09s
+[DATALOADER] Extra image found at end of data, cutting it from 170692602150
+[DATALOADER] Extra image found at end of data, cutting it from 170726723228
+[DATALOADER] Extra image found at end of data, cutting it from 170692670033
+[DATALOADER] Extra image found at end of data, cutting it from 170727028448
+[DATALOADER] Number of images and telemetry still do not match in 170725674343, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725366886
+[DATALOADER] Extra image found at end of data, cutting it from 170726164683
+[DATALOADER] Loading folder 170725419842, folder # 41/100, time elapsed 15.52s
+[DATALOADER] Extra image found at end of data, cutting it from 170692335583
+[DATALOADER] Extra image found at end of data, cutting it from 170726361198
+[DATALOADER] Extra image found at end of data, cutting it from 170700378855
+[DATALOADER] Loading folder 170726264087, folder # 51/100, time elapsed 19.71s
+[DATALOADER] Extra image found at end of data, cutting it from 170726264087
+[DATALOADER] Extra image found at end of data, cutting it from 170726432552
+[DATALOADER] Extra image found at end of data, cutting it from 170702024385
+[DATALOADER] Extra image found at end of data, cutting it from 170725430539
+[DATALOADER] Extra image found at end of data, cutting it from 170702092133
+[DATALOADER] Extra image found at end of data, cutting it from 170727033217
+[DATALOADER] Extra image found at end of data, cutting it from 170692361160
+[DATALOADER] Loading folder 170700324166, folder # 61/100, time elapsed 23.59s
+[DATALOADER] Extra image found at end of data, cutting it from 170700324166
+[DATALOADER] Extra image found at end of data, cutting it from 170725479254
+[DATALOADER] Extra image found at end of data, cutting it from 170726254574
+[DATALOADER] Extra image found at end of data, cutting it from 170700387766
+[DATALOADER] Extra image found at end of data, cutting it from 170726084299
+[DATALOADER] Loading folder 170726408142, folder # 71/100, time elapsed 27.36s
+[DATALOADER] Extra image found at end of data, cutting it from 170726408142
+[DATALOADER] Extra image found at end of data, cutting it from 170743321068
+[DATALOADER] Extra image found at end of data, cutting it from 170726744508
+[DATALOADER] Extra image found at end of data, cutting it from 170725588169
+[DATALOADER] Extra image found at end of data, cutting it from 170726939308
+[DATALOADER] Extra image found at end of data, cutting it from 170726249215
+[DATALOADER] Number of images and telemetry still do not match in 170726249215, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726468225
+[DATALOADER] Number of images and telemetry still do not match in 170726778115, skipping
+[DATALOADER] Loading folder 170726969542, folder # 81/100, time elapsed 31.99s
+[DATALOADER] Extra image found at end of data, cutting it from 170726969542
+[DATALOADER] Extra image found at end of data, cutting it from 170726244458
+[DATALOADER] Extra image found at end of data, cutting it from 170726436703
+[DATALOADER] Extra image found at end of data, cutting it from 170726217679
+[DATALOADER] Extra image found at end of data, cutting it from 170692579559
+[DATALOADER] Extra image found at end of data, cutting it from 170726893003
+[DATALOADER] Number of images and telemetry still do not match in 170726893003, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692341541
+[DATALOADER] Loading folder 170699814715, folder # 91/100, time elapsed 35.22s
+[DATALOADER] Extra image found at end of data, cutting it from 170699814715
+[DATALOADER] Extra image found at end of data, cutting it from 170726801133
+[DATALOADER] Number of images and telemetry still do not match in 170726801133, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692610493
+[DATALOADER] Extra image found at end of data, cutting it from 170726985004
+[DATALOADER] Extra image found at end of data, cutting it from 170725517367
+10 2848
+0 0
+[ANALYZER] Analyzing the data....
+训练集：13023, 验证集：3104
+
+创建模型...
+参数量：684,931
+
+开始训练 (20 epochs)...
+  Epoch 1, Batch 0/204, Loss: 18.7272
+  Epoch 1, Batch 50/204, Loss: 1.5442
+  Epoch 1, Batch 100/204, Loss: 1.0203
+  Epoch 1, Batch 150/204, Loss: 0.9331
+  Epoch 1, Batch 200/204, Loss: 1.1227
+Epoch 1/20 - Train: 3.4559, Val: 0.5454, LR: 0.000994, Time: 4.4s
+  ✓ 保存最佳模型
+  Epoch 2, Batch 0/204, Loss: 1.1485
+  Epoch 2, Batch 50/204, Loss: 1.0493
+  Epoch 2, Batch 100/204, Loss: 1.1113
+  Epoch 2, Batch 150/204, Loss: 0.9821
+  Epoch 2, Batch 200/204, Loss: 1.2922
+Epoch 2/20 - Train: 1.0229, Val: 0.5516, LR: 0.000976, Time: 4.0s
+  Epoch 3, Batch 0/204, Loss: 0.8666
+  Epoch 3, Batch 50/204, Loss: 1.0059
+  Epoch 3, Batch 100/204, Loss: 0.9556
+  Epoch 3, Batch 150/204, Loss: 1.0230
+  Epoch 3, Batch 200/204, Loss: 0.9569
+Epoch 3/20 - Train: 1.0147, Val: 0.5563, LR: 0.000946, Time: 4.2s
+  Epoch 4, Batch 0/204, Loss: 1.2565
+  Epoch 4, Batch 50/204, Loss: 0.8741
+  Epoch 4, Batch 100/204, Loss: 0.8956
+  Epoch 4, Batch 150/204, Loss: 1.1057
+  Epoch 4, Batch 200/204, Loss: 1.1908
+Epoch 4/20 - Train: 1.0137, Val: 0.5647, LR: 0.000905, Time: 4.7s
+  Epoch 5, Batch 0/204, Loss: 1.2236
+  Epoch 5, Batch 50/204, Loss: 0.8921
+  Epoch 5, Batch 100/204, Loss: 1.0507
+  Epoch 5, Batch 150/204, Loss: 1.1207
+  Epoch 5, Batch 200/204, Loss: 0.8495
+Epoch 5/20 - Train: 1.0092, Val: 0.5396, LR: 0.000854, Time: 4.8s
+  ✓ 保存最佳模型
+  Epoch 6, Batch 0/204, Loss: 0.7248
+  Epoch 6, Batch 50/204, Loss: 0.9417
+  Epoch 6, Batch 100/204, Loss: 0.9702
+  Epoch 6, Batch 150/204, Loss: 0.8829
+  Epoch 6, Batch 200/204, Loss: 0.9918
+Epoch 6/20 - Train: 1.0034, Val: 0.5454, LR: 0.000794, Time: 5.2s
+  Epoch 7, Batch 0/204, Loss: 1.1599
+  Epoch 7, Batch 50/204, Loss: 0.8931
+  Epoch 7, Batch 100/204, Loss: 0.8915
+  Epoch 7, Batch 150/204, Loss: 0.8685
+  Epoch 7, Batch 200/204, Loss: 0.9893
+Epoch 7/20 - Train: 1.0068, Val: 0.5397, LR: 0.000727, Time: 5.5s
+  Epoch 8, Batch 0/204, Loss: 1.0849
+  Epoch 8, Batch 50/204, Loss: 1.0712
+  Epoch 8, Batch 100/204, Loss: 0.7825
+  Epoch 8, Batch 150/204, Loss: 1.1868
+  Epoch 8, Batch 200/204, Loss: 0.9065
+Epoch 8/20 - Train: 1.0016, Val: 0.5432, LR: 0.000655, Time: 5.1s
+  Epoch 9, Batch 0/204, Loss: 0.9487
+  Epoch 9, Batch 50/204, Loss: 1.1806
+  Epoch 9, Batch 100/204, Loss: 1.0737
+  Epoch 9, Batch 150/204, Loss: 1.0206
+  Epoch 9, Batch 200/204, Loss: 0.8076
+Epoch 9/20 - Train: 0.9962, Val: 0.5458, LR: 0.000578, Time: 5.1s
+  Epoch 10, Batch 0/204, Loss: 0.8973
+  Epoch 10, Batch 50/204, Loss: 0.9600
+  Epoch 10, Batch 100/204, Loss: 1.2966
+  Epoch 10, Batch 150/204, Loss: 1.2339
+  Epoch 10, Batch 200/204, Loss: 0.8460
+Epoch 10/20 - Train: 0.9977, Val: 0.5677, LR: 0.000500, Time: 5.2s
+  Epoch 11, Batch 0/204, Loss: 1.0017
+  Epoch 11, Batch 50/204, Loss: 0.8994
+  Epoch 11, Batch 100/204, Loss: 1.3235
+  Epoch 11, Batch 150/204, Loss: 1.0865
+  Epoch 11, Batch 200/204, Loss: 0.9662
+Epoch 11/20 - Train: 0.9977, Val: 0.5421, LR: 0.000422, Time: 6.2s
+  Epoch 12, Batch 0/204, Loss: 0.9874
+  Epoch 12, Batch 50/204, Loss: 0.6881
+  Epoch 12, Batch 100/204, Loss: 1.1311
+  Epoch 12, Batch 150/204, Loss: 0.9762
+  Epoch 12, Batch 200/204, Loss: 0.8928
+Epoch 12/20 - Train: 0.9942, Val: 0.5413, LR: 0.000345, Time: 7.9s
+  Epoch 13, Batch 0/204, Loss: 1.2811
+  Epoch 13, Batch 50/204, Loss: 0.7254
+  Epoch 13, Batch 100/204, Loss: 1.0901
+  Epoch 13, Batch 150/204, Loss: 1.1570
+  Epoch 13, Batch 200/204, Loss: 1.1652
+Epoch 13/20 - Train: 0.9962, Val: 0.5401, LR: 0.000273, Time: 12.0s
+  Epoch 14, Batch 0/204, Loss: 1.1606
+  Epoch 14, Batch 50/204, Loss: 1.3197
+  Epoch 14, Batch 100/204, Loss: 1.0012
+  Epoch 14, Batch 150/204, Loss: 0.8636
+  Epoch 14, Batch 200/204, Loss: 1.0662
+Epoch 14/20 - Train: 0.9950, Val: 0.5419, LR: 0.000206, Time: 12.0s
+  Epoch 15, Batch 0/204, Loss: 1.0650
+  Epoch 15, Batch 50/204, Loss: 1.0531
+  Epoch 15, Batch 100/204, Loss: 0.9252
+  Epoch 15, Batch 150/204, Loss: 1.1915
+  Epoch 15, Batch 200/204, Loss: 0.7657
+Epoch 15/20 - Train: 0.9922, Val: 0.5448, LR: 0.000146, Time: 12.3s
+  Epoch 16, Batch 0/204, Loss: 0.9252
+  Epoch 16, Batch 50/204, Loss: 1.1638
+  Epoch 16, Batch 100/204, Loss: 0.7652
+  Epoch 16, Batch 150/204, Loss: 1.0782
+  Epoch 16, Batch 200/204, Loss: 0.9986
+Epoch 16/20 - Train: 0.9927, Val: 0.5413, LR: 0.000095, Time: 12.2s
+  Epoch 17, Batch 0/204, Loss: 0.9373
+  Epoch 17, Batch 50/204, Loss: 0.9318
+  Epoch 17, Batch 100/204, Loss: 1.0743
+  Epoch 17, Batch 150/204, Loss: 1.1520
+  Epoch 17, Batch 200/204, Loss: 0.9196
+Epoch 17/20 - Train: 0.9928, Val: 0.5407, LR: 0.000054, Time: 12.1s
+  Epoch 18, Batch 0/204, Loss: 0.7216
+  Epoch 18, Batch 50/204, Loss: 0.8945
+  Epoch 18, Batch 100/204, Loss: 1.2515
+  Epoch 18, Batch 150/204, Loss: 0.8807
+  Epoch 18, Batch 200/204, Loss: 1.3786
+Epoch 18/20 - Train: 0.9913, Val: 0.5418, LR: 0.000024, Time: 12.2s
+  Epoch 19, Batch 0/204, Loss: 0.8600
+  Epoch 19, Batch 50/204, Loss: 1.0476
+  Epoch 19, Batch 100/204, Loss: 0.9077
+  Epoch 19, Batch 150/204, Loss: 0.8142
+  Epoch 19, Batch 200/204, Loss: 1.2449
+Epoch 19/20 - Train: 0.9911, Val: 0.5424, LR: 0.000006, Time: 12.1s
+  Epoch 20, Batch 0/204, Loss: 0.8863
+  Epoch 20, Batch 50/204, Loss: 0.9649
+  Epoch 20, Batch 100/204, Loss: 1.2233
+  Epoch 20, Batch 150/204, Loss: 0.9338
+  Epoch 20, Batch 200/204, Loss: 0.9741
+Epoch 20/20 - Train: 0.9900, Val: 0.5429, LR: 0.000000, Time: 12.5s
+
+训练完成！最佳 Val Loss: 0.5396

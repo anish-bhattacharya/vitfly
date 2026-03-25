@@ -33,6 +33,12 @@ from datetime import datetime
 # 添加模型路径
 sys.path.insert(0, opj(os.path.dirname(os.path.abspath(__file__)), '../../models'))
 from model import DroneMamba
+# VMambaLSTM 导入
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../models"))
+    from vmamba_lstm_model import VMambaLSTMNet
+except ImportError:
+    VMambaLSTMNet = None
 
 
 class DroneMambaEvaluator:
@@ -88,8 +94,17 @@ class DroneMambaEvaluator:
         """加载训练好的模型"""
         print(f"加载模型：{model_path}")
         
-        # 始终使用 Temporal SSM 版本（DroneMamba 默认配置）
-        model = DroneMamba(use_temporal_ssm=True, d_state=8, hidden_size=128)
+        # 根据模型路径判断模型类型
+        if 'VMambaLSTM' in model_path or 'vmamba' in model_path.lower():
+            # VMamba+LSTM 模型
+            if VMambaLSTMNet is None:
+                raise ImportError("VMambaLSTMNet 未导入，请确保 vmamba_lstm_model.py 存在")
+            model = VMambaLSTMNet()
+            print("使用 VMamba+LSTM 架构")
+        else:
+            # DroneMamba 模型
+            model = DroneMamba(use_temporal_ssm=True, d_state=8, hidden_size=128)
+            print("使用 DroneMamba 架构")
         
         # 加载权重
         checkpoint = torch.load(model_path, map_location='cpu', weights_only=True)
@@ -450,7 +465,7 @@ def main():
     parser = argparse.ArgumentParser(description='DroneMamba 仿真评估')
     parser.add_argument('--model_path', type=str, required=True, help='模型权重路径')
     parser.add_argument('--model_type', type=str, default='DroneMamba', 
-                        choices=['DroneMamba', 'DroneMamba_SSM'], help='模型类型')
+                        choices=['DroneMamba', 'DroneMamba_SSM', 'VMambaLSTM'], help='模型类型')
     parser.add_argument('--num_episodes', type=int, default=50, help='评估次数')
     parser.add_argument('--output_dir', type=str, default='results/mamba_eval', help='输出目录')
     parser.add_argument('--timeout', type=int, default=60, help='超时时间 (秒)')

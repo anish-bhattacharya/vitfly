@@ -427,3 +427,52 @@ if __name__ == '__main__':
     model = DroneMamba(use_temporal_ssm=True).float()
     print("DroneMamba (SSM): ")
     print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+
+
+class VMambaLSTMNet(nn.Module):
+    """VMamba + LSTM 架构 (分支 A 最佳模型)"""
+    def __init__(self):
+        super().__init__()
+        # VMamba 视觉编码器
+        self.vmamba_config = {'embed_dim': 64, 'depth': 4, 'd_state': 16, 'output_dim': 512}
+        self.vmamba = self._create_vmamba(self.vmamba_config)
+        
+        # LSTM 时序建模
+        self.lstm = nn.LSTM(input_size=519, hidden_size=128, num_layers=2, dropout=0.1, bias=False)
+        self.fc_out = nn.Linear(128, 3)
+        
+    def _create_vmamba(self, config):
+        # 简化的 VMamba 编码器（实际应从 vmamba_encoder.py 导入）
+        from vmamba_encoder import VMambaEncoder
+        return VMambaEncoder(
+            in_channels=1,
+            embed_dim=config['embed_dim'],
+            depth=config['depth'],
+            d_state=config['d_state'],
+            dropout=0.1,
+            output_dim=config['output_dim']
+        )
+    
+    def forward(self, X, hidden_state=None):
+        # 预处理
+        X = refine_inputs(X)
+        
+        # 视觉编码
+        visual_feat = self.vmamba(X[0])  # (B, 512)
+        
+        # 特征融合
+        fused = torch.cat([visual_feat, X[1]*0.1, X[2]], dim=-1)  # (B, 519)
+        
+        # LSTM
+        if hidden_state is None:
+            fused_seq = fused.unsqueeze(0)
+            output, (h_n, c_n) = self.lstm(fused_seq)
+            output = output.squeeze(0)
+            hidden_state = (h_n, c_n)
+        else:
+            fused_seq = fused.unsqueeze(0)
+            output, hidden_state = self.lstm(fused_seq, hidden_state)
+            output = output.squeeze(0)
+        
+        output = self.fc_out(output)
+        return output, hidden_state

@@ -1,0 +1,315 @@
+
+使用设备: cpu
+
+加载数据...
+[DATALOADER] Loading folder 170743205912, folder # 1/580, time elapsed 0.00s
+[DATALOADER] Extra image found at end of data, cutting it from 170743205912
+[DATALOADER] Number of images and telemetry still do not match in 170743205912, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700369348
+[DATALOADER] Extra image found at end of data, cutting it from 170725978329
+[DATALOADER] Number of images and telemetry still do not match in 170725507255, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700246399
+[DATALOADER] Extra image found at end of data, cutting it from 170725566753
+[DATALOADER] Extra image found at end of data, cutting it from 170726878203
+[DATALOADER] Extra image found at end of data, cutting it from 170726689120
+[DATALOADER] Extra image found at end of data, cutting it from 170700236906
+[DATALOADER] Number of images and telemetry still do not match in 170727078390, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692344508
+[DATALOADER] Extra image found at end of data, cutting it from 170725687425
+[DATALOADER] Number of images and telemetry still do not match in 170725687425, skipping
+[DATALOADER] Number of images and telemetry still do not match in 170699897724, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725532836
+[DATALOADER] Extra image found at end of data, cutting it from 170726473577
+[DATALOADER] Extra image found at end of data, cutting it from 170725631541
+[DATALOADER] Extra image found at end of data, cutting it from 170700346766
+[DATALOADER] Extra image found at end of data, cutting it from 170725403764
+[DATALOADER] Extra image found at end of data, cutting it from 170726131920
+[DATALOADER] Extra image found at end of data, cutting it from 170692602150
+[DATALOADER] Extra image found at end of data, cutting it from 170726723228
+[DATALOADER] Extra image found at end of data, cutting it from 170692670033
+[DATALOADER] Extra image found at end of data, cutting it from 170727028448
+[DATALOADER] Number of images and telemetry still do not match in 170725674343, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725366886
+[DATALOADER] Extra image found at end of data, cutting it from 170726164683
+[DATALOADER] Extra image found at end of data, cutting it from 170692335583
+[DATALOADER] Extra image found at end of data, cutting it from 170726361198
+[DATALOADER] Extra image found at end of data, cutting it from 170700378855
+[DATALOADER] Extra image found at end of data, cutting it from 170726264087
+[DATALOADER] Extra image found at end of data, cutting it from 170726432552
+[DATALOADER] Extra image found at end of data, cutting it from 170702024385
+[DATALOADER] Extra image found at end of data, cutting it from 170725430539
+[DATALOADER] Extra image found at end of data, cutting it from 170702092133
+[DATALOADER] Extra image found at end of data, cutting it from 170727033217
+[DATALOADER] Loading folder 170726289054, folder # 59/580, time elapsed 20.28s
+[DATALOADER] Extra image found at end of data, cutting it from 170692361160
+[DATALOADER] Extra image found at end of data, cutting it from 170700324166
+[DATALOADER] Extra image found at end of data, cutting it from 170725479254
+[DATALOADER] Extra image found at end of data, cutting it from 170726254574
+[DATALOADER] Extra image found at end of data, cutting it from 170700387766
+[DATALOADER] Extra image found at end of data, cutting it from 170726084299
+[DATALOADER] Extra image found at end of data, cutting it from 170726408142
+[DATALOADER] Extra image found at end of data, cutting it from 170743321068
+[DATALOADER] Extra image found at end of data, cutting it from 170726744508
+[DATALOADER] Extra image found at end of data, cutting it from 170725588169
+[DATALOADER] Extra image found at end of data, cutting it from 170726939308
+[DATALOADER] Extra image found at end of data, cutting it from 170726249215
+[DATALOADER] Number of images and telemetry still do not match in 170726249215, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726468225
+[DATALOADER] Number of images and telemetry still do not match in 170726778115, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726969542
+[DATALOADER] Extra image found at end of data, cutting it from 170726244458
+[DATALOADER] Extra image found at end of data, cutting it from 170726436703
+[DATALOADER] Extra image found at end of data, cutting it from 170726217679
+[DATALOADER] Extra image found at end of data, cutting it from 170692579559
+[DATALOADER] Extra image found at end of data, cutting it from 170726893003
+[DATALOADER] Number of images and telemetry still do not match in 170726893003, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692341541
+[DATALOADER] Extra image found at end of data, cutting it from 170699814715
+[DATALOADER] Extra image found at end of data, cutting it from 170726801133
+[DATALOADER] Number of images and telemetry still do not match in 170726801133, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692610493
+[DATALOADER] Extra image found at end of data, cutting it from 170726985004
+[DATALOADER] Extra image found at end of data, cutting it from 170725517367
+[DATALOADER] Extra image found at end of data, cutting it from 170692323673
+[DATALOADER] Extra image found at end of data, cutting it from 170725231234
+[DATALOADER] Extra image found at end of data, cutting it from 170692434420
+[DATALOADER] Extra image found at end of data, cutting it from 170726492010
+[DATALOADER] Extra image found at end of data, cutting it from 170699842543
+[DATALOADER] Extra image found at end of data, cutting it from 170725988431
+[DATALOADER] Number of images and telemetry still do not match in 170727083727, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170702446827
+[DATALOADER] Loading folder 170726159942, folder # 117/580, time elapsed 39.95s
+[DATALOADER] Extra image found at end of data, cutting it from 170725355596
+[DATALOADER] Extra image found at end of data, cutting it from 170726197429
+[DATALOADER] Extra image found at end of data, cutting it from 170726351079
+[DATALOADER] Extra image found at end of data, cutting it from 170702071938
+[DATALOADER] Number of images and telemetry still do not match in 170702071938, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170699798770
+[DATALOADER] Number of images and telemetry still do not match in 170702576255, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170699919107
+[DATALOADER] Extra image found at end of data, cutting it from 170699900103
+[DATALOADER] Extra image found at end of data, cutting it from 170702020245
+[DATALOADER] Extra image found at end of data, cutting it from 170702553098
+[DATALOADER] Extra image found at end of data, cutting it from 170743158249
+[DATALOADER] Number of images and telemetry still do not match in 170743158249, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700392515
+[DATALOADER] Number of images and telemetry still do not match in 170700392515, skipping
+[DATALOADER] Number of images and telemetry still do not match in 170743105421, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700419247
+[DATALOADER] Extra image found at end of data, cutting it from 170726178984
+[DATALOADER] Extra image found at end of data, cutting it from 170726278957
+[DATALOADER] Extra image found at end of data, cutting it from 170725337161
+[DATALOADER] Number of images and telemetry still do not match in 170725171769, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725863161
+[DATALOADER] Extra image found at end of data, cutting it from 170692413556
+[DATALOADER] Extra image found at end of data, cutting it from 170726795076
+[DATALOADER] Extra image found at end of data, cutting it from 170725409726
+[DATALOADER] Extra image found at end of data, cutting it from 170726174211
+[DATALOADER] Extra image found at end of data, cutting it from 170726694586
+[DATALOADER] Number of images and telemetry still do not match in 170726694586, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692355205
+[DATALOADER] Extra image found at end of data, cutting it from 170702010728
+[DATALOADER] Extra image found at end of data, cutting it from 170727068279
+[DATALOADER] Number of images and telemetry still do not match in 170727068279, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726999275
+[DATALOADER] Number of images and telemetry still do not match in 170726999275, skipping
+[DATALOADER] Number of images and telemetry still do not match in 170727054032, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700356261
+[DATALOADER] Number of images and telemetry still do not match in 170700356261, skipping
+[DATALOADER] Loading folder 170692338554, folder # 175/580, time elapsed 62.23s
+[DATALOADER] Extra image found at end of data, cutting it from 170692338554
+[DATALOADER] Extra image found at end of data, cutting it from 170726106923
+[DATALOADER] Extra image found at end of data, cutting it from 170726974308
+[DATALOADER] Number of images and telemetry still do not match in 170726974308, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700279060
+[DATALOADER] Extra image found at end of data, cutting it from 170726958902
+[DATALOADER] Extra image found at end of data, cutting it from 170692612875
+[DATALOADER] Extra image found at end of data, cutting it from 170700241053
+[DATALOADER] Extra image found at end of data, cutting it from 170727048088
+[DATALOADER] Number of images and telemetry still do not match in 170727048088, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725554855
+[DATALOADER] Extra image found at end of data, cutting it from 170725993189
+[DATALOADER] Extra image found at end of data, cutting it from 170692375422
+[DATALOADER] Extra image found at end of data, cutting it from 170725681475
+[DATALOADER] Number of images and telemetry still do not match in 170726506306, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726323620
+[DATALOADER] Extra image found at end of data, cutting it from 170726949382
+[DATALOADER] Extra image found at end of data, cutting it from 170692587275
+[DATALOADER] Extra image found at end of data, cutting it from 170700360435
+[DATALOADER] Extra image found at end of data, cutting it from 170725814468
+[DATALOADER] Extra image found at end of data, cutting it from 170726497392
+[DATALOADER] Extra image found at end of data, cutting it from 170743072172
+[DATALOADER] Extra image found at end of data, cutting it from 170743267611
+[DATALOADER] Number of images and telemetry still do not match in 170743267611, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725343691
+[DATALOADER] Extra image found at end of data, cutting it from 170699892982
+[DATALOADER] Extra image found at end of data, cutting it from 170726852651
+[DATALOADER] Number of images and telemetry still do not match in 170726852651, skipping
+[DATALOADER] Number of images and telemetry still do not match in 170726838397, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170743236749
+[DATALOADER] Extra image found at end of data, cutting it from 170725277072
+[DATALOADER] Extra image found at end of data, cutting it from 170725204479
+[DATALOADER] Extra image found at end of data, cutting it from 170726027139
+[DATALOADER] Extra image found at end of data, cutting it from 170726677554
+[DATALOADER] Number of images and telemetry still do not match in 170726749357, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692584317
+[DATALOADER] Extra image found at end of data, cutting it from 170726183734
+[DATALOADER] Extra image found at end of data, cutting it from 170726403391
+[DATALOADER] Extra image found at end of data, cutting it from 170726239690
+[DATALOADER] Number of images and telemetry still do not match in 170726239690, skipping
+[DATALOADER] Loading folder 170725636293, folder # 233/580, time elapsed 84.63s
+[DATALOADER] Extra image found at end of data, cutting it from 170725636293
+[DATALOADER] Number of images and telemetry still do not match in 170725560804, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700319413
+[DATALOADER] Extra image found at end of data, cutting it from 170699929218
+[DATALOADER] Extra image found at end of data, cutting it from 170700218481
+[DATALOADER] Number of images and telemetry still do not match in 170726913196, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700208213
+[DATALOADER] Extra image found at end of data, cutting it from 170692551638
+[DATALOADER] Extra image found at end of data, cutting it from 170699931609
+[DATALOADER] Extra image found at end of data, cutting it from 170727004041
+[DATALOADER] Extra image found at end of data, cutting it from 170725538780
+[DATALOADER] Extra image found at end of data, cutting it from 170699853233
+[DATALOADER] Extra image found at end of data, cutting it from 170726824138
+[DATALOADER] Number of images and telemetry still do not match in 170726824138, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170743242707
+[DATALOADER] Number of images and telemetry still do not match in 170743242707, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692432019
+[DATALOADER] Number of images and telemetry still do not match in 170726511097, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726318860
+[DATALOADER] Extra image found at end of data, cutting it from 170726755565
+[DATALOADER] Number of images and telemetry still do not match in 170726755565, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726995115
+[DATALOADER] Extra image found at end of data, cutting it from 170700227997
+[DATALOADER] Extra image found at end of data, cutting it from 170692592652
+[DATALOADER] Extra image found at end of data, cutting it from 170725183055
+[DATALOADER] Extra image found at end of data, cutting it from 170699933982
+[DATALOADER] Extra image found at end of data, cutting it from 170726314091
+[DATALOADER] Number of images and telemetry still do not match in 170702014887, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726862746
+[DATALOADER] Number of images and telemetry still do not match in 170726862746, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700423994
+[DATALOADER] Extra image found at end of data, cutting it from 170726979646
+[DATALOADER] Number of images and telemetry still do not match in 170726842541, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725647575
+[DATALOADER] Loading folder 170692607521, folder # 291/580, time elapsed 103.92s
+[DATALOADER] Extra image found at end of data, cutting it from 170725664235
+[DATALOADER] Extra image found at end of data, cutting it from 170726007494
+[DATALOADER] Extra image found at end of data, cutting it from 170743315715
+[DATALOADER] Number of images and telemetry still do not match in 170743315715, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726080166
+[DATALOADER] Extra image found at end of data, cutting it from 170692416519
+[DATALOADER] Extra image found at end of data, cutting it from 170726059362
+[DATALOADER] Number of images and telemetry still do not match in 170726059362, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170702501453
+[DATALOADER] Number of images and telemetry still do not match in 170702501453, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726887690
+[DATALOADER] Number of images and telemetry still do not match in 170727073640, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726299189
+[DATALOADER] Extra image found at end of data, cutting it from 170692397470
+[DATALOADER] Extra image found at end of data, cutting it from 170692455831
+[DATALOADER] Number of images and telemetry still do not match in 170743211265, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170702066582
+[DATALOADER] Extra image found at end of data, cutting it from 170726053966
+[DATALOADER] Number of images and telemetry still do not match in 170726053966, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170743117887
+[DATALOADER] Extra image found at end of data, cutting it from 170692453451
+[DATALOADER] Extra image found at end of data, cutting it from 170702057070
+[DATALOADER] Extra image found at end of data, cutting it from 170699871611
+[DATALOADER] Number of images and telemetry still do not match in 170702562000, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725441209
+[DATALOADER] Extra image found at end of data, cutting it from 170692562331
+[DATALOADER] Extra image found at end of data, cutting it from 170726303376
+[DATALOADER] Extra image found at end of data, cutting it from 170726122376
+[DATALOADER] Extra image found at end of data, cutting it from 170743284845
+[DATALOADER] Number of images and telemetry still do not match in 170743284845, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170699855611
+[DATALOADER] Extra image found at end of data, cutting it from 170725715402
+[DATALOADER] Extra image found at end of data, cutting it from 170743144003
+[DATALOADER] Number of images and telemetry still do not match in 170743249220, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692410562
+[DATALOADER] Extra image found at end of data, cutting it from 170726520014
+[DATALOADER] Loading folder 170725841776, folder # 349/580, time elapsed 125.28s
+[DATALOADER] Extra image found at end of data, cutting it from 170725841776
+[DATALOADER] Extra image found at end of data, cutting it from 170726868099
+[DATALOADER] Number of images and telemetry still do not match in 170726412873, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700328313
+[DATALOADER] Extra image found at end of data, cutting it from 170726445644
+[DATALOADER] Extra image found at end of data, cutting it from 170692535018
+[DATALOADER] Extra image found at end of data, cutting it from 170702509743
+[DATALOADER] Extra image found at end of data, cutting it from 170725266365
+[DATALOADER] Extra image found at end of data, cutting it from 170702475946
+[DATALOADER] Extra image found at end of data, cutting it from 170743123829
+[DATALOADER] Extra image found at end of data, cutting it from 170726022382
+[DATALOADER] Number of images and telemetry still do not match in 170726022382, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725856033
+[DATALOADER] Extra image found at end of data, cutting it from 170726207541
+[DATALOADER] Extra image found at end of data, cutting it from 170726454556
+[DATALOADER] Number of images and telemetry still do not match in 170726739038, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725668987
+[DATALOADER] Extra image found at end of data, cutting it from 170725309222
+[DATALOADER] Extra image found at end of data, cutting it from 170692408193
+[DATALOADER] Number of images and telemetry still do not match in 170726071279, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692436812
+[DATALOADER] Extra image found at end of data, cutting it from 170726812669
+[DATALOADER] Number of images and telemetry still do not match in 170726812669, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170699869244
+[DATALOADER] Extra image found at end of data, cutting it from 170692391515
+[DATALOADER] Extra image found at end of data, cutting it from 170700255883
+[DATALOADER] Extra image found at end of data, cutting it from 170692326650
+[DATALOADER] Extra image found at end of data, cutting it from 170726954134
+[DATALOADER] Extra image found at end of data, cutting it from 170725501908
+[DATALOADER] Extra image found at end of data, cutting it from 170725304466
+[DATALOADER] Extra image found at end of data, cutting it from 170726934574
+[DATALOADER] Extra image found at end of data, cutting it from 170726283699
+[DATALOADER] Loading folder 170699801689, folder # 407/580, time elapsed 145.47s
+[DATALOADER] Extra image found at end of data, cutting it from 170699801689
+[DATALOADER] Extra image found at end of data, cutting it from 170725527463
+[DATALOADER] Extra image found at end of data, cutting it from 170726273618
+[DATALOADER] Extra image found at end of data, cutting it from 170700232744
+[DATALOADER] Extra image found at end of data, cutting it from 170725577457
+[DATALOADER] Extra image found at end of data, cutting it from 170692467197
+[DATALOADER] Extra image found at end of data, cutting it from 170725236576
+[DATALOADER] Extra image found at end of data, cutting it from 170725220546
+[DATALOADER] Number of images and telemetry still do not match in 170726761024, skipping
+[DATALOADER] Number of images and telemetry still do not match in 170702513896, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700222636
+[DATALOADER] Extra image found at end of data, cutting it from 170692475538
+[DATALOADER] Extra image found at end of data, cutting it from 170700333084
+[DATALOADER] Extra image found at end of data, cutting it from 170725622069
+[DATALOADER] Extra image found at end of data, cutting it from 170726882938
+[DATALOADER] Number of images and telemetry still do not match in 170726882938, skipping
+[DATALOADER] Number of images and telemetry still do not match in 170699909594, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726127157
+[DATALOADER] Extra image found at end of data, cutting it from 170725321119
+[DATALOADER] Number of images and telemetry still do not match in 170725828715, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726043239
+[DATALOADER] Number of images and telemetry still do not match in 170726043239, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726458724
+[DATALOADER] Number of images and telemetry still do not match in 170726458724, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725373433
+[DATALOADER] Extra image found at end of data, cutting it from 170699890625
+[DATALOADER] Number of images and telemetry still do not match in 170727088467, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726450394
+[DATALOADER] Extra image found at end of data, cutting it from 170702004765
+[DATALOADER] Number of images and telemetry still do not match in 170702004765, skipping
+[DATALOADER] Number of images and telemetry still do not match in 170743255138, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725495945
+[DATALOADER] Extra image found at end of data, cutting it from 170702097491
+[DATALOADER] Extra image found at end of data, cutting it from 170726234364
+[DATALOADER] Extra image found at end of data, cutting it from 170727023088
+[DATALOADER] Extra image found at end of data, cutting it from 170725582221
+[DATALOADER] Extra image found at end of data, cutting it from 170692472528
+[DATALOADER] Extra image found at end of data, cutting it from 170726427777
+[DATALOADER] Extra image found at end of data, cutting it from 170692369465
+[DATALOADER] Extra image found at end of data, cutting it from 170726136699
+[DATALOADER] Extra image found at end of data, cutting it from 170725198540
+[DATALOADER] Number of images and telemetry still do not match in 170725198540, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725242543
+[DATALOADER] Extra image found at end of data, cutting it from 170692570022
+[DATALOADER] Extra image found at end of data, cutting it from 170700383606
+[DATALOADER] Extra image found at end of data, cutting it from 170702037462
+[DATALOADER] Extra image found at end of data, cutting it from 170725457863
+[DATALOADER] Loading folder 170743196869, folder # 465/580, time elapsed 170.51s
+[DATALOADER] Number of images and telemetry still do not match in 170743196869, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170702452193

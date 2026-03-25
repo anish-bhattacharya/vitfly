@@ -1,0 +1,611 @@
+
+使用设备：cuda
+
+加载数据...
+[DATALOADER] Loading folder 170743205912, folder # 1/100, time elapsed 0.00s
+[DATALOADER] Extra image found at end of data, cutting it from 170743205912
+[DATALOADER] Number of images and telemetry still do not match in 170743205912, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700369348
+[DATALOADER] Extra image found at end of data, cutting it from 170725978329
+[DATALOADER] Number of images and telemetry still do not match in 170725507255, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170700246399
+[DATALOADER] Loading folder 170725566753, folder # 11/100, time elapsed 6.22s
+[DATALOADER] Extra image found at end of data, cutting it from 170725566753
+[DATALOADER] Extra image found at end of data, cutting it from 170726878203
+[DATALOADER] Extra image found at end of data, cutting it from 170726689120
+[DATALOADER] Extra image found at end of data, cutting it from 170700236906
+[DATALOADER] Number of images and telemetry still do not match in 170727078390, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692344508
+[DATALOADER] Extra image found at end of data, cutting it from 170725687425
+[DATALOADER] Number of images and telemetry still do not match in 170725687425, skipping
+[DATALOADER] Loading folder 170699897724, folder # 21/100, time elapsed 12.23s
+[DATALOADER] Number of images and telemetry still do not match in 170699897724, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725532836
+[DATALOADER] Extra image found at end of data, cutting it from 170726473577
+[DATALOADER] Extra image found at end of data, cutting it from 170725631541
+[DATALOADER] Extra image found at end of data, cutting it from 170700346766
+[DATALOADER] Extra image found at end of data, cutting it from 170725403764
+[DATALOADER] Extra image found at end of data, cutting it from 170726131920
+[DATALOADER] Loading folder 170725293151, folder # 31/100, time elapsed 16.76s
+[DATALOADER] Extra image found at end of data, cutting it from 170692602150
+[DATALOADER] Extra image found at end of data, cutting it from 170726723228
+[DATALOADER] Extra image found at end of data, cutting it from 170692670033
+[DATALOADER] Extra image found at end of data, cutting it from 170727028448
+[DATALOADER] Number of images and telemetry still do not match in 170725674343, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170725366886
+[DATALOADER] Extra image found at end of data, cutting it from 170726164683
+[DATALOADER] Loading folder 170725419842, folder # 41/100, time elapsed 22.67s
+[DATALOADER] Extra image found at end of data, cutting it from 170692335583
+[DATALOADER] Extra image found at end of data, cutting it from 170726361198
+[DATALOADER] Extra image found at end of data, cutting it from 170700378855
+[DATALOADER] Loading folder 170726264087, folder # 51/100, time elapsed 28.91s
+[DATALOADER] Extra image found at end of data, cutting it from 170726264087
+[DATALOADER] Extra image found at end of data, cutting it from 170726432552
+[DATALOADER] Extra image found at end of data, cutting it from 170702024385
+[DATALOADER] Extra image found at end of data, cutting it from 170725430539
+[DATALOADER] Extra image found at end of data, cutting it from 170702092133
+[DATALOADER] Extra image found at end of data, cutting it from 170727033217
+[DATALOADER] Extra image found at end of data, cutting it from 170692361160
+[DATALOADER] Loading folder 170700324166, folder # 61/100, time elapsed 33.90s
+[DATALOADER] Extra image found at end of data, cutting it from 170700324166
+[DATALOADER] Extra image found at end of data, cutting it from 170725479254
+[DATALOADER] Extra image found at end of data, cutting it from 170726254574
+[DATALOADER] Extra image found at end of data, cutting it from 170700387766
+[DATALOADER] Extra image found at end of data, cutting it from 170726084299
+[DATALOADER] Loading folder 170726408142, folder # 71/100, time elapsed 39.17s
+[DATALOADER] Extra image found at end of data, cutting it from 170726408142
+[DATALOADER] Extra image found at end of data, cutting it from 170743321068
+[DATALOADER] Extra image found at end of data, cutting it from 170726744508
+[DATALOADER] Extra image found at end of data, cutting it from 170725588169
+[DATALOADER] Extra image found at end of data, cutting it from 170726939308
+[DATALOADER] Extra image found at end of data, cutting it from 170726249215
+[DATALOADER] Number of images and telemetry still do not match in 170726249215, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170726468225
+[DATALOADER] Number of images and telemetry still do not match in 170726778115, skipping
+[DATALOADER] Loading folder 170726969542, folder # 81/100, time elapsed 46.09s
+[DATALOADER] Extra image found at end of data, cutting it from 170726969542
+[DATALOADER] Extra image found at end of data, cutting it from 170726244458
+[DATALOADER] Extra image found at end of data, cutting it from 170726436703
+[DATALOADER] Extra image found at end of data, cutting it from 170726217679
+[DATALOADER] Extra image found at end of data, cutting it from 170692579559
+[DATALOADER] Extra image found at end of data, cutting it from 170726893003
+[DATALOADER] Number of images and telemetry still do not match in 170726893003, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692341541
+[DATALOADER] Loading folder 170699814715, folder # 91/100, time elapsed 51.60s
+[DATALOADER] Extra image found at end of data, cutting it from 170699814715
+[DATALOADER] Extra image found at end of data, cutting it from 170726801133
+[DATALOADER] Number of images and telemetry still do not match in 170726801133, skipping
+[DATALOADER] Extra image found at end of data, cutting it from 170692610493
+[DATALOADER] Extra image found at end of data, cutting it from 170726985004
+[DATALOADER] Extra image found at end of data, cutting it from 170725517367
+10 2848
+0 0
+[ANALYZER] Analyzing the data....
+训练集：13023, 验证集：3104
+
+创建模型...
+参数量：552,579 (VMamba: 222,208, SSM: 329,984)
+
+开始训练 (50 epochs)...
+  Epoch 1, Batch 0/407, Loss: 12584721842176.0000
+  Epoch 1, Batch 50/407, Loss: 218707836928.0000
+  Epoch 1, Batch 100/407, Loss: 9160399872.0000
+  Epoch 1, Batch 150/407, Loss: 17626607616.0000
+  Epoch 1, Batch 200/407, Loss: 2504719360.0000
+  Epoch 1, Batch 250/407, Loss: 1583753216.0000
+  Epoch 1, Batch 300/407, Loss: 1023865472.0000
+  Epoch 1, Batch 350/407, Loss: 403628288.0000
+  Epoch 1, Batch 400/407, Loss: 179214384.0000
+Epoch 1/50 - Train: 1637633208578.4644, Val: 17996768.8454, LR: 0.003996, Time: 67.1s
+  ✓ 保存最佳模型 (Val=17996768.8454)
+  Epoch 2, Batch 0/407, Loss: 17997898.0000
+  Epoch 2, Batch 50/407, Loss: 9658474496.0000
+  Epoch 2, Batch 100/407, Loss: 422688832.0000
+  Epoch 2, Batch 150/407, Loss: 2521313280.0000
+  Epoch 2, Batch 200/407, Loss: 405068800.0000
+  Epoch 2, Batch 250/407, Loss: 55682224.0000
+  Epoch 2, Batch 300/407, Loss: 98873664.0000
+  Epoch 2, Batch 350/407, Loss: 102408672.0000
+  Epoch 2, Batch 400/407, Loss: 103183248.0000
+Epoch 2/50 - Train: 890566106.2113, Val: 250040453.4433, LR: 0.003984, Time: 67.0s
+  Epoch 3, Batch 0/407, Loss: 250047840.0000
+  Epoch 3, Batch 50/407, Loss: 6818942.0000
+  Epoch 3, Batch 100/407, Loss: 948692672.0000
+  Epoch 3, Batch 150/407, Loss: 708415424.0000
+  Epoch 3, Batch 200/407, Loss: 1470877056.0000
+  Epoch 3, Batch 250/407, Loss: 22463584.0000
+  Epoch 3, Batch 300/407, Loss: 860063104.0000
+  Epoch 3, Batch 350/407, Loss: 235729760.0000
+  Epoch 3, Batch 400/407, Loss: 509064320.0000
+Epoch 3/50 - Train: 617748488.6434, Val: 524649771.2165, LR: 0.003965, Time: 80.0s
+  Epoch 4, Batch 0/407, Loss: 524677216.0000
+  Epoch 4, Batch 50/407, Loss: 452241920.0000
+  Epoch 4, Batch 100/407, Loss: 989841088.0000
+  Epoch 4, Batch 150/407, Loss: 266087424.0000
+  Epoch 4, Batch 200/407, Loss: 89874432.0000
+  Epoch 4, Batch 250/407, Loss: 1109531.0000
+  Epoch 4, Batch 300/407, Loss: 84427744.0000
+  Epoch 4, Batch 350/407, Loss: 74842112.0000
+  Epoch 4, Batch 400/407, Loss: 195524704.0000
+Epoch 4/50 - Train: 320437934.6880, Val: 46643058.3093, LR: 0.003937, Time: 73.5s
+  Epoch 5, Batch 0/407, Loss: 46643544.0000
+  Epoch 5, Batch 50/407, Loss: 19937982.0000
+  Epoch 5, Batch 100/407, Loss: 35572656.0000
+  Epoch 5, Batch 150/407, Loss: 66245656.0000
+  Epoch 5, Batch 200/407, Loss: 71089016.0000
+  Epoch 5, Batch 250/407, Loss: 343896128.0000
+  Epoch 5, Batch 300/407, Loss: 193087968.0000
+  Epoch 5, Batch 350/407, Loss: 623108608.0000
+  Epoch 5, Batch 400/407, Loss: 31217168.0000
+Epoch 5/50 - Train: 308151018.5703, Val: 201803922.8041, LR: 0.003902, Time: 113.6s
+  Epoch 6, Batch 0/407, Loss: 201808128.0000
+  Epoch 6, Batch 50/407, Loss: 350872096.0000
+  Epoch 6, Batch 100/407, Loss: 330534880.0000
+  Epoch 6, Batch 150/407, Loss: 362049280.0000
+  Epoch 6, Batch 200/407, Loss: 143269664.0000
+  Epoch 6, Batch 250/407, Loss: 14533224.0000
+  Epoch 6, Batch 300/407, Loss: 161787008.0000
+  Epoch 6, Batch 350/407, Loss: 57882968.0000
+  Epoch 6, Batch 400/407, Loss: 141006240.0000
+Epoch 6/50 - Train: 644206013.2985, Val: 2210560166.2680, LR: 0.003860, Time: 91.6s
+  Epoch 7, Batch 0/407, Loss: 2210591232.0000
+  Epoch 7, Batch 50/407, Loss: 4204676.0000
+  Epoch 7, Batch 100/407, Loss: 159861632.0000
+  Epoch 7, Batch 150/407, Loss: 80970688.0000
+  Epoch 7, Batch 200/407, Loss: 1696918784.0000
+  Epoch 7, Batch 250/407, Loss: 922154688.0000
+  Epoch 7, Batch 300/407, Loss: 68651360.0000
+  Epoch 7, Batch 350/407, Loss: 74664192.0000
+  Epoch 7, Batch 400/407, Loss: 243668064.0000
+Epoch 7/50 - Train: 247822935.2196, Val: 44442908.0412, LR: 0.003810, Time: 63.0s
+  Epoch 8, Batch 0/407, Loss: 44448324.0000
+  Epoch 8, Batch 50/407, Loss: 40940544.0000
+  Epoch 8, Batch 100/407, Loss: 512113984.0000
+  Epoch 8, Batch 150/407, Loss: 101823896.0000
+  Epoch 8, Batch 200/407, Loss: 840679296.0000
+  Epoch 8, Batch 250/407, Loss: 464190048.0000
+  Epoch 8, Batch 300/407, Loss: 20288992.0000
+  Epoch 8, Batch 350/407, Loss: 25683304.0000
+  Epoch 8, Batch 400/407, Loss: 86835808.0000
+Epoch 8/50 - Train: 542783955.0141, Val: 113668030.3505, LR: 0.003753, Time: 67.2s
+  Epoch 9, Batch 0/407, Loss: 113668080.0000
+  Epoch 9, Batch 50/407, Loss: 213329120.0000
+  Epoch 9, Batch 100/407, Loss: 95271584.0000
+  Epoch 9, Batch 150/407, Loss: 2690082.7500
+  Epoch 9, Batch 200/407, Loss: 106778096.0000
+  Epoch 9, Batch 250/407, Loss: 169112192.0000
+  Epoch 9, Batch 300/407, Loss: 1358311424.0000
+  Epoch 9, Batch 350/407, Loss: 94158320.0000
+  Epoch 9, Batch 400/407, Loss: 68718456.0000
+Epoch 9/50 - Train: 426864137.5574, Val: 535562464.6598, LR: 0.003689, Time: 52.4s
+  Epoch 10, Batch 0/407, Loss: 535560576.0000
+  Epoch 10, Batch 50/407, Loss: 64421840.0000
+  Epoch 10, Batch 100/407, Loss: 90048952.0000
+  Epoch 10, Batch 150/407, Loss: 70577728.0000
+  Epoch 10, Batch 200/407, Loss: 28763006.0000
+  Epoch 10, Batch 250/407, Loss: 203106688.0000
+  Epoch 10, Batch 300/407, Loss: 220227104.0000
+  Epoch 10, Batch 350/407, Loss: 392480384.0000
+  Epoch 10, Batch 400/407, Loss: 59322624.0000
+Epoch 10/50 - Train: 184136736.1143, Val: 95287646.8454, LR: 0.003618, Time: 67.6s
+  Epoch 11, Batch 0/407, Loss: 95288896.0000
+  Epoch 11, Batch 50/407, Loss: 152554816.0000
+  Epoch 11, Batch 100/407, Loss: 268893312.0000
+  Epoch 11, Batch 150/407, Loss: 364790784.0000
+  Epoch 11, Batch 200/407, Loss: 75649504.0000
+  Epoch 11, Batch 250/407, Loss: 40890936.0000
+  Epoch 11, Batch 300/407, Loss: 24831404.0000
+  Epoch 11, Batch 350/407, Loss: 17793244.0000
+  Epoch 11, Batch 400/407, Loss: 32523796.0000
+Epoch 11/50 - Train: 401828992.8526, Val: 28892221.6289, LR: 0.003541, Time: 55.7s
+  Epoch 12, Batch 0/407, Loss: 28891860.0000
+  Epoch 12, Batch 50/407, Loss: 504924480.0000
+  Epoch 12, Batch 100/407, Loss: 173156896.0000
+  Epoch 12, Batch 150/407, Loss: 347614176.0000
+  Epoch 12, Batch 200/407, Loss: 153242016.0000
+  Epoch 12, Batch 250/407, Loss: 272379008.0000
+  Epoch 12, Batch 300/407, Loss: 229663792.0000
+  Epoch 12, Batch 350/407, Loss: 5907949.0000
+  Epoch 12, Batch 400/407, Loss: 121826520.0000
+Epoch 12/50 - Train: 267176759.0046, Val: 88994912.9897, LR: 0.003458, Time: 65.1s
+  Epoch 13, Batch 0/407, Loss: 88996080.0000
+  Epoch 13, Batch 50/407, Loss: 551087744.0000
+  Epoch 13, Batch 100/407, Loss: 1197103488.0000
+  Epoch 13, Batch 150/407, Loss: 19643164.0000
+  Epoch 13, Batch 200/407, Loss: 167638320.0000
+  Epoch 13, Batch 250/407, Loss: 463838432.0000
+  Epoch 13, Batch 300/407, Loss: 54278620.0000
+  Epoch 13, Batch 350/407, Loss: 14240246.0000
+  Epoch 13, Batch 400/407, Loss: 108508632.0000
+Epoch 13/50 - Train: 318985369.6717, Val: 92246413.3608, LR: 0.003369, Time: 55.7s
+  Epoch 14, Batch 0/407, Loss: 92245664.0000
+  Epoch 14, Batch 50/407, Loss: 71365936.0000
+  Epoch 14, Batch 100/407, Loss: 327114080.0000
+  Epoch 14, Batch 150/407, Loss: 72710688.0000
+  Epoch 14, Batch 200/407, Loss: 946509760.0000
+  Epoch 14, Batch 250/407, Loss: 35786736.0000
+  Epoch 14, Batch 300/407, Loss: 2303303168.0000
+  Epoch 14, Batch 350/407, Loss: 15725747.0000
+  Epoch 14, Batch 400/407, Loss: 2970177024.0000
+Epoch 14/50 - Train: 618006610.2010, Val: 180449624.4124, LR: 0.003275, Time: 54.6s
+  Epoch 15, Batch 0/407, Loss: 180451520.0000
+  Epoch 15, Batch 50/407, Loss: 10506560.0000
+  Epoch 15, Batch 100/407, Loss: 58004776.0000
+  Epoch 15, Batch 150/407, Loss: 10052961.0000
+  Epoch 15, Batch 200/407, Loss: 154706624.0000
+  Epoch 15, Batch 250/407, Loss: 159986752.0000
+  Epoch 15, Batch 300/407, Loss: 17431206.0000
+  Epoch 15, Batch 350/407, Loss: 418582720.0000
+  Epoch 15, Batch 400/407, Loss: 30059840.0000
+Epoch 15/50 - Train: 97858278.6896, Val: 55761493.9381, LR: 0.003176, Time: 53.0s
+  Epoch 16, Batch 0/407, Loss: 55760216.0000
+  Epoch 16, Batch 50/407, Loss: 29052438.0000
+  Epoch 16, Batch 100/407, Loss: 175750208.0000
+  Epoch 16, Batch 150/407, Loss: 83556080.0000
+  Epoch 16, Batch 200/407, Loss: 33134448.0000
+  Epoch 16, Batch 250/407, Loss: 212364928.0000
+  Epoch 16, Batch 300/407, Loss: 7802116.0000
+  Epoch 16, Batch 350/407, Loss: 14572479.0000
+  Epoch 16, Batch 400/407, Loss: 30420960.0000
+Epoch 16/50 - Train: 79638056.9191, Val: 139206176.8247, LR: 0.003072, Time: 56.7s
+  Epoch 17, Batch 0/407, Loss: 139206880.0000
+  Epoch 17, Batch 50/407, Loss: 24841180.0000
+  Epoch 17, Batch 100/407, Loss: 3266494.0000
+  Epoch 17, Batch 150/407, Loss: 115672624.0000
+  Epoch 17, Batch 200/407, Loss: 6960767.0000
+  Epoch 17, Batch 250/407, Loss: 77009520.0000
+  Epoch 17, Batch 300/407, Loss: 143780768.0000
+  Epoch 17, Batch 350/407, Loss: 96153112.0000
+  Epoch 17, Batch 400/407, Loss: 5228184.0000
+Epoch 17/50 - Train: 63552807.4651, Val: 4015632.5129, LR: 0.002964, Time: 54.9s
+  ✓ 保存最佳模型 (Val=4015632.5129)
+  Epoch 18, Batch 0/407, Loss: 4015849.0000
+  Epoch 18, Batch 50/407, Loss: 58769048.0000
+  Epoch 18, Batch 100/407, Loss: 4785516.0000
+  Epoch 18, Batch 150/407, Loss: 61285116.0000
+  Epoch 18, Batch 200/407, Loss: 29315392.0000
+  Epoch 18, Batch 250/407, Loss: 98200592.0000
+  Epoch 18, Batch 300/407, Loss: 22036080.0000
+  Epoch 18, Batch 350/407, Loss: 1523561.8750
+  Epoch 18, Batch 400/407, Loss: 22556294.0000
+Epoch 18/50 - Train: 59085512.9433, Val: 406760332.8660, LR: 0.002852, Time: 55.2s
+  Epoch 19, Batch 0/407, Loss: 406776768.0000
+  Epoch 19, Batch 50/407, Loss: 50871984.0000
+  Epoch 19, Batch 100/407, Loss: 65183608.0000
+  Epoch 19, Batch 150/407, Loss: 55980736.0000
+  Epoch 19, Batch 200/407, Loss: 94143920.0000
+  Epoch 19, Batch 250/407, Loss: 5332553.0000
+  Epoch 19, Batch 300/407, Loss: 86694240.0000
+  Epoch 19, Batch 350/407, Loss: 176078848.0000
+  Epoch 19, Batch 400/407, Loss: 28121784.0000
+Epoch 19/50 - Train: 62236314.5114, Val: 356759237.9381, LR: 0.002736, Time: 53.3s
+  Epoch 20, Batch 0/407, Loss: 356769696.0000
+  Epoch 20, Batch 50/407, Loss: 4089062.5000
+  Epoch 20, Batch 100/407, Loss: 233998976.0000
+  Epoch 20, Batch 150/407, Loss: 11722908.0000
+  Epoch 20, Batch 200/407, Loss: 1284095232.0000
+  Epoch 20, Batch 250/407, Loss: 111539640.0000
+  Epoch 20, Batch 300/407, Loss: 16381371.0000
+  Epoch 20, Batch 350/407, Loss: 34094712.0000
+  Epoch 20, Batch 400/407, Loss: 1459639296.0000
+Epoch 20/50 - Train: 224654958.6358, Val: 687774491.7113, LR: 0.002618, Time: 81.5s
+  Epoch 21, Batch 0/407, Loss: 687811008.0000
+  Epoch 21, Batch 50/407, Loss: 202861232.0000
+  Epoch 21, Batch 100/407, Loss: 7792274.0000
+  Epoch 21, Batch 150/407, Loss: 34105288.0000
+  Epoch 21, Batch 200/407, Loss: 3063154.0000
+  Epoch 21, Batch 250/407, Loss: 128916992.0000
+  Epoch 21, Batch 300/407, Loss: 19150396.0000
+  Epoch 21, Batch 350/407, Loss: 5760159.5000
+  Epoch 21, Batch 400/407, Loss: 40289808.0000
+Epoch 21/50 - Train: 44398518.8291, Val: 46976028.0825, LR: 0.002497, Time: 48.4s
+  Epoch 22, Batch 0/407, Loss: 46976536.0000
+  Epoch 22, Batch 50/407, Loss: 32337430.0000
+  Epoch 22, Batch 100/407, Loss: 147706368.0000
+  Epoch 22, Batch 150/407, Loss: 12542918.0000
+  Epoch 22, Batch 200/407, Loss: 354371040.0000
+  Epoch 22, Batch 250/407, Loss: 7861364.0000
+  Epoch 22, Batch 300/407, Loss: 19660390.0000
+  Epoch 22, Batch 350/407, Loss: 254429824.0000
+  Epoch 22, Batch 400/407, Loss: 55950304.0000
+Epoch 22/50 - Train: 281416367.3794, Val: 3523820.3892, LR: 0.002375, Time: 50.4s
+  ✓ 保存最佳模型 (Val=3523820.3892)
+  Epoch 23, Batch 0/407, Loss: 3524065.7500
+  Epoch 23, Batch 50/407, Loss: 24370364.0000
+  Epoch 23, Batch 100/407, Loss: 46436856.0000
+  Epoch 23, Batch 150/407, Loss: 2970270.7500
+  Epoch 23, Batch 200/407, Loss: 4845234.0000
+  Epoch 23, Batch 250/407, Loss: 25098540.0000
+  Epoch 23, Batch 300/407, Loss: 10365736.0000
+  Epoch 23, Batch 350/407, Loss: 554483712.0000
+  Epoch 23, Batch 400/407, Loss: 211396896.0000
+Epoch 23/50 - Train: 46464634.8957, Val: 183001163.7113, LR: 0.002251, Time: 50.2s
+  Epoch 24, Batch 0/407, Loss: 183003232.0000
+  Epoch 24, Batch 50/407, Loss: 30422528.0000
+  Epoch 24, Batch 100/407, Loss: 9437777.0000
+  Epoch 24, Batch 150/407, Loss: 1411996.0000
+  Epoch 24, Batch 200/407, Loss: 26588276.0000
+  Epoch 24, Batch 250/407, Loss: 10363954.0000
+  Epoch 24, Batch 300/407, Loss: 150487648.0000
+  Epoch 24, Batch 350/407, Loss: 42452148.0000
+  Epoch 24, Batch 400/407, Loss: 51964184.0000
+Epoch 24/50 - Train: 46035482.1913, Val: 126090660.0412, LR: 0.002126, Time: 49.2s
+  Epoch 25, Batch 0/407, Loss: 126095544.0000
+  Epoch 25, Batch 50/407, Loss: 56481968.0000
+  Epoch 25, Batch 100/407, Loss: 287599.9375
+  Epoch 25, Batch 150/407, Loss: 4457808.0000
+  Epoch 25, Batch 200/407, Loss: 9005630.0000
+  Epoch 25, Batch 250/407, Loss: 4472416.0000
+  Epoch 25, Batch 300/407, Loss: 3475662.7500
+  Epoch 25, Batch 350/407, Loss: 7999553.5000
+  Epoch 25, Batch 400/407, Loss: 4623343.0000
+Epoch 25/50 - Train: 14997244.5083, Val: 7629859.0928, LR: 0.002000, Time: 50.0s
+  Epoch 26, Batch 0/407, Loss: 7629877.0000
+  Epoch 26, Batch 50/407, Loss: 2139480.0000
+  Epoch 26, Batch 100/407, Loss: 1287746.7500
+  Epoch 26, Batch 150/407, Loss: 8274525.5000
+  Epoch 26, Batch 200/407, Loss: 332215.3125
+  Epoch 26, Batch 250/407, Loss: 78546920.0000
+  Epoch 26, Batch 300/407, Loss: 4089878.7500
+  Epoch 26, Batch 350/407, Loss: 9521799.0000
+  Epoch 26, Batch 400/407, Loss: 9501129.0000
+Epoch 26/50 - Train: 12108932.8396, Val: 33926516.9485, LR: 0.001874, Time: 71.1s
+  Epoch 27, Batch 0/407, Loss: 33927492.0000
+  Epoch 27, Batch 50/407, Loss: 111172256.0000
+  Epoch 27, Batch 100/407, Loss: 1458442.3750
+  Epoch 27, Batch 150/407, Loss: 2825539.5000
+  Epoch 27, Batch 200/407, Loss: 104706544.0000
+  Epoch 27, Batch 250/407, Loss: 2586024.7500
+  Epoch 27, Batch 300/407, Loss: 46525676.0000
+  Epoch 27, Batch 350/407, Loss: 9126943.0000
+  Epoch 27, Batch 400/407, Loss: 3057534.7500
+Epoch 27/50 - Train: 16105613.0934, Val: 71411091.3814, LR: 0.001749, Time: 74.0s
+  Epoch 28, Batch 0/407, Loss: 71413456.0000
+  Epoch 28, Batch 50/407, Loss: 875885.6875
+  Epoch 28, Batch 100/407, Loss: 19760544.0000
+  Epoch 28, Batch 150/407, Loss: 22952220.0000
+  Epoch 28, Batch 200/407, Loss: 471219.0938
+  Epoch 28, Batch 250/407, Loss: 357991.0000
+  Epoch 28, Batch 300/407, Loss: 6334281.5000
+  Epoch 28, Batch 350/407, Loss: 652010.7500
+  Epoch 28, Batch 400/407, Loss: 3107977.0000
+Epoch 28/50 - Train: 11477015.9701, Val: 2107883.5851, LR: 0.001625, Time: 63.3s
+  ✓ 保存最佳模型 (Val=2107883.5851)
+  Epoch 29, Batch 0/407, Loss: 2107775.0000
+  Epoch 29, Batch 50/407, Loss: 12248768.0000
+  Epoch 29, Batch 100/407, Loss: 121456.4297
+  Epoch 29, Batch 150/407, Loss: 28747084.0000
+  Epoch 29, Batch 200/407, Loss: 11783944.0000
+  Epoch 29, Batch 250/407, Loss: 22657864.0000
+  Epoch 29, Batch 300/407, Loss: 13448746.0000
+  Epoch 29, Batch 350/407, Loss: 547741.3750
+  Epoch 29, Batch 400/407, Loss: 641759.0000
+Epoch 29/50 - Train: 7030454.5767, Val: 8077665.8093, LR: 0.001503, Time: 65.2s
+  Epoch 30, Batch 0/407, Loss: 8078127.0000
+  Epoch 30, Batch 50/407, Loss: 924503.6250
+  Epoch 30, Batch 100/407, Loss: 25615884.0000
+  Epoch 30, Batch 150/407, Loss: 9280916.0000
+  Epoch 30, Batch 200/407, Loss: 2190119.7500
+  Epoch 30, Batch 250/407, Loss: 844742.3750
+  Epoch 30, Batch 300/407, Loss: 5366391.5000
+  Epoch 30, Batch 350/407, Loss: 181815.4375
+  Epoch 30, Batch 400/407, Loss: 2287834.7500
+Epoch 30/50 - Train: 5292097.6844, Val: 1769804.0541, LR: 0.001382, Time: 103.9s
+  ✓ 保存最佳模型 (Val=1769804.0541)
+  Epoch 31, Batch 0/407, Loss: 1769669.8750
+  Epoch 31, Batch 50/407, Loss: 3672320.7500
+  Epoch 31, Batch 100/407, Loss: 118147.3438
+  Epoch 31, Batch 150/407, Loss: 850600.2500
+  Epoch 31, Batch 200/407, Loss: 660092.3750
+  Epoch 31, Batch 250/407, Loss: 570618.1875
+  Epoch 31, Batch 300/407, Loss: 231021.6094
+  Epoch 31, Batch 350/407, Loss: 1251643.1250
+  Epoch 31, Batch 400/407, Loss: 1623853.8750
+Epoch 31/50 - Train: 2071690.2269, Val: 1482921.3157, LR: 0.001264, Time: 87.0s
+  ✓ 保存最佳模型 (Val=1482921.3157)
+  Epoch 32, Batch 0/407, Loss: 1482978.7500
+  Epoch 32, Batch 50/407, Loss: 334024.2188
+  Epoch 32, Batch 100/407, Loss: 3776751.5000
+  Epoch 32, Batch 150/407, Loss: 8064727.0000
+  Epoch 32, Batch 200/407, Loss: 950194.6250
+  Epoch 32, Batch 250/407, Loss: 371710.7188
+  Epoch 32, Batch 300/407, Loss: 956248.6875
+  Epoch 32, Batch 350/407, Loss: 81295.2344
+  Epoch 32, Batch 400/407, Loss: 216751.1562
+Epoch 32/50 - Train: 3849105.8569, Val: 1341799.5657, LR: 0.001148, Time: 41.1s
+  ✓ 保存最佳模型 (Val=1341799.5657)
+  Epoch 33, Batch 0/407, Loss: 1341861.8750
+  Epoch 33, Batch 50/407, Loss: 2122877.7500
+  Epoch 33, Batch 100/407, Loss: 12632344.0000
+  Epoch 33, Batch 150/407, Loss: 1794759.3750
+  Epoch 33, Batch 200/407, Loss: 17155890.0000
+  Epoch 33, Batch 250/407, Loss: 162102.4531
+  Epoch 33, Batch 300/407, Loss: 1103577.5000
+  Epoch 33, Batch 350/407, Loss: 356614.7500
+  Epoch 33, Batch 400/407, Loss: 4963778.0000
+Epoch 33/50 - Train: 2342802.5542, Val: 3279075.8711, LR: 0.001036, Time: 60.3s
+  Epoch 34, Batch 0/407, Loss: 3279385.0000
+  Epoch 34, Batch 50/407, Loss: 2240389.0000
+  Epoch 34, Batch 100/407, Loss: 642437.2500
+  Epoch 34, Batch 150/407, Loss: 100318.5859
+  Epoch 34, Batch 200/407, Loss: 829754.8750
+  Epoch 34, Batch 250/407, Loss: 314194.6875
+  Epoch 34, Batch 300/407, Loss: 318806.6875
+  Epoch 34, Batch 350/407, Loss: 782644.2500
+  Epoch 34, Batch 400/407, Loss: 673665.1875
+Epoch 34/50 - Train: 1259627.2338, Val: 1831178.0129, LR: 0.000928, Time: 71.6s
+  Epoch 35, Batch 0/407, Loss: 1831316.0000
+  Epoch 35, Batch 50/407, Loss: 584158.5000
+  Epoch 35, Batch 100/407, Loss: 170586.2344
+  Epoch 35, Batch 150/407, Loss: 305788.0938
+  Epoch 35, Batch 200/407, Loss: 319787.4375
+  Epoch 35, Batch 250/407, Loss: 102425.6797
+  Epoch 35, Batch 300/407, Loss: 1607493.8750
+  Epoch 35, Batch 350/407, Loss: 1003330.8750
+  Epoch 35, Batch 400/407, Loss: 1414511.7500
+Epoch 35/50 - Train: 578044.2028, Val: 148264.6785, LR: 0.000824, Time: 44.2s
+  ✓ 保存最佳模型 (Val=148264.6785)
+  Epoch 36, Batch 0/407, Loss: 148254.3125
+  Epoch 36, Batch 50/407, Loss: 127669.8594
+  Epoch 36, Batch 100/407, Loss: 336422.4688
+  Epoch 36, Batch 150/407, Loss: 90268.3594
+  Epoch 36, Batch 200/407, Loss: 504113.6250
+  Epoch 36, Batch 250/407, Loss: 608022.0625
+  Epoch 36, Batch 300/407, Loss: 46126.0234
+  Epoch 36, Batch 350/407, Loss: 21175.3242
+  Epoch 36, Batch 400/407, Loss: 2025437.3750
+Epoch 36/50 - Train: 755087.8840, Val: 2400353.5180, LR: 0.000725, Time: 67.7s
+  Epoch 37, Batch 0/407, Loss: 2400475.5000
+  Epoch 37, Batch 50/407, Loss: 278505.8438
+  Epoch 37, Batch 100/407, Loss: 181859.5625
+  Epoch 37, Batch 150/407, Loss: 273644.8750
+  Epoch 37, Batch 200/407, Loss: 57357.0312
+  Epoch 37, Batch 250/407, Loss: 34593.8438
+  Epoch 37, Batch 300/407, Loss: 32711.8730
+  Epoch 37, Batch 350/407, Loss: 65713.9375
+  Epoch 37, Batch 400/407, Loss: 385857.9375
+Epoch 37/50 - Train: 355374.2763, Val: 136457.1617, LR: 0.000631, Time: 54.6s
+  ✓ 保存最佳模型 (Val=136457.1617)
+  Epoch 38, Batch 0/407, Loss: 136465.8750
+  Epoch 38, Batch 50/407, Loss: 54778.1172
+  Epoch 38, Batch 100/407, Loss: 34253.8281
+  Epoch 38, Batch 150/407, Loss: 14077.2646
+  Epoch 38, Batch 200/407, Loss: 46931.1562
+  Epoch 38, Batch 250/407, Loss: 10902.9551
+  Epoch 38, Batch 300/407, Loss: 217095.2344
+  Epoch 38, Batch 350/407, Loss: 352224.2500
+  Epoch 38, Batch 400/407, Loss: 1204741.3750
+Epoch 38/50 - Train: 141258.5499, Val: 36607.5161, LR: 0.000542, Time: 57.0s
+  ✓ 保存最佳模型 (Val=36607.5161)
+  Epoch 39, Batch 0/407, Loss: 36622.4219
+  Epoch 39, Batch 50/407, Loss: 14945.9014
+  Epoch 39, Batch 100/407, Loss: 265146.8750
+  Epoch 39, Batch 150/407, Loss: 27576.2617
+  Epoch 39, Batch 200/407, Loss: 4495.8843
+  Epoch 39, Batch 250/407, Loss: 84034.4297
+  Epoch 39, Batch 300/407, Loss: 26502.9023
+  Epoch 39, Batch 350/407, Loss: 17795.9121
+  Epoch 39, Batch 400/407, Loss: 6129.3237
+Epoch 39/50 - Train: 196509.9636, Val: 120379.5049, LR: 0.000459, Time: 58.4s
+  Epoch 40, Batch 0/407, Loss: 120485.7344
+  Epoch 40, Batch 50/407, Loss: 6896.3198
+  Epoch 40, Batch 100/407, Loss: 7655.4180
+  Epoch 40, Batch 150/407, Loss: 36297.9258
+  Epoch 40, Batch 200/407, Loss: 87090.4844
+  Epoch 40, Batch 250/407, Loss: 30537.7930
+  Epoch 40, Batch 300/407, Loss: 2166.8159
+  Epoch 40, Batch 350/407, Loss: 10773.8145
+  Epoch 40, Batch 400/407, Loss: 2619.2087
+Epoch 40/50 - Train: 41992.1508, Val: 29706.1486, LR: 0.000382, Time: 56.6s
+  ✓ 保存最佳模型 (Val=29706.1486)
+  Epoch 41, Batch 0/407, Loss: 29748.7402
+  Epoch 41, Batch 50/407, Loss: 11206.7988
+  Epoch 41, Batch 100/407, Loss: 20951.5469
+  Epoch 41, Batch 150/407, Loss: 14453.9561
+  Epoch 41, Batch 200/407, Loss: 270.8056
+  Epoch 41, Batch 250/407, Loss: 73354.2969
+  Epoch 41, Batch 300/407, Loss: 1661.8964
+  Epoch 41, Batch 350/407, Loss: 1590.9431
+  Epoch 41, Batch 400/407, Loss: 61583.8125
+Epoch 41/50 - Train: 24057.1656, Val: 745634.9865, LR: 0.000311, Time: 45.0s
+  Epoch 42, Batch 0/407, Loss: 745579.3750
+  Epoch 42, Batch 50/407, Loss: 148915.0000
+  Epoch 42, Batch 100/407, Loss: 3904.3164
+  Epoch 42, Batch 150/407, Loss: 4858.0571
+  Epoch 42, Batch 200/407, Loss: 4120.8433
+  Epoch 42, Batch 250/407, Loss: 2966.6230
+  Epoch 42, Batch 300/407, Loss: 19430.8828
+  Epoch 42, Batch 350/407, Loss: 5128.7627
+  Epoch 42, Batch 400/407, Loss: 333.9069
+Epoch 42/50 - Train: 22875.1266, Val: 13443.2289, LR: 0.000247, Time: 20.6s
+  ✓ 保存最佳模型 (Val=13443.2289)
+  Epoch 43, Batch 0/407, Loss: 13483.5264
+  Epoch 43, Batch 50/407, Loss: 664.1801
+  Epoch 43, Batch 100/407, Loss: 6486.6328
+  Epoch 43, Batch 150/407, Loss: 232.2310
+  Epoch 43, Batch 200/407, Loss: 924.2599
+  Epoch 43, Batch 250/407, Loss: 6127.3936
+  Epoch 43, Batch 300/407, Loss: 4027.6250
+  Epoch 43, Batch 350/407, Loss: 1001.6657
+  Epoch 43, Batch 400/407, Loss: 1591.7695
+Epoch 43/50 - Train: 3783.7696, Val: 7721.5051, LR: 0.000190, Time: 20.7s
+  ✓ 保存最佳模型 (Val=7721.5051)
+  Epoch 44, Batch 0/407, Loss: 7717.6787
+  Epoch 44, Batch 50/407, Loss: 1988.9858
+  Epoch 44, Batch 100/407, Loss: 1172.8418
+  Epoch 44, Batch 150/407, Loss: 1064.1848
+  Epoch 44, Batch 200/407, Loss: 2952.9014
+  Epoch 44, Batch 250/407, Loss: 21.0863
+  Epoch 44, Batch 300/407, Loss: 206.2933
+  Epoch 44, Batch 350/407, Loss: 4069.1079
+  Epoch 44, Batch 400/407, Loss: 157.6463
+Epoch 44/50 - Train: 1914.6924, Val: 1645.0370, LR: 0.000140, Time: 20.9s
+  ✓ 保存最佳模型 (Val=1645.0370)
+  Epoch 45, Batch 0/407, Loss: 1639.3994
+  Epoch 45, Batch 50/407, Loss: 827.0370
+  Epoch 45, Batch 100/407, Loss: 686.2221
+  Epoch 45, Batch 150/407, Loss: 37.1436
+  Epoch 45, Batch 200/407, Loss: 3313.5132
+  Epoch 45, Batch 250/407, Loss: 397.5551
+  Epoch 45, Batch 300/407, Loss: 137.3253
+  Epoch 45, Batch 350/407, Loss: 826.9467
+  Epoch 45, Batch 400/407, Loss: 36.8574
+Epoch 45/50 - Train: 404.4250, Val: 65.3517, LR: 0.000098, Time: 21.1s
+  ✓ 保存最佳模型 (Val=65.3517)
+  Epoch 46, Batch 0/407, Loss: 68.1051
+  Epoch 46, Batch 50/407, Loss: 99.5213
+  Epoch 46, Batch 100/407, Loss: 642.2581
+  Epoch 46, Batch 150/407, Loss: 26.3549
+  Epoch 46, Batch 200/407, Loss: 22.6123
+  Epoch 46, Batch 250/407, Loss: 14.0004
+  Epoch 46, Batch 300/407, Loss: 101.9940
+  Epoch 46, Batch 350/407, Loss: 97.4355
+  Epoch 46, Batch 400/407, Loss: 71.9770
+Epoch 46/50 - Train: 123.8021, Val: 36.9442, LR: 0.000063, Time: 21.9s
+  ✓ 保存最佳模型 (Val=36.9442)
+  Epoch 47, Batch 0/407, Loss: 36.5483
+  Epoch 47, Batch 50/407, Loss: 13.4349
+  Epoch 47, Batch 100/407, Loss: 42.6048
+  Epoch 47, Batch 150/407, Loss: 5.0975
+  Epoch 47, Batch 200/407, Loss: 6.5323
+  Epoch 47, Batch 250/407, Loss: 2.0613
+  Epoch 47, Batch 300/407, Loss: 8.0052
+  Epoch 47, Batch 350/407, Loss: 4.7817
+  Epoch 47, Batch 400/407, Loss: 10.8462
+Epoch 47/50 - Train: 28.4227, Val: 8.9007, LR: 0.000035, Time: 20.2s
+  ✓ 保存最佳模型 (Val=8.9007)
+  Epoch 48, Batch 0/407, Loss: 10.6876
+  Epoch 48, Batch 50/407, Loss: 3.6124
+  Epoch 48, Batch 100/407, Loss: 11.5383
+  Epoch 48, Batch 150/407, Loss: 1.5714
+  Epoch 48, Batch 200/407, Loss: 1.1662
+  Epoch 48, Batch 250/407, Loss: 0.9615
+  Epoch 48, Batch 300/407, Loss: 1.3134
+  Epoch 48, Batch 350/407, Loss: 3.4517
+  Epoch 48, Batch 400/407, Loss: 1.8588
+Epoch 48/50 - Train: 3.9550, Val: 5.7632, LR: 0.000016, Time: 20.5s
+  ✓ 保存最佳模型 (Val=5.7632)
+  Epoch 49, Batch 0/407, Loss: 5.7031
+  Epoch 49, Batch 50/407, Loss: 0.8947
+  Epoch 49, Batch 100/407, Loss: 0.6357
+  Epoch 49, Batch 150/407, Loss: 0.9734
+  Epoch 49, Batch 200/407, Loss: 1.5645
+  Epoch 49, Batch 250/407, Loss: 0.9179
+  Epoch 49, Batch 300/407, Loss: 1.6687
+  Epoch 49, Batch 350/407, Loss: 1.4941
+  Epoch 49, Batch 400/407, Loss: 1.4431
+Epoch 49/50 - Train: 1.3993, Val: 1.1700, LR: 0.000004, Time: 20.6s
+  ✓ 保存最佳模型 (Val=1.1700)
+  Epoch 50, Batch 0/407, Loss: 1.4753
+  Epoch 50, Batch 50/407, Loss: 1.2324
+  Epoch 50, Batch 100/407, Loss: 1.2662
+  Epoch 50, Batch 150/407, Loss: 1.6452
+  Epoch 50, Batch 200/407, Loss: 1.8295
+  Epoch 50, Batch 250/407, Loss: 0.6790
+  Epoch 50, Batch 300/407, Loss: 0.7947
+  Epoch 50, Batch 350/407, Loss: 0.7871
+  Epoch 50, Batch 400/407, Loss: 0.8290
+Epoch 50/50 - Train: 1.0833, Val: 0.5422, LR: 0.000000, Time: 20.4s
+  ✓ 保存最佳模型 (Val=0.5422)
+
+训练完成！最佳 Val Loss: 0.5422

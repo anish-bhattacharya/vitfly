@@ -96,9 +96,28 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
         
         with torch.no_grad():
             output = trained_model([img.view(1, 1, h, w).to(device), 
-                                   torch.tensor(desiredVel).view(1, 1).float().to(device), 
+                                   torch.tensor(desiredVel).view(1, 1).float().to(device).expand(1, 3), 
                                    torch.tensor(q).view(1, -1).float().to(device), 
                                    hidden_state])
+            if isinstance(output, tuple):
+                x, hidden_state = output
+            else:
+                x = output
+                
+    elif 'VMambaLSTM' in trained_model.__class__.__name__:
+        # VMamba+LSTM 模型
+        if trained_model.lstm.num_layers == 2 and trained_model.lstm.hidden_size == 128:
+            pass  # 默认配置
+        
+        if state.pos[0] < 0.5 or hidden_state is None:
+            hidden_state = (torch.zeros(2, 128).float().to(device),
+                           torch.zeros(2, 128).float().to(device))
+        
+        with torch.no_grad():
+            output = trained_model([img.view(1, 1, h, w).to(device), 
+                                   torch.tensor(desiredVel).view(1, 1).float().to(device).expand(1, 3), 
+                                   torch.tensor(q).view(1, -1).float().to(device)],
+                                   hidden_state)
             if isinstance(output, tuple):
                 x, hidden_state = output
             else:
@@ -108,7 +127,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
         # DroneMamba 模型，使用 SSM 版本不需要隐藏状态
         with torch.no_grad():
             output = trained_model([img.view(1, 1, h, w).to(device), 
-                                   torch.tensor(desiredVel).view(1, 1).float().to(device), 
+                                   torch.tensor(desiredVel).view(1, 1).float().to(device).expand(1, 3), 
                                    torch.tensor(q).view(1, -1).float().to(device)])
             if isinstance(output, tuple):
                 x, hidden_state = output
