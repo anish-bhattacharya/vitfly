@@ -287,3 +287,58 @@ N_eps = 50
 cd /root/catkin_ws/src/vitfly
 MODEL_TYPE="VMambaLSTMNet" MODEL_PATH="models/VMambaLSTM_best.pth" bash launch_evaluation.bash 20 vision
 ```
+
+## Ubuntu 20.04 OpenSSL Bug 记录
+
+### 问题描述
+Ubuntu 20.04 系统 Python 3.8 的 OpenSSL 库存在已知 bug，导致 requests 模块无法使用：
+
+```
+AttributeError: module 'lib' has no attribute 'X509_V_FLAG_NOTIFY_POLICY'
+```
+
+### 影响范围
+- python3 (系统 3.8.10) 的 requests 模块无法导入
+- torchvision 依赖 requests，因此也无法使用
+- ROS 评估脚本 (`run_competition.py`, `evaluation_node.py`) 无法运行
+
+### 根本原因
+系统包 `python3-openssl` 与 `python3-cryptography` 版本不兼容：
+- python3-openssl: 19.0.0-1build1
+- python3-cryptography: 2.8-3ubuntu0.x
+
+### 解决方案
+
+#### 方案 1: 升级 Ubuntu (推荐)
+升级到 Ubuntu 22.04+ 可解决此问题
+
+#### 方案 2: 使用 Docker
+```bash
+docker run -it --gpus all ros:noetic-ros-base bash
+# 在容器内安装依赖并运行仿真
+```
+
+#### 方案 3: 使用 python3.10 + ROS 桥接 (未完全验证)
+```bash
+# python3.10 有完整的 CUDA 支持且无 OpenSSL 问题
+# 但需要解决 cv_bridge 等 ROS 包的兼容性问题
+```
+
+### 当前仿真配置
+- Unity 已连接：✅
+- 深度图话题：`/kingfisher/dodgeros_pilot/unity/depth`
+- RViz 配置：已更新
+- VMambaLSTMNet 支持：已添加
+- 前向速度修复：已添加
+
+### 待执行命令 (在修复 OpenSSL 的环境)
+```bash
+killall -9 roscore rosmaster rosout visionsim_node flight_render rviz
+export DISPLAY=:0
+export LIBGL_ALWAYS_SOFTWARE=1
+export FLIGHTMARE_PATH=/root/catkin_ws/src/vitfly/flightmare
+export MODEL_TYPE="VMambaLSTMNet"
+export MODEL_PATH="/root/catkin_ws/src/vitfly/models/VMambaLSTM_best.pth"
+cd /root/catkin_ws/src/vitfly
+bash launch_evaluation.bash 20 vision
+```

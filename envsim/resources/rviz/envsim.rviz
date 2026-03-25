@@ -27,7 +27,7 @@ Displays:
     Plane Cell Count: 10
 
   - Class: rviz/Image
-    Image Topic: /kingfisher/depth_image
+    Image Topic: /kingfisher/dodgeros_pilot/unity/depth
     Name: DepthImage
     Transport Hint: raw
     Value: true

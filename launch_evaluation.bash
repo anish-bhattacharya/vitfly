@@ -38,25 +38,16 @@ else
   exit 1
 fi
 
-# Set Flightmare Path - must point to complete flightmare with Unity resources
-export FLIGHTMARE_PATH=$HOME/catkin_ws/src/vitfly/flightmare
-
-# Kill all related processes before starting
-echo "[LAUNCH] Killing all related processes..."
-killall -9 roscore rosmaster rosout gzserver gzclient RPG_Flightmare. visionsim_node 2>/dev/null
-sleep 3
-
-# Enable Unity rendering by default (set RENDER=0 to disable)
-ENABLE_RENDER=${RENDER:-1}
+# Set Flightmare Path if it is not set
+if [ -z $FLIGHTMARE_PATH ]
+then
+  export FLIGHTMARE_PATH=$PWD/flightmare
+fi
 
 # Launch the simulator, unless it is already running
 if [ -z $(pgrep visionsim_node) ]
 then
-  if [ "$ENABLE_RENDER" = "1" ]; then
-    roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True $realtimefactor &
-  else
-    roslaunch envsim visionenv_sim.launch render:=False gui:=False rviz:=True $realtimefactor &
-  fi
+  roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True $realtimefactor &
   ROS_PID="$!"
   echo $ROS_PID
   sleep 10
@@ -121,11 +112,7 @@ do
   python3 evaluation_node.py ${datetime}_N$i &
   PY_PID="$!"
 
-  # Default to ViTLSTM, allow override via MODEL_TYPE environment variable
-  MODEL_TYPE=${MODEL_TYPE:-"ViTLSTM"}
-  MODEL_PATH=${MODEL_PATH:-"../../models/ViTLSTM_model.pth"}
-  
-  python3 run_competition.py $run_competition_args --des_vel 7.0 --model_type "$MODEL_TYPE" --model_path "$MODEL_PATH" &
+  python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "ViTLSTM" --model_path ../../models/ViTLSTM_model.pth &
   COMP_PID="$!"
 
   cd -
