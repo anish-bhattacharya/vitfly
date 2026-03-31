@@ -1,0 +1,28 @@
+# 分支C: CNN + Mamba3 配置模板
+# 模型架构: CNN特征提取器 + Mamba3时序建模 (~2.8M参数)
+
+# 继承基础配置
+_base_: base_config.yaml
+
+# 分支特定配置
+branch: C
+model_type: CNNMamba3
+experiment_name: mamba_branch_C
+
+# 训练配置调整
+lr: 1.0e-4  # 标准学习率
+N_eps: 55  # 中等epoch数
+lr_warmup_epochs: 6  # 标准预热
+batch_size: 1  # 轨迹级别批处理
+
+# 正则化配置
+weight_decay: 1.2e-5  # 标准权重衰减
+reg_lambda: 0.012  # 标准L2正则化
+
+# 优化器配置
+optimizer: adamw
+betas: [0.9, 0.999]
+eps: 1.0e-8
+
+# 实验标签
+tags: [mamba, branch_C, cnn, mamba3, hybrid]

@@ -1,0 +1,28 @@
+# 分支E: Decision Mamba 配置模板
+# 模型架构: 决策导向的Mamba架构 (~2.5M参数)
+
+# 继承基础配置
+_base_: base_config.yaml
+
+# 分支特定配置
+branch: E
+model_type: DecisionMamba
+experiment_name: mamba_branch_E
+
+# 训练配置调整
+lr: 9.0e-5  # 稍低的学习率，适合决策任务
+N_eps: 70  # 更多epoch，需要更精细的训练
+lr_warmup_epochs: 12  # 更长的预热
+batch_size: 1  # 轨迹级别批处理
+
+# 正则化配置
+weight_decay: 2.0e-5  # 较高的权重衰减
+reg_lambda: 0.025  # 较高的L2正则化
+
+# 优化器配置
+optimizer: adamw
+betas: [0.9, 0.999]
+eps: 1.0e-8
+
+# 实验标签
+tags: [mamba, branch_E, decision, policy, control]

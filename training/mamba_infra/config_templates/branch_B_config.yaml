@@ -1,0 +1,28 @@
+# 分支B: MambaVision + SSM 配置模板
+# 模型架构: MambaVision视觉编码器 + SSM时序头 (~3.3M参数)
+
+# 继承基础配置
+_base_: base_config.yaml
+
+# 分支特定配置
+branch: B
+model_type: MambaVisionSSM
+experiment_name: mamba_branch_B
+
+# 训练配置调整
+lr: 1.2e-4  # 稍高的学习率，适合MambaVision架构
+N_eps: 60  # 更多epoch，因为模型稍大
+lr_warmup_epochs: 8  # 更长的预热
+batch_size: 1  # 轨迹级别批处理
+
+# 正则化配置
+weight_decay: 1.5e-5  # 稍高的权重衰减
+reg_lambda: 0.015  # 稍高的L2正则化
+
+# 优化器配置
+optimizer: adamw
+betas: [0.9, 0.999]
+eps: 1.0e-8
+
+# 实验标签
+tags: [mamba, branch_B, mambavision, ssm, vision_encoder]

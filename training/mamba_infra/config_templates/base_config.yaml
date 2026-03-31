@@ -1,0 +1,51 @@
+# Mamba训练基础配置模板
+# 适用于所有Mamba分支(B-E)的通用配置
+
+# 基础配置
+device: cuda  # 训练设备: cuda 或 cpu
+basedir: /home/vitfly  # 基础目录
+logdir: training/logs  # 日志目录
+datadir: training/datasets  # 数据目录
+ws_suffix: ''  # 工作空间后缀
+
+# 数据配置
+dataset: data  # 数据集名称
+short: 0  # 使用前N个轨迹 (0表示使用所有)
+val_split: 0.2  # 验证集比例
+seed: 42  # 随机种子
+
+# 模型配置
+model_type: DroneMamba  # 模型类型
+branch: B  # Mamba分支: B, C, D, E
+load_checkpoint: false  # 是否从检查点加载
+checkpoint_path: ''  # 检查点路径
+
+# 训练配置
+lr: 1.0e-4  # 学习率
+N_eps: 50  # 训练epoch数
+lr_warmup_epochs: 5  # 学习率预热epoch数
+lr_decay: true  # 是否启用学习率衰减
+lr_decay_rate: 0.95  # 学习率衰减率
+lr_decay_steps: 10  # 学习率衰减步长
+save_model_freq: 25  # 保存模型频率 (epoch)
+val_freq: 10  # 验证频率 (epoch)
+batch_size: 1  # 批大小 (轨迹级别)
+grad_clip: 1.0  # 梯度裁剪阈值
+
+# 损失函数配置
+loss_type: mse  # 损失类型: mse, l1, huber
+weight_decay: 1.0e-5  # 权重衰减
+reg_lambda: 0.01  # L2正则化系数
+
+# 优化器配置
+optimizer: adamw  # 优化器: adamw, adam, sgd
+betas: [0.9, 0.999]  # Adam优化器参数
+eps: 1.0e-8  # Adam优化器epsilon
+
+# TensorBoard配置
+tensorboard: true  # 是否启用TensorBoard
+log_freq: 10  # 日志记录频率 (steps)
+
+# 实验配置
+experiment_name: ''  # 实验名称 (为空则自动生成)
+tags: []  # 实验标签

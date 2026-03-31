@@ -1,0 +1,34 @@
+# ViT-Fly Mamba分支B-E 训练配置
+# 生成时间: 2026-03-31 18:49:51
+
+device = cuda
+basedir = /root/catkin_ws/src/vitfly
+logdir = training/logs
+datadir = training/datasets
+
+dataset = data
+short = 0
+val_split = 0.2
+
+# 模型选择: ConvNet, LSTMnet, UNet, ViT, ViTLSTM, DroneMamba
+model_type = ViTLSTM
+load_checkpoint = False
+checkpoint_path = ''
+
+# 训练参数
+lr = 1e-4
+N_eps = 100
+lr_warmup_epochs = 5
+lr_decay = False
+save_model_freq = 25
+val_freq = 10
+
+# Mamba分支特定参数
+# 注意: DroneMamba模型需要额外的配置
+# mamba_config = models/mamba_config.json
+
+# 数据增强 (可选)
+# data_augmentation = True
+# augment_rotation = 5.0  # 度
+# augment_translation = 0.1  # 比例
+# augment_brightness = 0.2  # 比例
