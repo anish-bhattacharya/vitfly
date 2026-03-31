@@ -53,13 +53,14 @@ class MambaTemporalFusion(nn.Module):
         self.input_proj = nn.Linear(input_dim, hidden_dim)
         
         self.ssm_layers = nn.ModuleList()
+        self.A_params = nn.ParameterList()
+        self.D_params = nn.ParameterList()
+        
         for _ in range(num_layers):
             self.ssm_layers.append(nn.ModuleDict({
                 'in_proj': nn.Linear(hidden_dim, hidden_dim * 2),
                 'x_proj': nn.Linear(hidden_dim, d_state, bias=False),
                 'out_proj': nn.Linear(hidden_dim, hidden_dim),
-                'A': nn.Parameter(torch.ones(d_state)),
-                'D': nn.Parameter(torch.ones(hidden_dim) * 0.1),
                 'mlp': nn.Sequential(
                     nn.Linear(hidden_dim, hidden_dim * 4),
                     nn.GELU(),
@@ -68,6 +69,8 @@ class MambaTemporalFusion(nn.Module):
                 'norm1': nn.LayerNorm(hidden_dim),
                 'norm2': nn.LayerNorm(hidden_dim)
             }))
+            self.A_params.append(nn.Parameter(torch.ones(d_state)))
+            self.D_params.append(nn.Parameter(torch.ones(hidden_dim) * 0.1))
             
         self.out_norm = nn.LayerNorm(hidden_dim)
         self.d_state = d_state
@@ -80,16 +83,16 @@ class MambaTemporalFusion(nn.Module):
         if state is None:
             state = torch.zeros(B, self.d_state, device=x.device)
             
-        for layer in self.ssm_layers:
+        for i, layer in enumerate(self.ssm_layers):
             x_norm = layer['norm1'](x)
             xz = layer['in_proj'](x_norm)
             x_inner, z = xz.chunk(2, dim=-1)
             
             B_state = layer['x_proj'](x_inner)
-            A = layer['A'].unsqueeze(0).unsqueeze(0)
+            A = self.A_params[i].unsqueeze(0).unsqueeze(0)
             
             h = torch.cumsum(B_state * A, dim=1)
-            y = h @ layer['A'].unsqueeze(-1)
+            y = h @ self.A_params[i].unsqueeze(-1)
             y = y.squeeze(-1).unsqueeze(-1).expand(-1, -1, self.hidden_dim)
             
             y = y * torch.sigmoid(z)

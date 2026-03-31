@@ -91,10 +91,10 @@ class MambaVisionSSMNet(nn.Module):
         if mambavision_config is None:
             mambavision_config = {
                 'in_channels': 1,
-                'stem_dim': 64,
-                'stage_dims': (96, 192, 384),
-                'depths': (4, 4, 4),
-                'd_state': 16,
+                'stem_dim': 48,
+                'stage_dims': (64, 128, 192),
+                'depths': (2, 2, 2),
+                'd_state': 12,
                 'dropout': dropout,
                 'output_dim': 512
             }

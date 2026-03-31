@@ -66,11 +66,10 @@ class MambaVisionStage(nn.Module):
     def __init__(self, in_dim, out_dim, depth, d_state=16, dropout=0.1):
         super().__init__()
         
-        # 下采样 (如果不是第一阶段)
         if in_dim != out_dim:
             self.downsample = nn.Sequential(
                 nn.Conv2d(in_dim, out_dim, kernel_size=3, stride=2, padding=1),
-                nn.LayerNorm(out_dim)
+                nn.BatchNorm2d(out_dim)
             )
         else:
             self.downsample = nn.Identity()
@@ -105,10 +104,10 @@ class MambaVisionEncoder(nn.Module):
     def __init__(
         self,
         in_channels=1,
-        stem_dim=64,
-        stage_dims=(96, 192, 384),
-        depths=(4, 4, 4),
-        d_state=16,
+        stem_dim=48,
+        stage_dims=(64, 128, 192),
+        depths=(2, 2, 2),
+        d_state=12,
         dropout=0.1,
         output_dim=512
     ):

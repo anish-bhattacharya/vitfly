@@ -115,7 +115,7 @@ class DecisionMambaNet(nn.Module):
     
     def __init__(
         self,
-        embed_dim=192,
+        embed_dim=256,
         coarse_d_state=16,
         fine_d_state=32,
         num_patches=15,
@@ -124,22 +124,25 @@ class DecisionMambaNet(nn.Module):
         super().__init__()
         
         self.patch_embed = PatchEmbedding(in_channels=1, embed_dim=embed_dim, patch_size=4)
-        self.state_proj = nn.Linear(7, 64)
+        self.state_proj = nn.Linear(7, 256)
         
         self.coarse_ssm = CoarseSSM(embed_dim, coarse_d_state, num_patches)
         self.fine_ssm = FineSSM(embed_dim, fine_d_state, num_patches)
         
-        fusion_dim = embed_dim + 64 + embed_dim + embed_dim
+        fusion_dim = embed_dim + 256 + embed_dim + embed_dim
         self.fusion = nn.Sequential(
-            nn.Linear(fusion_dim, 256),
+            nn.Linear(fusion_dim, 512),
             nn.GELU(),
             nn.Dropout(dropout),
-            nn.Linear(256, 128),
+            nn.Linear(512, 512),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(512, 256),
             nn.GELU(),
             nn.Dropout(dropout),
         )
         
-        self.fc_out = nn.Linear(128, 3)
+        self.fc_out = nn.Linear(256, 3)
         
     def forward(self, X):
         if X[2] is None:
