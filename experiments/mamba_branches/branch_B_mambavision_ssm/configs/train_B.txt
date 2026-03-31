@@ -1,0 +1,13 @@
+model_type=mambavision_ssm
+lr=0.0001
+batch_size=32
+epochs=50
+weight_decay=0.01
+dropout=0.1
+ssm_d_state=16
+ssm_hidden=256
+ssm_layers=2
+output_dim=512
+stem_dim=64
+stage_dims=96,192,384
+depths=4,4,4

@@ -1,0 +1,10 @@
+model_type=sth_mamba
+lr=0.0001
+batch_size=32
+epochs=50
+weight_decay=0.01
+dropout=0.1
+spatial_dim=256
+temporal_d_state=16
+temporal_hidden=256
+temporal_layers=3

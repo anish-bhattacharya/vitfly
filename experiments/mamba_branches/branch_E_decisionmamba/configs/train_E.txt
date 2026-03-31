@@ -1,0 +1,10 @@
+model_type=decision_mamba
+lr=0.0001
+batch_size=32
+epochs=50
+weight_decay=0.01
+dropout=0.1
+embed_dim=192
+coarse_d_state=16
+fine_d_state=32
+num_patches=15

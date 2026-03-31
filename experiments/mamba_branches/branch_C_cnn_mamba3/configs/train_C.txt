@@ -1,0 +1,12 @@
+model_type=cnn_mamba3
+lr=0.0001
+batch_size=32
+epochs=50
+weight_decay=0.01
+dropout=0.1
+ssm_d_state=32
+ssm_hidden=256
+ssm_layers=2
+output_dim=512
+stem_dim=32
+stage_dims=32,64,128,256
