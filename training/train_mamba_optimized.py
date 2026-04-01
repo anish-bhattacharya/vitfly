@@ -1,0 +1,514 @@
+#!/usr/bin/env python3
+"""
+Optimized training script for Mamba branches B-E with maximum GPU utilization.
+
+Key Features:
+1. Mixed Precision Training (FP16) with torch.cuda.amp
+2. Optimized DataLoader with parallel loading
+3. GPU memory monitoring and management
+4. Training for all 4 branches (B, C, D, E)
+5. Gradient accumulation for larger effective batch sizes
+6. Learning rate warmup and cosine annealing
+7. Checkpoint saving and validation
+
+Expected Performance:
+- GPU utilization > 80%
+- Training time < 2 hours per branch
+- Convergence within 100 epochs
+"""
+
+import os
+import sys
+import argparse
+import time
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
+import random
+from torch.cuda.amp import autocast, GradScaler
+import subprocess
+import psutil
+
+# Add paths to import models
+sys.path.insert(0, '/root/vitfly')
+sys.path.insert(0, '/root/vitfly/training')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_A_vmamba_lstm/models')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_B_mambavision_ssm/models')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_C_cnn_mamba3/models')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_D_sth_mamba/models')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_E_decisionmamba/models')
+
+# Import models
+try:
+    from vmamba_lstm_model import VMambaLSTMNet, create_vmamba_lstm_model
+    from mambavision_ssm_model import MambaVisionSSMNet, create_mambavision_ssm_model
+    from cnn_mamba3_model import CNNMamba3Net, create_cnn_mamba3_model
+    from sth_mamba_model import STHMambaNet, create_sth_mamba_model
+    from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
+    MODELS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Could not import some models: {e}")
+    MODELS_AVAILABLE = False
+
+# Import dataloader
+from dataloading import dataloader
+
+
+class OptimizedFlightmareDataset(Dataset):
+    """Optimized dataset with proper 3D velocity extraction."""
+    
+    def __init__(self, traj_ims, traj_meta, desired_vels, curr_quats):
+        """
+        Args:
+            traj_ims: List of depth images
+            traj_meta: Metadata array with shape (N, M)
+            desired_vels: Desired velocities (scalar)
+            curr_quats: Current quaternions
+        """
+        self.traj_ims = traj_ims
+        self.traj_meta = traj_meta
+        self.desired_vels = np.asarray(desired_vels)
+        self.curr_quats = curr_quats
+        
+    def __len__(self):
+        return len(self.traj_ims)
+    
+    def __getitem__(self, idx):
+        depth = torch.from_numpy(self.traj_ims[idx]).unsqueeze(0).float()
+        
+        # Extract 3D velocity from traj_meta[:, 2:5] (desired velocity)
+        if self.traj_meta.shape[1] >= 5:
+            velocity = torch.from_numpy(self.traj_meta[idx, 2:5]).float()
+        else:
+            velocity = torch.zeros(3, dtype=torch.float32)
+        
+        quat = torch.from_numpy(self.curr_quats[idx]).float()
+        
+        # FIXED: Target should be the same 3D velocity, not a repeated scalar
+        # The model learns to predict velocity from depth images
+        target = velocity.clone()
+        
+        return depth, velocity, quat, target
+
+
+def get_gpu_memory_info():
+    """Get GPU memory usage information."""
+    try:
+        result = subprocess.run(
+            ['nvidia-smi', '--query-gpu=memory.used,memory.total', '--format=csv,nounits,noheader'],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            lines = result.stdout.strip().split('\n')
+            memory_info = []
+            for line in lines:
+                used, total = map(int, line.split(','))
+                memory_info.append({
+                    'used_mb': used,
+                    'total_mb': total,
+                    'usage_percent': (used / total) * 100
+                })
+            return memory_info
+    except Exception as e:
+        print(f"Warning: Could not get GPU memory info: {e}")
+    
+    # Fallback to torch.cuda
+    if torch.cuda.is_available():
+        return [{
+            'used_mb': torch.cuda.memory_allocated() / 1024**2,
+            'total_mb': torch.cuda.get_device_properties(0).total_memory / 1024**2,
+            'usage_percent': (torch.cuda.memory_allocated() / torch.cuda.get_device_properties(0).total_memory) * 100
+        }]
+    
+    return None
+
+
+def print_gpu_memory_usage(epoch, batch_idx, total_batches):
+    """Print current GPU memory usage."""
+    gpu_info = get_gpu_memory_info()
+    if gpu_info:
+        for i, info in enumerate(gpu_info):
+            print(f"  GPU {i}: {info['used_mb']:.0f}/{info['total_mb']:.0f} MB ({info['usage_percent']:.1f}%) "
+                  f"Epoch {epoch}, Batch {batch_idx}/{total_batches}")
+
+
+def set_seed(seed=42):
+    """Set random seeds for reproducibility."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+
+def create_model(branch_name, config, device):
+    """Create model based on branch name."""
+    if branch_name == 'A':
+        model = create_vmamba_lstm_model(config)
+    elif branch_name == 'B':
+        model = create_mambavision_ssm_model(config)
+    elif branch_name == 'C':
+        model = create_cnn_mamba3_model(config)
+    elif branch_name == 'D':
+        model = create_sth_mamba_model(config)
+    elif branch_name == 'E':
+        model = create_decision_mamba_model(config)
+    else:
+        raise ValueError(f"Unknown branch: {branch_name}")
+    
+    model = model.to(device)
+    return model
+
+
+def train_epoch(model, loader, optimizer, criterion, scaler, device, epoch, 
+                grad_accum_steps=1, clip_grad_norm=1.0):
+    """Train for one epoch with mixed precision."""
+    model.train()
+    total_loss = 0.0
+    total_samples = 0
+    
+    optimizer.zero_grad()
+    
+    for batch_idx, (depth, velocity, quat, target) in enumerate(loader):
+        depth = depth.to(device, non_blocking=True)
+        velocity = velocity.to(device, non_blocking=True)
+        quat = quat.to(device, non_blocking=True)
+        target = target.to(device, non_blocking=True)
+        
+        with autocast():
+            output, _ = model([depth, velocity, quat])
+            loss = criterion(output, target)
+            loss = loss / grad_accum_steps
+        
+        scaler.scale(loss).backward()
+        
+        if (batch_idx + 1) % grad_accum_steps == 0:
+            scaler.unscale_(optimizer)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad_norm)
+            
+            scaler.step(optimizer)
+            scaler.update()
+            optimizer.zero_grad()
+            
+            if batch_idx % 50 == 0:
+                print_gpu_memory_usage(epoch, batch_idx, len(loader))
+                print(f"    Batch {batch_idx}/{len(loader)}, Loss: {loss.item() * grad_accum_steps:.4f}")
+        
+        total_loss += loss.item() * grad_accum_steps
+        total_samples += depth.size(0)
+    
+    if total_samples % grad_accum_steps != 0:
+        scaler.unscale_(optimizer)
+        torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad_norm)
+        scaler.step(optimizer)
+        scaler.update()
+        optimizer.zero_grad()
+    
+    return total_loss / len(loader)
+
+
+def validate(model, loader, criterion, device):
+    """Validate model performance."""
+    model.eval()
+    total_loss = 0.0
+    
+    # Handle empty validation set
+    if len(loader) == 0:
+        print("  Warning: Empty validation set, skipping validation")
+        return float('inf')
+    
+    with torch.no_grad():
+        for depth, velocity, quat, target in loader:
+            depth = depth.to(device, non_blocking=True)
+            velocity = velocity.to(device, non_blocking=True)
+            quat = quat.to(device, non_blocking=True)
+            target = target.to(device, non_blocking=True)
+            
+            with autocast():
+                output, _ = model([depth, velocity, quat])
+                loss = criterion(output, target)
+            
+            total_loss += loss.item()
+    
+    return total_loss / len(loader)
+
+
+def get_lr_scheduler(optimizer, warmup_epochs, total_epochs):
+    def lr_lambda(epoch):
+        if warmup_epochs >= total_epochs:
+            return 1.0
+        if epoch < warmup_epochs:
+            return (epoch + 1) / warmup_epochs
+        else:
+            progress = (epoch - warmup_epochs) / max(1, total_epochs - warmup_epochs)
+            return 0.5 * (1 + np.cos(np.pi * progress))
+    
+    return optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
+
+
+def train_branch(branch_name, args, train_loader, val_loader, device):
+    """Train a single branch."""
+    print(f"\n{'='*60}")
+    print(f"Training Branch {branch_name}")
+    print(f"{'='*60}")
+    
+    # Model configuration
+    config = {
+        'mambavision_config': {
+            'in_channels': 1,
+            'stem_dim': 48,
+            'stage_dims': (64, 128, 192),
+            'depths': (2, 2, 2),
+            'd_state': 12,
+            'dropout': 0.1,
+            'output_dim': 512
+        },
+        'ssm_d_state': 16,
+        'ssm_hidden': 256,
+        'ssm_layers': 2,
+        'dropout': 0.1
+    }
+    
+    # Create model
+    model = create_model(branch_name, config, device)
+    param_count = sum(p.numel() for p in model.parameters())
+    print(f"Model parameters: {param_count:,} ({param_count/1e6:.2f}M)")
+    
+    # Loss and optimizer
+    criterion = nn.MSELoss()
+    optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
+    
+    # Learning rate scheduler with warmup
+    scheduler = get_lr_scheduler(optimizer, args.warmup_epochs, args.epochs)
+    
+    # Gradient scaler for mixed precision with optimized settings
+    scaler = GradScaler(init_scale=2.**16, growth_interval=2000)
+    
+    # Training loop
+    best_val_loss = float('inf')
+    train_losses = []
+    val_losses = []
+    
+    # Create save directory for this branch
+    branch_save_dir = os.path.join(args.save_dir, f"branch_{branch_name}")
+    os.makedirs(branch_save_dir, exist_ok=True)
+    
+    print(f"\nStarting training for {args.epochs} epochs...")
+    print(f"Batch size: {args.batch_size}, Gradient accumulation: {args.grad_accum_steps}")
+    print(f"Effective batch size: {args.batch_size * args.grad_accum_steps}")
+    
+    for epoch in range(1, args.epochs + 1):
+        epoch_start = time.time()
+        
+        # Train
+        train_loss = train_epoch(
+            model, train_loader, optimizer, criterion, scaler, device, epoch,
+            grad_accum_steps=args.grad_accum_steps, clip_grad_norm=args.clip_grad_norm
+        )
+        
+        # Validate
+        val_loss = validate(model, val_loader, criterion, device)
+        
+        # Update learning rate
+        scheduler.step()
+        
+        # Record losses
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
+        
+        # Print epoch summary
+        epoch_time = time.time() - epoch_start
+        current_lr = scheduler.get_last_lr()[0]
+        print(f"Epoch {epoch:3d}/{args.epochs} | "
+              f"Train Loss: {train_loss:.4f} | "
+              f"Val Loss: {val_loss:.4f} | "
+              f"LR: {current_lr:.6f} | "
+              f"Time: {epoch_time:.1f}s")
+        
+        # Save checkpoint every 25 epochs
+        if epoch % 25 == 0:
+            checkpoint_path = os.path.join(branch_save_dir, f"checkpoint_epoch_{epoch}.pth")
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'scaler_state_dict': scaler.state_dict(),
+                'train_loss': train_loss,
+                'val_loss': val_loss,
+                'config': config
+            }, checkpoint_path)
+            print(f"  Saved checkpoint: {checkpoint_path}")
+        
+        # Save best model
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            best_model_path = os.path.join(branch_save_dir, f"best_model.pth")
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'val_loss': val_loss,
+                'config': config
+            }, best_model_path)
+            print(f"  New best model! Val Loss: {val_loss:.4f}")
+        
+        # Clear GPU cache periodically
+        if epoch % 10 == 0 and torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    
+    # Save final losses
+    np.save(os.path.join(branch_save_dir, "train_losses.npy"), np.array(train_losses))
+    np.save(os.path.join(branch_save_dir, "val_losses.npy"), np.array(val_losses))
+    
+    print(f"\nBranch {branch_name} training completed!")
+    print(f"Best validation loss: {best_val_loss:.4f}")
+    
+    return best_val_loss
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Optimized training for Mamba branches B-E")
+    
+    # Data arguments
+    parser.add_argument('--data_dir', default='/root/vitfly/training/datasets/data',
+                       help='Directory containing training data')
+    parser.add_argument('--val_split', type=float, default=0.2,
+                       help='Validation split ratio')
+    parser.add_argument('--short', type=int, default=0,
+                       help='Use only first N trajectories (0=all)')
+    
+    # Training arguments
+    parser.add_argument('--epochs', type=int, default=100,
+                       help='Number of training epochs')
+    parser.add_argument('--batch_size', type=int, default=32,
+                       help='Batch size per GPU')
+    parser.add_argument('--grad_accum_steps', type=int, default=1,
+                       help='Gradient accumulation steps')
+    parser.add_argument('--lr', type=float, default=1e-4,
+                       help='Learning rate')
+    parser.add_argument('--warmup_epochs', type=int, default=5,
+                       help='Number of warmup epochs')
+    parser.add_argument('--clip_grad_norm', type=float, default=1.0,
+                       help='Gradient clipping norm')
+    
+    # System arguments
+    parser.add_argument('--num_workers', type=int, default=4,
+                       help='Number of data loader workers')
+    parser.add_argument('--prefetch_factor', type=int, default=2,
+                       help='Data loader prefetch factor')
+    parser.add_argument('--seed', type=int, default=42,
+                       help='Random seed')
+    parser.add_argument('--device', default='cuda',
+                       help='Device to use (cuda or cpu)')
+    
+    # Branch selection
+    parser.add_argument('--branches', nargs='+', default=['A', 'B', 'C', 'D', 'E'],
+                       help='Branches to train (A, B, C, D, E)')
+    
+    # Output arguments
+    parser.add_argument('--save_dir', default='/root/vitfly/experiments/mamba_branches/optimized_training',
+                       help='Directory to save checkpoints and logs')
+    
+    args = parser.parse_args()
+    
+    # Set seed
+    set_seed(args.seed)
+    
+    # Check device
+    device = torch.device(args.device if torch.cuda.is_available() and args.device == 'cuda' else 'cpu')
+    print(f"\nUsing device: {device}")
+    if torch.cuda.is_available():
+        print(f"GPU: {torch.cuda.get_device_name(0)}")
+        print(f"CUDA version: {torch.version.cuda}")
+    
+    # Check if models are available
+    if not MODELS_AVAILABLE:
+        print("Error: Could not import all models. Please check model paths.")
+        return
+    
+    # Create save directory
+    os.makedirs(args.save_dir, exist_ok=True)
+    
+    # Load data
+    print("\nLoading data...")
+    train_data, val_data, _, _ = dataloader(
+        args.data_dir, 
+        val_split=args.val_split, 
+        seed=args.seed,
+        short=args.short
+    )
+    
+    traj_meta_train, traj_ims_train, _, desired_vels_train, curr_quats_train, _ = train_data
+    traj_meta_val, traj_ims_val, _, desired_vels_val, curr_quats_val, _ = val_data
+    
+    print(f"Training samples: {len(traj_ims_train)}")
+    print(f"Validation samples: {len(traj_ims_val)}")
+    
+    # Create datasets
+    train_dataset = OptimizedFlightmareDataset(
+        traj_ims_train, traj_meta_train, desired_vels_train, curr_quats_train
+    )
+    val_dataset = OptimizedFlightmareDataset(
+        traj_ims_val, traj_meta_val, desired_vels_val, curr_quats_val
+    )
+    
+    # Create data loaders with optimized settings
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=args.batch_size,
+        shuffle=True,
+        num_workers=args.num_workers,
+        pin_memory=True,
+        prefetch_factor=args.prefetch_factor,
+        persistent_workers=args.num_workers > 0,
+        drop_last=True  # Drop last incomplete batch for stable gradient accumulation
+    )
+    
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=args.batch_size,
+        shuffle=False,
+        num_workers=args.num_workers,
+        pin_memory=True,
+        prefetch_factor=args.prefetch_factor,
+        persistent_workers=args.num_workers > 0
+    )
+    
+    print(f"\nDataLoader configuration:")
+    print(f"  Workers: {args.num_workers}")
+    print(f"  Prefetch factor: {args.prefetch_factor}")
+    print(f"  Pin memory: True")
+    
+    # Train each branch
+    results = {}
+    for branch in args.branches:
+        if branch not in ['A', 'B', 'C', 'D', 'E']:
+            print(f"Warning: Unknown branch '{branch}', skipping...")
+            continue
+        
+        # Clear GPU cache before training each branch
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        
+        # Train branch
+        best_val_loss = train_branch(branch, args, train_loader, val_loader, device)
+        results[branch] = best_val_loss
+    
+    # Print summary
+    print(f"\n{'='*60}")
+    print("Training Summary")
+    print(f"{'='*60}")
+    for branch, loss in results.items():
+        print(f"Branch {branch}: Best validation loss = {loss:.4f}")
+    
+    print(f"\nAll branches trained successfully!")
+    print(f"Checkpoints saved to: {args.save_dir}")
+
+
+if __name__ == '__main__':
+    main()

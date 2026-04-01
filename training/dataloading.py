@@ -145,26 +145,39 @@ def dataloader(data_dir, val_split=0., short=0, seed=None, train_val_dirs=None):
     traj_meta[:, 18] = (traj_meta[:, 18] - stats_ctbr[2, 0]) / (2 * stats_ctbr[2, 1])
     traj_meta[:, 19] = (traj_meta[:, 19] - stats_ctbr[3, 0]) / (2 * stats_ctbr[3, 1])
 
-    # make train-val split (relies on earlier shuffle of traj_folders to randomize selection)
     num_val_trajs = int(val_split * len(traj_lengths))
-    val_idx = np.sum(traj_lengths[:num_val_trajs], dtype=np.int32)
-    traj_meta_val = traj_meta_full[:val_idx]
-    traj_meta_train = traj_meta_full[val_idx:]
-    traj_ims_val = traj_ims_full[:val_idx]
-    traj_ims_train = traj_ims_full[val_idx:]
-    traj_lengths_val = traj_lengths[:num_val_trajs]
-    traj_lengths_train = traj_lengths[num_val_trajs:]
-    desired_vels_val = desired_vels[:val_idx]
-    desired_vels_train = desired_vels[val_idx:]
-    #curr_vels_val = curr_vels[:val_idx]
-    #curr_vels_train = curr_vels[val_idx:]
-    curr_quats_val = curr_quats[:val_idx]
-    curr_quats_train = curr_quats[val_idx:]
-    curr_ctbr_val = curr_ctbr[:val_idx]
-    curr_ctbr_train = curr_ctbr[val_idx:]
+    if num_val_trajs == 0 and val_split > 0 and len(traj_lengths) >= 2:
+        num_val_samples = int(val_split * len(traj_meta_full))
+        indices = np.random.permutation(len(traj_meta_full))
+        val_indices = indices[:num_val_samples]
+        train_indices = indices[num_val_samples:]
+        traj_meta_train = traj_meta_full[train_indices]
+        traj_meta_val = traj_meta_full[val_indices]
+        traj_ims_train = traj_ims_full[train_indices]
+        traj_ims_val = traj_ims_full[val_indices]
+        traj_lengths_train = np.array([len(train_indices)])
+        traj_lengths_val = np.array([len(val_indices)])
+        desired_vels_train = desired_vels[train_indices]
+        desired_vels_val = desired_vels[val_indices]
+        curr_quats_train = curr_quats[train_indices]
+        curr_quats_val = curr_quats[val_indices]
+        curr_ctbr_train = curr_ctbr[train_indices]
+        curr_ctbr_val = curr_ctbr[val_indices]
+    else:
+        val_idx = np.sum(traj_lengths[:num_val_trajs], dtype=np.int32) if num_val_trajs > 0 else 0
+        traj_meta_val = traj_meta_full[:val_idx] if val_idx > 0 else traj_meta_full[:0]
+        traj_meta_train = traj_meta_full[val_idx:] if val_idx > 0 else traj_meta_full
+        traj_ims_val = traj_ims_full[:val_idx] if val_idx > 0 else traj_ims_full[:0]
+        traj_ims_train = traj_ims_full[val_idx:] if val_idx > 0 else traj_ims_full
+        traj_lengths_val = traj_lengths[:num_val_trajs] if num_val_trajs > 0 else np.array([])
+        traj_lengths_train = traj_lengths[num_val_trajs:] if num_val_trajs > 0 else traj_lengths
+        desired_vels_val = desired_vels[:val_idx] if val_idx > 0 else desired_vels[:0]
+        desired_vels_train = desired_vels[val_idx:] if val_idx > 0 else desired_vels
+        curr_quats_val = curr_quats[:val_idx] if val_idx > 0 else curr_quats[:0]
+        curr_quats_train = curr_quats[val_idx:] if val_idx > 0 else curr_quats
+        curr_ctbr_val = curr_ctbr[:val_idx] if val_idx > 0 else curr_ctbr[:0]
+        curr_ctbr_train = curr_ctbr[val_idx:] if val_idx > 0 else curr_ctbr
 
-    # Note, we return the is_png=1 flag since it indicates old vs new datasets, which indicates how to parse the metadata
-    # We also return the traj_folder names for train and val sets, so that they can be saved and later used to specifically generate evaluate plots on each set
     return (traj_meta_train, traj_ims_train, traj_lengths_train, desired_vels_train, curr_quats_train, curr_ctbr_train), (traj_meta_val, traj_ims_val, traj_lengths_val, desired_vels_val, curr_quats_val, curr_ctbr_val), 1, (traj_folders[num_val_trajs:], traj_folders[:num_val_trajs])
 
 def parse_meta_str(meta_str):
