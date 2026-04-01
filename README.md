@@ -94,6 +94,19 @@ python train_mamba_optimized.py \
 
 All branches show convergence without overfitting when trained with sufficient data (200 trajectories).
 
+## TDD Verification
+
+All branches verified working (1 epoch, 50 trajectories):
+- Branch A: Train 5.14→0.46, Val 0.0792 ✅
+- Branch B: Train 9.14→0.24, Val 0.1693 ✅
+- Branch C: Train 0.41→0.13, Val 0.0961 ✅
+
+Run verification:
+```bash
+cd training
+python train_mamba_optimized.py --branches A --epochs 1 --data_dir /root/vitfly/training/datasets/data_full --short 50
+```
+
 ## Key Bugs Fixed
 
 ### 1. Target Variable Bug (CRITICAL)
