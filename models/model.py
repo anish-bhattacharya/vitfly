@@ -476,3 +476,218 @@ class VMambaLSTMNet(nn.Module):
         
         output = self.fc_out(output)
         return output, hidden_state
+
+
+class CNNMamba3(nn.Module):
+    """
+    分支C：CNN空间编码 + Mamba-3时序架构
+    目标：极致轻量化(<1M参数)下的性能底线
+    
+    架构特点：
+    - Stage 1: MobileNetV3浅层CNN (2-6层可调)
+    - Stage 2: Mamba-3 SSM × 2 (d_state=32-128可调)
+    - Stage 3: 轻量特征融合与解码
+    - Stage 4: 时序建模 (可选LSTM或Temporal-SSM)
+    
+    参数量：目标 < 1M (当前实现 ~2.14M)
+    """
+    
+    def __init__(self, cnn_depth=4, ssm_layers=2, d_state=32, hidden_size=128, use_temporal_ssm=False):
+        """
+        :param cnn_depth: CNN层数 [2,4,6]
+        :param ssm_layers: Mamba-3 SSM层数 [1,2,4]
+        :param d_state: SSM状态维度 [32,64,128]
+        :param hidden_size: LSTM隐藏层大小
+        :param use_temporal_ssm: 是否使用时序SSM代替LSTM
+        """
+        super().__init__()
+        
+        # Stage 1: MobileNetV3浅层CNN
+        self.cnn_depth = cnn_depth
+        self.d_state = d_state
+        self.cnn_layers = nn.ModuleList()
+        
+        # 输入: (B, 1, 60, 90)
+        in_channels = 1
+        out_channels = 32
+        
+        # CNN层配置 - 增加容量但仍保持轻量
+        for i in range(cnn_depth):
+            if i == 0:
+                # 第一层：较大卷积核，提取基础特征
+                conv = nn.Conv2d(in_channels, out_channels, kernel_size=7, stride=2, padding=3)
+            elif i == 1:
+                # 第二层：深度可分离卷积，效率高
+                conv = nn.Sequential(
+                    nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, groups=out_channels),
+                    nn.Conv2d(out_channels, out_channels*2, kernel_size=1, stride=1)
+                )
+                out_channels *= 2
+            elif i == 2:
+                # 第三层：扩张卷积，增加感受野
+                conv = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=2, dilation=2)
+            else:
+                # 后续层：轻量卷积
+                conv = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1)
+            
+            self.cnn_layers.append(conv)
+            self.cnn_layers.append(nn.BatchNorm2d(out_channels))
+            self.cnn_layers.append(nn.GELU())
+            
+            if i % 2 == 0 and i > 0:
+                # 每两层添加池化，逐步降采样
+                self.cnn_layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
+        
+        self.cnn_out_channels = out_channels
+        
+        # Stage 2: Mamba-3 SSM
+        self.ssm_layers = ssm_layers
+        self.ssm_blocks = nn.ModuleList()
+        
+        for i in range(ssm_layers):
+            ssm_block = SimplifiedSSMBlock(
+                self.cnn_out_channels, 
+                d_state=d_state,
+                expansion_factor=2,  # 轻量化设计
+                drop_path=0.05
+            )
+            self.ssm_blocks.append(ssm_block)
+        
+        # Patch merging for SSM
+        self.patch_merge = OverlapPatchMerging(
+            in_channels=self.cnn_out_channels,
+            out_channels=self.cnn_out_channels,
+            patch_size=3,
+            stride=2,
+            padding=1
+        )
+        
+        # Stage 3: 轻量特征融合与解码
+        self.global_pool = nn.AdaptiveAvgPool2d((1, 1))
+        self.decoder = nn.Sequential(
+            nn.Linear(self.cnn_out_channels, 256),
+            nn.GELU(),
+            nn.Dropout(0.1),
+            nn.Linear(256, 128),
+            nn.GELU(),
+            nn.Dropout(0.1),
+            nn.Linear(128, 128)  # 输出128维以匹配LSTM输入
+        )
+        
+        # Stage 4: 时序建模
+        self.use_temporal_ssm = use_temporal_ssm
+        if use_temporal_ssm:
+            # 使用时序SSM
+            self.temporal_ssm = SimplifiedSSM(129, d_state=16, bidirectional=False)
+            self.fc_out = nn.Linear(129, 3)
+        else:
+            # 使用轻量LSTM
+            self.lstm = nn.LSTM(
+                input_size=129,  # 128 + 1 (desvel/10)
+                hidden_size=hidden_size,
+                num_layers=1,
+                batch_first=False
+            )
+            self.fc_out = nn.Linear(hidden_size, 3)
+    
+    def forward(self, X):
+        # 处理输入
+        x = X[0]
+        is_sequence = (len(x.shape) == 5)
+        
+        if is_sequence:
+            T, B_seq = x.shape[:2]
+            x = x.reshape(T * B_seq, *x.shape[2:])
+            desvel = X[1].reshape(T * B_seq, -1) if len(X[1].shape) > 1 else X[1]
+            currquat = X[2].reshape(T * B_seq, -1) if len(X[2].shape) > 1 else X[2]
+        else:
+            B_seq = x.shape[0]
+            desvel = X[1]
+            currquat = X[2]
+        
+        X_processed = [x, desvel, currquat]
+        X_processed = refine_inputs(X_processed)
+        x = X_processed[0]
+        
+        B = x.shape[0]
+        
+        # Stage 1: CNN特征提取
+        for layer in self.cnn_layers:
+            x = layer(x)
+        
+        # 获取CNN输出尺寸
+        _, C_cnn, H_cnn, W_cnn = x.shape
+        
+        # Stage 2: Mamba-3 SSM处理
+        # Patch merging - 将空间特征转换为序列
+        x, H_patch, W_patch = self.patch_merge(x)  # (B, N, C_cnn)
+        
+        # SSM处理
+        for ssm_block in self.ssm_blocks:
+            x = ssm_block(x, H_patch, W_patch)
+        
+        # 转换回空间格式
+        x = x.transpose(1, 2).reshape(B, self.cnn_out_channels, H_patch, W_patch)
+        
+        # Stage 3: 特征融合与解码
+        x = self.global_pool(x).flatten(1)  # (B, C_cnn)
+        x = self.decoder(x)  # (B, 64)
+        
+        # 融合速度信息
+        desvel_normalized = X_processed[1] / 10.0
+        x = torch.cat([x, desvel_normalized], dim=1)  # (B, 129)
+        
+        # Stage 4: 时序建模
+        if is_sequence:
+            # 恢复时序维度
+            x = x.reshape(T, B_seq, 129)
+            
+            if self.use_temporal_ssm:
+                # 时序SSM处理 - 需要添加空间维度
+                # x形状: (T, B, 129) -> 需要转换为 (T, B, 1, 129) 然后展平
+                x_reshaped = x.unsqueeze(2)  # (T, B, 1, 129)
+                B_total = T * B_seq
+                x_reshaped = x_reshaped.reshape(B_total, 1, 129)  # (T*B, 1, 129)
+                x_processed = self.temporal_ssm(x_reshaped, 1, 1)  # (T*B, 1, 129)
+                x_processed = x_processed.reshape(T, B_seq, 129)  # 恢复形状
+                x = x_processed.mean(dim=0)  # 池化时间维度
+                output = self.fc_out(x)
+            else:
+                # LSTM处理
+                x, (h_n, c_n) = self.lstm(x)
+                x = x[-1]
+                output = self.fc_out(x)
+        else:
+            # 非时序模式
+            h_n, c_n = None, None
+            if self.use_temporal_ssm:
+                # 添加空间维度以匹配SSM输入格式
+                x = x.unsqueeze(1)  # (B, 1, 129)
+                x = self.temporal_ssm(x, 1, 1)  # (B, 1, 129)
+                x = x.squeeze(1)  # (B, 129)
+                output = self.fc_out(x)
+            else:
+                # 单步LSTM
+                x = x.unsqueeze(0)
+                x, (h_n, c_n) = self.lstm(x)
+                x = x.squeeze(0)
+                output = self.fc_out(x)
+        
+        # 返回输出和hidden_state（为兼容性）
+        hidden_state = None
+        if not self.use_temporal_ssm and is_sequence:
+            hidden_state = (h_n, c_n)
+        
+        return output, hidden_state
+    
+    def count_parameters(self):
+        """计算模型参数量"""
+        total_params = sum(p.numel() for p in self.parameters())
+        trainable_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
+        
+        print(f"总参数量: {total_params:,}")
+        print(f"可训练参数量: {trainable_params:,}")
+        print(f"CNN深度: {self.cnn_depth}, SSM层数: {self.ssm_layers}, d_state: {self.d_state}")
+        print(f"是否达到<1M目标: {'是' if total_params < 1000000 else '否'}")
+        
+        return total_params, trainable_params

@@ -134,6 +134,15 @@ class TRAINER:
         elif self.model_type == 'DroneMamba_LSTM':
             # 使用 LSTM 进行时序建模 (混合版本)
             self.model = model_library.DroneMamba(use_temporal_ssm=False, d_state=8, hidden_size=128).to(self.device).float()
+        elif self.model_type == 'CNNMamba3':
+            # 分支C: CNN + Mamba-3 轻量化架构
+            self.model = model_library.CNNMamba3(
+                cnn_depth=self.args.cnn_depth,
+                ssm_layers=self.args.ssm_layers,
+                d_state=self.args.d_state,
+                hidden_size=self.args.hidden_size,
+                use_temporal_ssm=self.args.use_temporal_ssm
+            ).to(self.device).float()
         else:
             self.mylogger('[SETUP] Invalid model_type {}. Exiting.'.format(self.model_type))
             exit()
@@ -326,6 +335,14 @@ def argparsing():
     parser.add_argument('--lr_decay', action='store_true', default=False, help='whether to use lr_decay, hardcoded to exponentially decay to 0.01 * lr by end of training')
     parser.add_argument('--save_model_freq', type=int, default=25, help='frequency with which to save model checkpoints')
     parser.add_argument('--val_freq', type=int, default=10, help='frequency with which to evaluate on validation set')
+    
+    # 分支C特定参数
+    parser.add_argument('--batch_size', type=int, default=32, help='batch size for training')
+    parser.add_argument('--cnn_depth', type=int, default=4, help='CNN depth for CNNMamba3 [2,4,6]')
+    parser.add_argument('--ssm_layers', type=int, default=2, help='Mamba-3 SSM layers for CNNMamba3 [1,2,4]')
+    parser.add_argument('--d_state', type=int, default=32, help='SSM state dimension for CNNMamba3 [32,64,128]')
+    parser.add_argument('--hidden_size', type=int, default=128, help='LSTM hidden size for CNNMamba3')
+    parser.add_argument('--use_temporal_ssm', action='store_true', default=False, help='use temporal SSM instead of LSTM for CNNMamba3')
 
     args = parser.parse_args()
     print('[CONFIGARGPARSE] Parsing args from config file {}'.format(args.config))
