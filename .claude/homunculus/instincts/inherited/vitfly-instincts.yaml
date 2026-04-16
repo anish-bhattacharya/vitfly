@@ -1,0 +1,300 @@
+# Instincts generated from https://github.com/Liber1917/vitfly
+# Generated: 2026-04-16T15:10:47.974Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: vitfly-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/Liber1917/vitfly
+---
+
+# Vitfly Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: fix
+
+## Evidence
+
+- 1 commits analyzed
+- Detected conventional commit pattern
+- Examples: fix: resolve simulation bugs across evaluation pipeline
+
+---
+id: vitfly-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/Liber1917/vitfly
+---
+
+# Vitfly Commit Length
+
+## Action
+
+Write moderate-length commit messages (~55 characters)
+
+## Evidence
+
+- Average commit message length: 55 chars
+- Based on 1 commits
+
+---
+id: vitfly-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/Liber1917/vitfly
+---
+
+# Vitfly Naming Files
+
+## Action
+
+Use snake_case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: snake_case
+
+---
+id: vitfly-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/Liber1917/vitfly
+---
+
+# Vitfly Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: vitfly-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/Liber1917/vitfly
+---
+
+# Vitfly Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: vitfly-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/Liber1917/vitfly
+---
+
+# Vitfly Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: vitfly-instinct-file-naming
+trigger: "When creating a new Python file"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct File Naming
+
+## Action
+
+Name the file using snake_case
+
+## Evidence
+
+- Pattern in namingConventions.files: snake_case
+
+---
+id: vitfly-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Function Naming
+
+## Action
+
+Use camelCase for the function name
+
+## Evidence
+
+- Pattern in namingConventions.functions: camelCase
+
+---
+id: vitfly-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Class Naming
+
+## Action
+
+Use PascalCase for the class name
+
+## Evidence
+
+- Pattern in namingConventions.classes: PascalCase
+
+---
+id: vitfly-instinct-constant-naming
+trigger: "When declaring a constant"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Constant Naming
+
+## Action
+
+Use SCREAMING_SNAKE_CASE for the constant name
+
+## Evidence
+
+- Pattern in namingConventions.constants: SCREAMING_SNAKE_CASE
+
+---
+id: vitfly-instinct-import-style
+trigger: "When importing modules within the package"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Import Style
+
+## Action
+
+Use relative imports
+
+## Evidence
+
+- Pattern in importStyle: relative
+
+---
+id: vitfly-instinct-export-style
+trigger: "When exporting functions or classes from a module"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in exportStyle: named
+
+---
+id: vitfly-instinct-commit-format
+trigger: "When writing a git commit message"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Commit Format
+
+## Action
+
+Start the message with a conventional commit prefix, such as 'fix:'
+
+## Evidence
+
+- Pattern in commits.prefixes: fix
+- Seen in commit: fix: resolve simulation bugs across evaluation pipeline
+
+---
+id: vitfly-instinct-commit-length
+trigger: "When composing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Commit Length
+
+## Action
+
+Keep the message concise, around 55 characters on average
+
+## Evidence
+
+- Pattern in commits.averageLength: 55
+
+---
+id: vitfly-instinct-test-location
+trigger: "When adding or updating tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: Liber1917/vitfly
+---
+
+# Vitfly Instinct Test Location
+
+## Action
+
+Place test files in the separate 'envtest' folder
+
+## Evidence
+
+- Pattern in architecture.folderStructure.testLocation: separate
+- Pattern in architecture.folderStructure.commonFolders: envtest
+
