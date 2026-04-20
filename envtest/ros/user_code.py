@@ -154,8 +154,12 @@ def find_closest_zero_index(arr):
     return tuple(zero_indices[chosen_index])  # return index tuple
 
 def compute_command_state_based(state, obstacles, desiredVel, rl_policy=None, keyboard=False, keyboard_input=''):
-    # print("Computing command based on obstacle information!")
-    # print("Obstacles: ", obstacles)
+    if obstacles is None or not hasattr(obstacles, 'obstacles') or len(obstacles.obstacles) == 0:
+        command = AgileCommand(2)
+        command.t = state.t
+        command.velocity = [desiredVel, 0, 0]
+        command.yawrate = 0.0
+        return command
 
     """
     # Example of SRT command

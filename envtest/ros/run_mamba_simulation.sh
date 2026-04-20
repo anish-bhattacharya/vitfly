@@ -157,7 +157,7 @@ print_warning "等待仿真初始化 (10 秒)..."
 sleep 10
 
 # 检查仿真节点
-if rostopic list | grep -q "/kingfisher/state"; then
+if rostopic list | grep -q "/kingfisher/dodgeros_pilot/groundtruth/state"; then
     print_success "仿真节点已就绪"
 else
     print_error "仿真节点未就绪，请手动检查"

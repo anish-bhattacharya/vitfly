@@ -13,6 +13,7 @@ DroneMamba 仿真评估节点
 
 import argparse
 import rospy
+import cv2
 from dodgeros_msgs.msg import Command, QuadState
 from envsim_msgs.msg import ObstacleArray
 from sensor_msgs.msg import Image

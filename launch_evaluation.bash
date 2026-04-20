@@ -1,5 +1,31 @@
 #!/bin/bash
 
+# Set ROS environment for WSL
+export ROS_MASTER_URI=http://192.168.233.250:11311
+export ROS_IP=192.168.233.250
+unset ROS_HOSTNAME
+
+# WSL2 mirrored mode: fix 127.0.0.1 routing (loops through loopback0 instead of lo,
+# which breaks NetMQ Signaler's internal TCP loopback and prevents Unity-ZMQ connection)
+if ip route get 127.0.0.1 2>/dev/null | grep -q loopback0; then
+  ip route del 127.0.0.1 via 169.254.73.152 dev loopback0 proto kernel src 127.0.0.1 onlink table 127 2>/dev/null
+  ip route flush cache 2>/dev/null
+  echo "[LAUNCH SCRIPT] Fixed 127.0.0.1 routing (was loopback0, now lo)"
+fi
+
+# WSL2 graphics: force Mesa OpenGL over NVIDIA GLX (which crashes with XWayland)
+export MESA_GL_VERSION_OVERRIDE=4.5
+export MESA_GLSL_VERSION_OVERRIDE=450
+
+# Set Flightmare Path if it is not set
+if [ -z $FLIGHTMARE_PATH ]
+then
+  export FLIGHTMARE_PATH=$PWD/flightmare
+fi
+
+# Force absolute path for WSL
+export FLIGHTMARE_PATH=/root/catkin_ws/src/vitfly/flightmare
+
 # Pass number of rollouts as argument
 if [ $1 ]
 then
@@ -45,15 +71,15 @@ then
 fi
 
 # Launch the simulator, unless it is already running
-if [ -z $(pgrep visionsim_node) ]
-then
-  roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True $realtimefactor &
-  ROS_PID="$!"
-  echo $ROS_PID
-  sleep 10
-else
-  ROS_PID=""
-fi
+  if [ -z $(pgrep visionsim_node) ]
+  then
+    roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True $realtimefactor &
+    ROS_PID="$!"
+    echo $ROS_PID
+    sleep 15
+  else
+    ROS_PID=""
+  fi
 
 SUMMARY_FILE="evaluation.yaml"
 echo "" > $SUMMARY_FILE
@@ -86,7 +112,7 @@ do
     # Launch the simulator, unless it is already running
     if [ -z $(pgrep visionsim_node) ]
     then
-      roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True $realtimefactor &
+  roslaunch envsim visionenv_sim.launch render:=False gui:=False rviz:=True $realtimefactor &
       ROS_PID="$!"
       echo $ROS_PID
       sleep 10
@@ -109,9 +135,15 @@ do
   echo "$ROLLOUT_NAME"
 
   cd ./envtest/ros/
+  export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7
+  source ~/miniconda3/etc/profile.d/conda.sh && conda activate ros_py38
+  # Add conda packages AFTER ROS packages in PYTHONPATH  
+  export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
   python3 evaluation_node.py ${datetime}_N$i &
   PY_PID="$!"
 
+  export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7  
+  export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
   python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "ViTLSTM" --model_path ../../models/ViTLSTM_model.pth &
   COMP_PID="$!"
 

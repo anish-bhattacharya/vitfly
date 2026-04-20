@@ -225,13 +225,28 @@ class AgilePilotNode:
     def img_callback(self, img_data):
         self.ctr += 1
         self.prevImg = deepcopy(self.last_valid_img)
-        img = self.cv_bridge.imgmsg_to_cv2(img_data, desired_encoding="passthrough")
+        try:
+            img = self.cv_bridge.imgmsg_to_cv2(img_data, desired_encoding="passthrough")
+        except Exception as e:
+            print(f"[img_callback] cv_bridge error: {e}, using fallback")
+            img = np.zeros((480, 640), dtype=np.float32)
+
+        if img.size == 0 or img.shape[0] == 0:
+            img = np.zeros((480, 640), dtype=np.float32)
+
+        if self.last_valid_img is None:
+            self.prevImg = np.ones((480, 640), dtype=np.float32) * 10.0
+
         img = np.clip(img/self.depth_im_threshold, 0, 1)
-                
+
         if self.prevImg is None:
             self.prevImg = img
 
-        self.last_valid_img = deepcopy(img) if img.min() > 0.0 else self.last_valid_img
+        if img.size > 0 and img.shape[0] > 0:
+            try:
+                self.last_valid_img = deepcopy(img) if img.min() > 0.0 else self.last_valid_img
+            except:
+                self.last_valid_img = np.ones((480, 640), dtype=np.float32) * 10.0
         
         
         

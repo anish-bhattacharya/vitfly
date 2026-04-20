@@ -105,6 +105,8 @@ class Evaluator:
         )
         self.pos.append(pos)
 
+        if np.isnan(self.pos_x):
+            return
         bin_x = int(max(min(np.floor(self.pos_x), self.xmax), 0))
         if np.isnan(self.time_array[bin_x]):
             self.time_array[bin_x] = rospy.get_rostime().to_sec()
