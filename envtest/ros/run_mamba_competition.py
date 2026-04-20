@@ -193,7 +193,7 @@ class DroneMambaEvaluator:
         depth_tensor = torch.from_numpy(depth_img).unsqueeze(0).unsqueeze(0)  # (1, 1, 60, 90)
         
         # 期望速度（从状态或固定值）
-        desired_vel = torch.tensor([5.0]).view(1, 1)  # 默认 5.0 m/s（高速）
+        desired_vel = torch.tensor([[5.0, 0.0, 0.0]])  # 3D velocity: [vx, vy, vz] — matches training input shape (B, 3)
         
         # 四元数 - QuadState 的 pose 是 PoseStamped
         quat = [
