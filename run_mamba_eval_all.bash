@@ -64,7 +64,7 @@ for BRANCH in "${BRANCHES[@]}"; do
   mkdir -p "$BRANCH_RESULTS"
 
   cd "$SCRIPT_DIR"
-  bash launch_mamba_evaluation.bash "$N" vision "$MODEL_TYPE" "$MODEL_PATH" \
+  bash launch_mamba_evaluation.bash "$N" vision "" "$MODEL_TYPE" "$MODEL_PATH" \
     2>&1 | tee "$BRANCH_RESULTS/eval.log"
 
   # Copy evaluation summary if present
