@@ -24,9 +24,10 @@ declare -A BRANCH_MODEL_TYPE=(
   [E]="DecisionMamba"
 )
 
-BRANCHES=("${@:-A B C D E}")
-if [ ${#BRANCHES[@]} -eq 0 ]; then
+if [ $# -eq 0 ]; then
   BRANCHES=(A B C D E)
+else
+  BRANCHES=("$@")
 fi
 
 echo "========================================"
