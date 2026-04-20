@@ -28,6 +28,27 @@ import torch
 sys.path.append(opj(os.path.dirname(os.path.abspath(__file__)), '../../models'))
 from model import *
 
+# Branch model imports — each branch has its own model directory
+_BRANCH_MODEL_DIRS = [
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_A_vmamba_lstm/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_B_mambavision_ssm/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_C_cnn_mamba3/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_D_sth_mamba/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_E_decisionmamba/models'),
+]
+for _d in _BRANCH_MODEL_DIRS:
+    if _d not in sys.path:
+        sys.path.insert(0, _d)
+
+try:
+    from vmamba_lstm_model import VMambaLSTMNet, create_vmamba_lstm_model
+    from mambavision_ssm_model import MambaVisionSSMNet, create_mambavision_ssm_model
+    from cnn_mamba3_model import CNNMamba3Net, create_cnn_mamba3_model
+    from sth_mamba_model import STHMambaNet, create_sth_mamba_model
+    from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
+except ImportError as _e:
+    print(f"[RUN_COMPETITION] Warning: branch model import failed: {_e}")
+
 class AgilePilotNode:
     def __init__(self, vision_based=False, model_type=None, model_path=None, desVel=None, keyboard=False):
         print("[RUN_COMPETITION] Initializing agile_pilot_node...")
@@ -101,13 +122,30 @@ class AgilePilotNode:
                 self.model = LSTMNetVIT().to(self.device).float()
             elif model_type == 'DroneMamba':
                 self.model = DroneMamba(use_temporal_ssm=True, d_state=8).to(self.device).float()
-                print(f"[RUN_COMPETITION] DroneMamba (SSM 版本) 已加载")                
+                print(f"[RUN_COMPETITION] DroneMamba (SSM) loaded")
+            elif model_type == 'VMambaLSTM':
+                self.model = VMambaLSTMNet().to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch A — VMambaLSTMNet loaded")
+            elif model_type == 'MambaVisionSSM':
+                self.model = create_mambavision_ssm_model({}).to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch B — MambaVisionSSMNet loaded")
+            elif model_type == 'CNNMamba3':
+                self.model = create_cnn_mamba3_model({'ssm_d_state': 16}).to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch C — CNNMamba3Net loaded (ssm_d_state=16)")
+            elif model_type == 'STHMamba':
+                self.model = create_sth_mamba_model({}).to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch D — STHMambaNet loaded")
+            elif model_type == 'DecisionMamba':
+                self.model = create_decision_mamba_model({}).to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch E — DecisionMambaNet loaded")
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()
 
             # Give full path if possible since the bash script runs from outside the folder
-            self.model.load_state_dict(torch.load(model_path, map_location=self.device))
+            ckpt = torch.load(model_path, map_location=self.device)
+            state_dict = ckpt['model_state_dict'] if isinstance(ckpt, dict) and 'model_state_dict' in ckpt else ckpt
+            self.model.load_state_dict(state_dict)
             self.model.eval()
 
             # Initialize hidden state

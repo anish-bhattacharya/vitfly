@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-20T06:56:20Z",
+  "timestamp": "2026-04-20T08:30:00Z",
   "phase": "mambatest-eval",
   "phase_name": "Mamba model evaluation on WSL2 simulation",
   "phase_dir": "/root/catkin_ws/src/vitfly-mambatest",
@@ -15,17 +15,48 @@
     {"id": 7, "name": "Restore user_code.py obstacles null-check", "status": "done"},
     {"id": 8, "name": "Fix run_mamba_competition.py missing import cv2", "status": "done"},
     {"id": 9, "name": "Fix run_mamba_simulation.sh wrong topic name", "status": "done"},
-    {"id": 10, "name": "Commit and push mambatest to GitHub", "status": "done", "commit": "febb6ed"}
+    {"id": 10, "name": "Commit and push mambatest to GitHub", "status": "done", "commit": "febb6ed"},
+    {
+      "id": 11,
+      "name": "Offline forward pass validation of Mamba models",
+      "status": "done",
+      "findings": {
+        "mamba_submodules": "OK — SimplifiedSSM, SimplifiedSSMBlock, OverlapPatchMerging all import cleanly",
+        "einops": "INSTALLED — pip install einops required in ros_py38 (was missing)",
+        "branch_A_VMambaLSTMNet": "PASS — output shape [1,3]. Uses 3D velocity (B,3). run_mamba_competition.py fixed from view(1,1) to [[5.0,0.0,0.0]]",
+        "branch_B_MambaVisionSSMNet": "PASS — output shape [1,3]. Uses 3D velocity.",
+        "branch_C_CNNMamba3Net": "PASS — output shape [1,3]. Must use create_cnn_mamba3_model({'ssm_d_state': 16}) — checkpoint uses d_state=16 but factory default is 32.",
+        "branch_D": "PASS — output shape [1,3].",
+        "branch_E_DecisionMambaNet": "PASS — output shape [1,3]. Module file is decision_mamba_model.py not decisionmamba_model.py.",
+        "DroneMamba_model_pth": "PASS — output shape [1,3]. Uses 1D velocity (B,1) — trained before 3D vel fix. temporal_ssm d_model=517 (not 519).",
+        "critical_bugs_found": [
+          "run_mamba_competition.py line 196: desired_vel was view(1,1) — FIXED to [[5.0,0.0,0.0]] (3D)",
+          "run_mamba_competition.py only loads DroneMamba/VMambaLSTMNet — cannot load branches B/C/D/E without changes",
+          "Branch C checkpoint uses ssm_d_state=16 but factory defaults to 32 — must pass {'ssm_d_state': 16} to create_cnn_mamba3_model"
+        ]
+      }
+    }
   ],
   "remaining_tasks": [
-    {"id": 11, "name": "Offline forward pass validation of Mamba models", "status": "not_started",
-     "detail": "Check mamba_submodules.py imports in ros_py38 conda env; run DroneMamba/VMambaLSTM forward pass with dummy data matching sim I/O shapes"},
-    {"id": 12, "name": "Verify ROS topic interface compatibility", "status": "not_started",
-     "detail": "run_mamba_competition.py publishes TwistStamped; verify dodgeros_pilot accepts it (original uses dodgeros_msgs/Command)"},
-    {"id": 13, "name": "Full simulation run with Mamba weights", "status": "not_started",
-     "detail": "After offline validation passes: ip addr add 192.168.233.250/32 dev lo, then run simulation with each branch best_model.pth"}
+    {
+      "id": 12,
+      "name": "Verify ROS topic interface compatibility AND extend run_mamba_competition.py to support all 5 branches",
+      "status": "not_started",
+      "detail": "run_mamba_competition.py currently only loads DroneMamba or VMambaLSTMNet. Need to add loading logic for branches B (MambaVisionSSMNet), C (CNNMamba3Net with ssm_d_state=16), D (STH-Mamba), E (DecisionMambaNet). Also verify TwistStamped interface with rostopic echo during sim."
+    },
+    {
+      "id": 13,
+      "name": "Full simulation run with Mamba weights",
+      "status": "not_started",
+      "detail": "After interface fix: ip addr add 192.168.233.250/32 dev lo, then run simulation with each branch best_model.pth"
+    }
   ],
   "blockers": [
+    {
+      "description": "run_mamba_competition.py cannot load branch B/C/D/E models — needs branch-aware loading added to load_model()",
+      "type": "technical",
+      "workaround": "Add elif branch_name checks in load_model(); use sys.path.insert for branch model directories"
+    },
     {
       "description": "ROS interface mismatch risk: run_mamba_competition.py publishes TwistStamped but dodgeros_pilot may only accept dodgeros_msgs/Command",
       "type": "technical",
@@ -42,10 +73,10 @@
   "decisions": [
     {"decision": "Use setup-evaluation-20260321 as base (not wsl2-support)", "rationale": "setup-evaluation has the full Mamba model code, weights, and training infra; wsl2-support only had WSL2 fixes which we cherry-picked in"},
     {"decision": "Worktree at /root/catkin_ws/src/vitfly-mambatest, wsl2-support kept intact at /root/catkin_ws/src/vitfly", "rationale": "wsl2-support is the known-working simulation baseline and must not be polluted"},
-    {"decision": "Did not run offline validation this session due to context limits", "rationale": "Must be done next session before sim run"},
-    {"decision": "Did not fix velocity normalization change in user_code.py (mambatest adds x/norm + min 2.0 m/s floor)", "rationale": "This is a deliberate Mamba-era change, not a bug; left as-is"}
+    {"decision": "Fixed run_mamba_competition.py velocity from (B,1) to (B,3)", "rationale": "Branches A/B/C/D/E all trained with 3D velocity (512+3+4=519 LSTM input). DroneMamba_model.pth is legacy 1D model — not used for branch eval."},
+    {"decision": "DroneMamba_model.pth uses 1D velocity (517-dim SSM)", "rationale": "Pre-dates train_mamba_optimized.py 3D velocity fix; keep as fallback but not primary evaluation target"}
   ],
-  "uncommitted_files": [],
-  "next_action": "cd /root/catkin_ws/src/vitfly-mambatest && conda activate ros_py38 && python3 -c \"import sys; sys.path.insert(0,'models'); from mamba_submodules import SimplifiedSSM; from vmamba_lstm_model import VMambaLSTMNet; import torch; m=VMambaLSTMNet(); x=torch.zeros(1,1,60,90); v=torch.tensor([[5.0]]); q=torch.zeros(1,4); q[:,0]=1; o,h=m([x,v,q]); print('VMambaLSTM OK, output shape:', o.shape)\"",
-  "context_notes": "mambatest branch is now on GitHub at https://github.com/Liber1917/vitfly/tree/mambatest. The branch merges the full Mamba experiment suite with working WSL2 simulation infrastructure. The big unknown is whether run_mamba_competition.py's TwistStamped interface works with dodgeros_pilot. If it doesn't, fall back to loading Mamba model inside the original run_competition.py user_code.py instead."
+  "uncommitted_files": ["envtest/ros/run_mamba_competition.py"],
+  "next_action": "Extend run_mamba_competition.py load_model() to support branch B/C/D/E by detecting branch name from model_path and loading correct model class. Then verify TwistStamped interface in live sim.",
+  "context_notes": "All 5 branches (A-E) validated with actual saved weights — all output [1,3] velocity vectors. Key fix applied: velocity input changed from (B,1) to (B,3) in run_mamba_competition.py. Branch C needs ssm_d_state=16 override. Branch E module is decision_mamba_model.py. einops must be installed in ros_py38 (done). Ready for sim once load_model() extended."
 }

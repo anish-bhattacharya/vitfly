@@ -77,39 +77,58 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     img2 = orig_img.copy() # used for generating debugimg
     img = ToTensor()(np.array(img))
 
-    if 'LSTMNet' in trained_model.__class__.__name__ or 'VMambaLSTMNet' in trained_model.__class__.__name__:
-        if trained_model.__class__.__name__ == 'LSTMNet':
+    # Branch A (VMambaLSTMNet) and legacy LSTM models use sequence hidden state.
+    # VMambaLSTMNet expects 3D velocity (B,3); legacy models expect scalar (B,1).
+    _class = trained_model.__class__.__name__
+    _is_vmamba_lstm = (_class == 'VMambaLSTMNet')
+    _is_legacy_lstm = 'LSTMNet' in _class or _class == 'UNetConvLSTMNet'
+    # Branch B/C/D/E are stateless (no LSTM hidden state)
+    _is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet')
+
+    if _is_legacy_lstm or _is_vmamba_lstm:
+        if _class == 'LSTMNet':
             trained_model.lstm.num_layers = 2
             trained_model.lstm.hidden_size = 395
-        elif trained_model.__class__.__name__ == 'LSTMNetVIT':
+        elif _class == 'LSTMNetVIT':
             trained_model.lstm.num_layers = 3
             trained_model.lstm.hidden_size = 128
-        elif trained_model.__class__.__name__ == 'UNetConvLSTMNet':
+        elif _class == 'UNetConvLSTMNet':
             trained_model.lstm.num_layers = 2
             trained_model.lstm.hidden_size = 200
-        else:
-            pass  # VMambaLSTMNet uses default config
+        # else: VMambaLSTMNet uses its own lstm config from __init__
 
-        # Initialize or move hidden_state to the correct device
         if state.pos[0] < 0.5 or hidden_state is None:
             hidden_state = (torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float().to(device),
                             torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float().to(device))
         else:
             hidden_state = (hidden_state[0].to(device), hidden_state[1].to(device))
 
+        if _is_vmamba_lstm:
+            # VMambaLSTMNet trained with 3D velocity: lstm_input = 512 + 3 + 4 = 519
+            vel_tensor = torch.tensor([[desiredVel, 0.0, 0.0]]).float().to(device)
+        else:
+            vel_tensor = torch.tensor(desiredVel).view(1, 1).float().to(device)
+
         with torch.no_grad():
-            # Move all input tensors to the model's device before inference
             x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
-                                             torch.tensor(desiredVel).view(1, 1).float().to(device),
-                                             torch.tensor(q).view(1,-1).float().to(device),
+                                             vel_tensor,
+                                             torch.tensor(q).view(1, -1).float().to(device),
                                              hidden_state])
 
-    else:
+    elif _is_branch_bce:
+        # Branches B/C/D/E: stateless models, 3D velocity input, return (output, None)
+        vel_tensor = torch.tensor([[desiredVel, 0.0, 0.0]]).float().to(device)
         with torch.no_grad():
-            # Move all input tensors to the model's device before inference
+            x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
+                                             vel_tensor,
+                                             torch.tensor(q).view(1, -1).float().to(device)])
+
+    else:
+        # DroneMamba and other stateless models: scalar velocity (1D)
+        with torch.no_grad():
             x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
                                              torch.tensor(desiredVel).view(1, 1).float().to(device),
-                                             torch.tensor(q).view(1,-1).float().to(device)])
+                                             torch.tensor(q).view(1, -1).float().to(device)])
 
     # Move the output tensor back to CPU before converting to numpy
     x = x.squeeze().cpu().detach().numpy()
