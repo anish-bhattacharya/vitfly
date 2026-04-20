@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-04-20T06:56:20Z",
+  "phase": "mambatest-eval",
+  "phase_name": "Mamba model evaluation on WSL2 simulation",
+  "phase_dir": "/root/catkin_ws/src/vitfly-mambatest",
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Create mambatest worktree from wsl2-support base", "status": "done"},
+    {"id": 2, "name": "Reset mambatest to setup-evaluation-20260321 (Mamba full branch)", "status": "done"},
+    {"id": 3, "name": "Copy WSL2 launch_evaluation.bash fixes", "status": "done"},
+    {"id": 4, "name": "Merge WSL2 README troubleshooting section", "status": "done"},
+    {"id": 5, "name": "Restore evaluation_node.py NaN check", "status": "done"},
+    {"id": 6, "name": "Restore run_competition.py robust img_callback", "status": "done"},
+    {"id": 7, "name": "Restore user_code.py obstacles null-check", "status": "done"},
+    {"id": 8, "name": "Fix run_mamba_competition.py missing import cv2", "status": "done"},
+    {"id": 9, "name": "Fix run_mamba_simulation.sh wrong topic name", "status": "done"},
+    {"id": 10, "name": "Commit and push mambatest to GitHub", "status": "done", "commit": "febb6ed"}
+  ],
+  "remaining_tasks": [
+    {"id": 11, "name": "Offline forward pass validation of Mamba models", "status": "not_started",
+     "detail": "Check mamba_submodules.py imports in ros_py38 conda env; run DroneMamba/VMambaLSTM forward pass with dummy data matching sim I/O shapes"},
+    {"id": 12, "name": "Verify ROS topic interface compatibility", "status": "not_started",
+     "detail": "run_mamba_competition.py publishes TwistStamped; verify dodgeros_pilot accepts it (original uses dodgeros_msgs/Command)"},
+    {"id": 13, "name": "Full simulation run with Mamba weights", "status": "not_started",
+     "detail": "After offline validation passes: ip addr add 192.168.233.250/32 dev lo, then run simulation with each branch best_model.pth"}
+  ],
+  "blockers": [
+    {
+      "description": "ROS interface mismatch risk: run_mamba_competition.py publishes TwistStamped but dodgeros_pilot may only accept dodgeros_msgs/Command",
+      "type": "technical",
+      "workaround": "Check rostopic list after sim starts; may need to republish or use original run_competition.py with Mamba model loaded"
+    }
+  ],
+  "human_actions_pending": [
+    {
+      "action": "Apply WSL2 IP alias before any simulation run",
+      "context": "ip addr add 192.168.233.250/32 dev lo — lost on every wsl --shutdown",
+      "blocking": true
+    }
+  ],
+  "decisions": [
+    {"decision": "Use setup-evaluation-20260321 as base (not wsl2-support)", "rationale": "setup-evaluation has the full Mamba model code, weights, and training infra; wsl2-support only had WSL2 fixes which we cherry-picked in"},
+    {"decision": "Worktree at /root/catkin_ws/src/vitfly-mambatest, wsl2-support kept intact at /root/catkin_ws/src/vitfly", "rationale": "wsl2-support is the known-working simulation baseline and must not be polluted"},
+    {"decision": "Did not run offline validation this session due to context limits", "rationale": "Must be done next session before sim run"},
+    {"decision": "Did not fix velocity normalization change in user_code.py (mambatest adds x/norm + min 2.0 m/s floor)", "rationale": "This is a deliberate Mamba-era change, not a bug; left as-is"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "cd /root/catkin_ws/src/vitfly-mambatest && conda activate ros_py38 && python3 -c \"import sys; sys.path.insert(0,'models'); from mamba_submodules import SimplifiedSSM; from vmamba_lstm_model import VMambaLSTMNet; import torch; m=VMambaLSTMNet(); x=torch.zeros(1,1,60,90); v=torch.tensor([[5.0]]); q=torch.zeros(1,4); q[:,0]=1; o,h=m([x,v,q]); print('VMambaLSTM OK, output shape:', o.shape)\"",
+  "context_notes": "mambatest branch is now on GitHub at https://github.com/Liber1917/vitfly/tree/mambatest. The branch merges the full Mamba experiment suite with working WSL2 simulation infrastructure. The big unknown is whether run_mamba_competition.py's TwistStamped interface works with dodgeros_pilot. If it doesn't, fall back to loading Mamba model inside the original run_competition.py user_code.py instead."
+}
