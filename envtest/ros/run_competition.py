@@ -145,6 +145,9 @@ class AgilePilotNode:
             # Give full path if possible since the bash script runs from outside the folder
             ckpt = torch.load(model_path, map_location=self.device)
             state_dict = ckpt['model_state_dict'] if isinstance(ckpt, dict) and 'model_state_dict' in ckpt else ckpt
+            # strip _orig_mod. prefix from torch.compile() checkpoints
+            if any(k.startswith('_orig_mod.') for k in state_dict):
+                state_dict = {k.replace('_orig_mod.', '', 1): v for k, v in state_dict.items()}
             self.model.load_state_dict(state_dict)
             self.model.eval()
 

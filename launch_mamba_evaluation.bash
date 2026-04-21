@@ -73,12 +73,21 @@ fi
 # Launch the simulator, unless it is already running
   if [ -z $(pgrep visionsim_node) ]
   then
-    roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True $realtimefactor &
+    # Launch Unity renderer directly (roslaunch node type lookup fails in this workspace)
+    UNITY_BIN="/root/catkin_ws/src/vitfly/flightmare/flightrender/vitfly-unity.x86_64"
+    if [ -x "$UNITY_BIN" ]; then
+      "$UNITY_BIN" -batchmode -nographics &
+      UNITY_PID="$!"
+      echo "[LAUNCH SCRIPT] Unity PID: $UNITY_PID"
+      sleep 5
+    fi
+    roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=False $realtimefactor &
     ROS_PID="$!"
     echo $ROS_PID
     sleep 15
   else
     ROS_PID=""
+    UNITY_PID=""
   fi
 
 SUMMARY_FILE="evaluation.yaml"
@@ -188,4 +197,9 @@ done
 if [ $ROS_PID ]
 then
   kill -SIGINT "$ROS_PID"
+fi
+
+if [ ! -z "${UNITY_PID}" ]
+then
+  kill -SIGINT "$UNITY_PID" 2>/dev/null
 fi
