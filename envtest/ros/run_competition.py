@@ -9,6 +9,7 @@ from geometry_msgs.msg import TwistStamped
 from sensor_msgs.msg import Image
 from std_msgs.msg import Empty
 from std_msgs.msg import String
+from visualization_msgs.msg import Marker
 
 from envsim_msgs.msg import ObstacleArray
 
@@ -238,6 +239,11 @@ class AgilePilotNode:
             Image,
             queue_size=1,
         )
+        self.vel_marker_pub = rospy.Publisher(
+            "/debug/vel_marker",
+            Marker,
+            queue_size=1,
+        )
         print("[RUN_COMPETITION] Initialization completed!")
 
         self.ctr = 0
@@ -313,6 +319,7 @@ class AgilePilotNode:
             print(f'[RUN_COMPETITION] compute_command_vision_based took {time.time() - start_compute_time} seconds')
 
         self.publish_command(command)
+        self._publish_vel_marker(command)
         # print(f'[RUN_COMPETITION] output: {command.velocity}')
 
         if self.state.pos[0] < 0.1:
@@ -521,6 +528,37 @@ class AgilePilotNode:
                 print(f"[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: {command.velocity}")
         else:
             assert False, "Unknown command mode specified"
+
+    def _publish_vel_marker(self, command):
+        if self.state is None:
+            return
+        m = Marker()
+        m.header.stamp = rospy.Time(command.t)
+        m.header.frame_id = "world"
+        m.ns = "model_velocity"
+        m.id = 0
+        m.type = Marker.ARROW
+        m.action = Marker.ADD
+        m.pose.orientation.w = 1.0
+        # arrow defined by two points: drone position → drone position + velocity
+        from geometry_msgs.msg import Point
+        p0 = Point()
+        p0.x, p0.y, p0.z = float(self.state.pos[0]), float(self.state.pos[1]), float(self.state.pos[2])
+        p1 = Point()
+        p1.x = p0.x + float(command.velocity[0])
+        p1.y = p0.y + float(command.velocity[1])
+        p1.z = p0.z + float(command.velocity[2])
+        m.points = [p0, p1]
+        m.scale.x = 0.15   # shaft diameter
+        m.scale.y = 0.30   # head diameter
+        m.scale.z = 0.30   # head length
+        # color: green when mostly forward (x dominant), red when z-dominated
+        vx, vz = abs(command.velocity[0]), abs(command.velocity[2])
+        m.color.a = 1.0
+        m.color.r = 0.0 if vx >= vz else 1.0
+        m.color.g = 1.0 if vx >= vz else 0.0
+        m.color.b = 0.0
+        self.vel_marker_pub.publish(m)
 
     def start_callback(self, data):
         print("[RUN_COMPETITION] Start publishing commands!")

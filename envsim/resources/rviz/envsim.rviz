@@ -38,6 +38,11 @@ Displays:
     Shape:
       Value: Axes
 
+  - Class: rviz/Marker
+    Name: ModelVelocity
+    Marker Topic: /debug/vel_marker
+    Value: true
+
 View:
   Target Frame: <Fixed Frame>
   Class: rviz/Orbit

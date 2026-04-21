@@ -81,7 +81,7 @@ fi
       echo "[LAUNCH SCRIPT] Unity PID: $UNITY_PID"
       sleep 5
     fi
-    roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=False $realtimefactor &
+    roslaunch envsim visionenv_sim.launch render:=False gui:=False rviz:=False $realtimefactor &
     ROS_PID="$!"
     echo $ROS_PID
     sleep 15
