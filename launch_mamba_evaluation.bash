@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Set ROS environment for WSL
-export ROS_MASTER_URI=http://192.168.233.250:11311
-export ROS_IP=192.168.233.250
+# Set ROS environment for WSL - dynamically get current IP
+CURRENT_IP=$(hostname -I | awk '{print $1}')
+export ROS_MASTER_URI=http://${CURRENT_IP}:11311
+export ROS_IP=${CURRENT_IP}
 unset ROS_HOSTNAME
 
 # WSL2 mirrored mode: fix 127.0.0.1 routing (loops through loopback0 instead of lo,
@@ -70,6 +71,10 @@ then
   export FLIGHTMARE_PATH=$PWD/flightmare
 fi
 
+# Source ROS environment
+source /opt/ros/noetic/setup.bash
+source /root/catkin_ws/devel/setup.bash
+
 # Launch the simulator, unless it is already running
   if [ -z $(pgrep visionsim_node) ]
   then
@@ -109,10 +114,14 @@ do
     killall -9 roscore rosmaster rosout gzserver gzclient RPG_Flightmare.
     sleep 10
 
+    # Source ROS environment
+    source /opt/ros/noetic/setup.bash
+    source /root/catkin_ws/devel/setup.bash
+
     # Launch the simulator, unless it is already running
     if [ -z $(pgrep visionsim_node) ]
     then
-  roslaunch envsim visionenv_sim.launch render:=False gui:=False rviz:=True $realtimefactor &
+  roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True $realtimefactor &
       ROS_PID="$!"
       echo $ROS_PID
       sleep 10
@@ -134,17 +143,23 @@ do
   export ROLLOUT_NAME="rollout_""$i"
   echo "$ROLLOUT_NAME"
 
+  # Convert model_path to absolute path before cd
+  MODEL_PATH_ARG="${5:-../../models/ViTLSTM_model.pth}"
+  if [[ ! "$MODEL_PATH_ARG" = /* ]]; then
+    MODEL_PATH_ARG="$(cd "$(dirname "$MODEL_PATH_ARG")" 2>/dev/null && pwd)/$(basename "$MODEL_PATH_ARG")"
+  fi
+
   cd ./envtest/ros/
   export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7
   source ~/miniconda3/etc/profile.d/conda.sh && conda activate ros_py38
-  # Add conda packages AFTER ROS packages in PYTHONPATH  
+  # Add conda packages AFTER ROS packages in PYTHONPATH
   export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
   python3 evaluation_node.py ${datetime}_N$i &
   PY_PID="$!"
 
-  export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7  
+  export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7
   export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
-  python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "${4:-ViTLSTM}" --model_path "${5:-../../models/ViTLSTM_model.pth}" &
+  python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "${4:-ViTLSTM}" --model_path "$MODEL_PATH_ARG" &
   COMP_PID="$!"
 
   cd -

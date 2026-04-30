@@ -128,8 +128,24 @@ class AgilePilotNode:
                 self.model = VMambaLSTMNet().to(self.device).float()
                 print(f"[RUN_COMPETITION] Branch A — VMambaLSTMNet loaded")
             elif model_type == 'MambaVisionSSM':
-                self.model = create_mambavision_ssm_model({}).to(self.device).float()
-                print(f"[RUN_COMPETITION] Branch B — MambaVisionSSMNet loaded")
+                # Use the same config as training (from train_mamba_optimized.py lines 383-391)
+                config = {
+                    'mambavision_config': {
+                        'in_channels': 1,
+                        'stem_dim': 48,
+                        'stage_dims': (64, 128, 192),
+                        'depths': (2, 2, 2),
+                        'd_state': 12,
+                        'dropout': 0.3,
+                        'output_dim': 512
+                    },
+                    'ssm_d_state': 16,
+                    'ssm_hidden': 256,
+                    'ssm_layers': 2,
+                    'dropout': 0.3
+                }
+                self.model = create_mambavision_ssm_model(config).to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch B — MambaVisionSSMNet loaded (stem_dim=48, stage_dims=[64,128,192])")
             elif model_type == 'CNNMamba3':
                 self.model = create_cnn_mamba3_model({'ssm_d_state': 16}).to(self.device).float()
                 print(f"[RUN_COMPETITION] Branch C — CNNMamba3Net loaded (ssm_d_state=16)")
@@ -146,9 +162,12 @@ class AgilePilotNode:
             # Give full path if possible since the bash script runs from outside the folder
             ckpt = torch.load(model_path, map_location=self.device)
             state_dict = ckpt['model_state_dict'] if isinstance(ckpt, dict) and 'model_state_dict' in ckpt else ckpt
-            # strip _orig_mod. prefix from torch.compile() checkpoints
-            if any(k.startswith('_orig_mod.') for k in state_dict):
-                state_dict = {k.replace('_orig_mod.', '', 1): v for k, v in state_dict.items()}
+
+            # Remove '_orig_mod.' prefix from torch.compile() compiled models
+            if any(k.startswith('_orig_mod.') for k in state_dict.keys()):
+                state_dict = {k.replace('_orig_mod.', ''): v for k, v in state_dict.items()}
+                print(f"[RUN_COMPETITION] Removed '_orig_mod.' prefix from compiled model weights")
+
             self.model.load_state_dict(state_dict)
             self.model.eval()
 
@@ -239,6 +258,11 @@ class AgilePilotNode:
             Image,
             queue_size=1,
         )
+        self.depth_viz_pub = rospy.Publisher(
+            "/kingfisher/dodgeros_pilot/unity/depth_viz",
+            Image,
+            queue_size=1,
+        )
         self.vel_marker_pub = rospy.Publisher(
             "/debug/vel_marker",
             Marker,
@@ -315,11 +339,17 @@ class AgilePilotNode:
         self.debug_img1_pub.publish(self.cv_bridge.cv2_to_imgmsg(debug_img1, encoding="passthrough"))
         self.debug_img2_pub.publish(self.cv_bridge.cv2_to_imgmsg(debug_img2, encoding="passthrough"))
 
+        # publish depth visualization for RViz
+        depth_viz = (img * 255).astype(np.uint8)
+        self.depth_viz_pub.publish(self.cv_bridge.cv2_to_imgmsg(depth_viz, encoding="mono8"))
+
+        # publish velocity marker for RViz
+        self.publish_velocity_marker(command)
+
         if self.ctr % 30 == 0:
             print(f'[RUN_COMPETITION] compute_command_vision_based took {time.time() - start_compute_time} seconds')
 
         self.publish_command(command)
-        self._publish_vel_marker(command)
         # print(f'[RUN_COMPETITION] output: {command.velocity}')
 
         if self.state.pos[0] < 0.1:
@@ -487,6 +517,54 @@ class AgilePilotNode:
 
         return hit_obstacle
 
+    def publish_velocity_marker(self, command):
+        """Publish velocity command as arrow marker for RViz visualization"""
+        if self.state is None:
+            return
+
+        marker = Marker()
+        marker.header.frame_id = "world"
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = "velocity"
+        marker.id = 0
+        marker.type = Marker.ARROW
+        marker.action = Marker.ADD
+
+        # Arrow starts at drone position
+        marker.pose.position.x = self.state.pos[0]
+        marker.pose.position.y = self.state.pos[1]
+        marker.pose.position.z = self.state.pos[2]
+
+        # Arrow direction from velocity vector
+        vel_norm = np.linalg.norm(command.velocity)
+        if vel_norm > 0.01:
+            # Normalize and scale for visibility
+            vel_dir = command.velocity / vel_norm
+            # Convert to quaternion (arrow points along x-axis by default)
+            yaw = np.arctan2(vel_dir[1], vel_dir[0])
+            pitch = np.arcsin(-vel_dir[2])
+            marker.pose.orientation.x = 0
+            marker.pose.orientation.y = np.sin(pitch/2)
+            marker.pose.orientation.z = np.sin(yaw/2) * np.cos(pitch/2)
+            marker.pose.orientation.w = np.cos(yaw/2) * np.cos(pitch/2)
+        else:
+            marker.pose.orientation.w = 1.0
+
+        # Arrow size (length proportional to velocity magnitude)
+        marker.scale.x = min(vel_norm * 0.5, 3.0)  # shaft length
+        marker.scale.y = 0.1  # shaft diameter
+        marker.scale.z = 0.15  # head diameter
+
+        # Color: green for forward, red for backward
+        marker.color.r = 0.0 if command.velocity[0] > 0 else 1.0
+        marker.color.g = 1.0 if command.velocity[0] > 0 else 0.0
+        marker.color.b = 0.0
+        marker.color.a = 1.0
+
+        marker.lifetime = rospy.Duration(0.2)
+
+        self.vel_marker_pub.publish(marker)
+
     def publish_command(self, command):
         if command.mode == AgileCommandMode.SRT:
             assert len(command.rotor_thrusts) == 4
@@ -528,37 +606,6 @@ class AgilePilotNode:
                 print(f"[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: {command.velocity}")
         else:
             assert False, "Unknown command mode specified"
-
-    def _publish_vel_marker(self, command):
-        if self.state is None:
-            return
-        m = Marker()
-        m.header.stamp = rospy.Time(command.t)
-        m.header.frame_id = "world"
-        m.ns = "model_velocity"
-        m.id = 0
-        m.type = Marker.ARROW
-        m.action = Marker.ADD
-        m.pose.orientation.w = 1.0
-        # arrow defined by two points: drone position → drone position + velocity
-        from geometry_msgs.msg import Point
-        p0 = Point()
-        p0.x, p0.y, p0.z = float(self.state.pos[0]), float(self.state.pos[1]), float(self.state.pos[2])
-        p1 = Point()
-        p1.x = p0.x + float(command.velocity[0])
-        p1.y = p0.y + float(command.velocity[1])
-        p1.z = p0.z + float(command.velocity[2])
-        m.points = [p0, p1]
-        m.scale.x = 0.15   # shaft diameter
-        m.scale.y = 0.30   # head diameter
-        m.scale.z = 0.30   # head length
-        # color: green when mostly forward (x dominant), red when z-dominated
-        vx, vz = abs(command.velocity[0]), abs(command.velocity[2])
-        m.color.a = 1.0
-        m.color.r = 0.0 if vx >= vz else 1.0
-        m.color.g = 1.0 if vx >= vz else 0.0
-        m.color.b = 0.0
-        self.vel_marker_pub.publish(m)
 
     def start_callback(self, data):
         print("[RUN_COMPETITION] Start publishing commands!")
