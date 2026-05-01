@@ -82,15 +82,19 @@ class Evaluator:
     def callbackState(self, msg):
 
         self.pos_x = msg.pose.position.x
+        self.pos_y = msg.pose.position.y
+        self.pos_z = msg.pose.position.z
 
         # mark start time based on position rather than start signal
         if self.pos_x > 0.5 and not self.start_time_mark:
             self.time_array[0] = rospy.get_rostime().to_sec()
             self.start_time_mark = True
+            rospy.loginfo(f"[EVAL] Drone started moving! Position: x={self.pos_x:.2f}, y={self.pos_y:.2f}, z={self.pos_z:.2f}")
 
-        # self.ctr += 1
-        # if self.ctr % 30 != 0:
-        #     print(f'[evaluator] self.is_active={self.is_active} ; self.time_array[0]={self.time_array[0]:.3f}')
+        # Log position every 20 callbacks (~2 seconds)
+        self.ctr += 1
+        if self.ctr % 20 == 0 and self.is_active:
+            rospy.loginfo(f"[EVAL] Position: x={self.pos_x:.2f}, y={self.pos_y:.2f}, z={self.pos_z:.2f}, goal={self.xmax}m")
 
         if not self.is_active:
             return
@@ -110,8 +114,9 @@ class Evaluator:
         bin_x = int(max(min(np.floor(self.pos_x), self.xmax), 0))
         if np.isnan(self.time_array[bin_x]):
             self.time_array[bin_x] = rospy.get_rostime().to_sec()
-        if self.pos_x > 60:
+        if self.pos_x > self.xmax:  # Use config value instead of hardcoded 60
             self.is_active = False
+            rospy.loginfo(f"[EVAL] Goal reached! Final position: x={self.pos_x:.2f}m (goal was {self.xmax}m)")
             self.publishFinish()
 
         if rospy.get_time() - self.time_array[0] > self.timeout:

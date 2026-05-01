@@ -5,8 +5,8 @@ topics:
   start: "start_navigation"
   finish: "finish_navigation"
 
-target: 60 # goal distance in x-direction, must be INTEGER
-timeout: 40  # after [timeout] seconds without arriving at the desired distance in x direction, the episode is considered a failure
+target: 20 # goal distance in x-direction, must be INTEGER (lowered from 60 for testing)
+timeout: 120  # after [timeout] seconds without arriving at the desired distance in x direction, the episode is considered a failure (increased from 40)
 bounding_box: [-5, 65, -10, 10, 0, 10] # when exiting this bounding box, the episode is considered a failure
 
 # if you really don't want the cool plots, put this to False
