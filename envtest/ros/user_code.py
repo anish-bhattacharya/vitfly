@@ -133,16 +133,17 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     # Move the output tensor back to CPU before converting to numpy
     x = x.squeeze().cpu().detach().numpy()
 
-    # Model outputs 3D velocity directly - just scale to desired magnitude
-    x_norm = np.linalg.norm(x)
-    if x_norm > 1e-6:
-        # Scale to desired velocity while preserving direction
-        command.velocity = (x / x_norm) * desiredVel
-    else:
-        # Fallback to forward direction if model output is near-zero
-        command.velocity = np.array([desiredVel, 0.0, 0.0])
+    # Normalize model output and scale to desired velocity (original baseline)
+    x[0] = np.clip(x[0], -1, 1)
+    x = x/np.linalg.norm(x)
+    command.velocity = x*desiredVel
 
-    # Let model control velocity directly - no startup ramp interference
+    # Manual speedup - startup ramp (original baseline)
+    # Only modifies forward component, preserves lateral/vertical control
+    min_xvel_cmd = 1.0
+    hardcoded_ctl_threshold = 2.0
+    if state.pos[0] < hardcoded_ctl_threshold:
+        command.velocity[0] = max(min_xvel_cmd, (state.pos[0]/hardcoded_ctl_threshold)*desiredVel)
 
 
 
