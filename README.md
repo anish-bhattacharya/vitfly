@@ -40,6 +40,17 @@ cd vitfly
 pip install -r requirements.txt
 ```
 
+## Simulation Testing (WSL2)
+
+For running ROS/Flightmare simulation tests on WSL2, see the operational runbook:
+
+📖 **[Simulation Runbook](.claude/skills/vitfly/SKILL.md)** — WSL2 network setup, launch sequence, model testing workflow, and failure diagnosis.
+
+Quick start:
+```bash
+bash test_mamba_branch.bash B MambaVisionSSM  # Test Branch B
+```
+
 #### (Optional) Set up ROS/Flightmare
 For simulation testing, see the original documentation. Additional details at https://github.com/uzh-rpg/agile_flight.
 
