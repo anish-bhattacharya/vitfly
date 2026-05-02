@@ -77,19 +77,21 @@ class OptimizedFlightmareDataset(Dataset):
     
     def __getitem__(self, idx):
         depth = torch.from_numpy(self.traj_ims[idx]).unsqueeze(0).float()
-        
-        # Extract 3D velocity from traj_meta[:, 2:5] (desired velocity)
+
+        # Extract 3D velocity from traj_meta[:, 2:5] (current velocity - MODEL INPUT)
         if self.traj_meta.shape[1] >= 5:
             velocity = torch.from_numpy(self.traj_meta[idx, 2:5]).float()
         else:
             velocity = torch.zeros(3, dtype=torch.float32)
-        
+
         quat = torch.from_numpy(self.curr_quats[idx]).float()
-        
-        # FIXED: Target should be the same 3D velocity, not a repeated scalar
-        # The model learns to predict velocity from depth images
-        target = velocity.clone()
-        
+
+        # TARGET: Use expert velocity COMMAND from columns 13:16
+        # Reference: vitfly/training/train.py line 185 → self.train_velcmd = self.train_meta[:, range(13, 16)]
+        # NOT velocity (cols 2:5) which is the model INPUT - using that causes mode collapse
+        target = torch.from_numpy(self.traj_meta[idx, 13:16]).float()
+        target = target / (torch.norm(target) + 1e-6)
+
         return depth, velocity, quat, target
 
 
