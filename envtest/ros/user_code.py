@@ -142,25 +142,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
         # Fallback to forward direction if model output is near-zero
         command.velocity = np.array([desiredVel, 0.0, 0.0])
 
-    # Apply startup ramp BEFORE minimum velocity check to avoid conflict
-    min_xvel_cmd = 1.0
-    hardcoded_ctl_threshold = 2.0
-    if state.pos[0] < hardcoded_ctl_threshold:
-        # Ramp up forward velocity from min to desired over first 2 meters
-        ramp_factor = state.pos[0] / hardcoded_ctl_threshold
-        target_x = max(min_xvel_cmd, ramp_factor * desiredVel)
-        # Scale entire velocity vector to achieve target forward velocity
-        if command.velocity[0] > 0.1:
-            scale = target_x / command.velocity[0]
-            command.velocity = command.velocity * scale
-        else:
-            command.velocity[0] = target_x
-
-    # Ensure minimum forward velocity component (only after startup ramp)
-    if command.velocity[0] < 2.0:
-        # Scale up entire velocity vector to maintain direction
-        scale_factor = 2.0 / command.velocity[0] if command.velocity[0] > 0.1 else desiredVel
-        command.velocity = command.velocity * scale_factor
+    # Let model control velocity directly - no startup ramp interference
 
 
 
