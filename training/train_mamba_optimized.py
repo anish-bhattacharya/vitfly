@@ -27,7 +27,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import random
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 import subprocess
 import psutil
 
@@ -52,8 +52,9 @@ except ImportError as e:
     print(f"Warning: Could not import some models: {e}")
     MODELS_AVAILABLE = False
 
-# Import dataloader
+# Import dataloaders
 from dataloading import dataloader
+from lazy_dataloading import create_lazy_dataloader
 
 
 class OptimizedFlightmareDataset(Dataset):
@@ -183,9 +184,18 @@ def train_epoch(model, loader, optimizer, criterion, scaler, device, epoch,
         quat = quat.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
         
-        with autocast():
+        if torch.isnan(depth).any() or torch.isnan(velocity).any() or torch.isnan(quat).any() or torch.isnan(target).any():
+            print(f"  Warning: NaN detected in batch {batch_idx}, skipping")
+            continue
+        
+        with autocast(device_type='cuda', dtype=torch.float16):
             output, _ = model([depth, velocity, quat])
             loss = criterion(output, target)
+            
+            if torch.isnan(loss) or torch.isinf(loss):
+                print(f"  Warning: NaN/Inf loss at batch {batch_idx}, skipping")
+                continue
+            
             loss = loss / grad_accum_steps
         
         scaler.scale(loss).backward()
@@ -232,7 +242,7 @@ def validate(model, loader, criterion, device):
             quat = quat.to(device, non_blocking=True)
             target = target.to(device, non_blocking=True)
             
-            with autocast():
+            with autocast(device_type='cuda', dtype=torch.float16):
                 output, _ = model([depth, velocity, quat])
                 loss = criterion(output, target)
             
@@ -290,7 +300,7 @@ def train_branch(branch_name, args, train_loader, val_loader, device):
     scheduler = get_lr_scheduler(optimizer, args.warmup_epochs, args.epochs)
     
     # Gradient scaler for mixed precision with optimized settings
-    scaler = GradScaler(init_scale=2.**16, growth_interval=2000)
+    scaler = GradScaler('cuda', init_scale=2.**16, growth_interval=2000)
     
     # Training loop
     best_val_loss = float('inf')
@@ -436,54 +446,35 @@ def main():
     # Create save directory
     os.makedirs(args.save_dir, exist_ok=True)
     
-    # Load data
-    print("\nLoading data...")
-    train_data, val_data, _, _ = dataloader(
-        args.data_dir, 
-        val_split=args.val_split, 
+    print("\nLoading data with lazy dataloader...")
+    train_loader, val_loader, stats = create_lazy_dataloader(
+        data_dir=args.data_dir,
+        val_split=args.val_split,
+        batch_size=args.batch_size,
+        num_workers=args.num_workers,
+        short=args.short,
         seed=args.seed,
-        short=args.short
+        pin_memory=True
     )
     
-    traj_meta_train, traj_ims_train, _, desired_vels_train, curr_quats_train, _ = train_data
-    traj_meta_val, traj_ims_val, _, desired_vels_val, curr_quats_val, _ = val_data
+    print(f"Training samples: {stats['num_train_samples']}")
+    print(f"Validation samples: {stats['num_val_samples']}")
+    print(f"Trajectories loaded: {stats['num_trajectories']}")
     
-    print(f"Training samples: {len(traj_ims_train)}")
-    print(f"Validation samples: {len(traj_ims_val)}")
-    
-    # Create datasets
-    train_dataset = OptimizedFlightmareDataset(
-        traj_ims_train, traj_meta_train, desired_vels_train, curr_quats_train
-    )
-    val_dataset = OptimizedFlightmareDataset(
-        traj_ims_val, traj_meta_val, desired_vels_val, curr_quats_val
-    )
-    
-    # Create data loaders with optimized settings
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=args.batch_size,
-        shuffle=True,
-        num_workers=args.num_workers,
-        pin_memory=True,
-        prefetch_factor=args.prefetch_factor,
-        persistent_workers=args.num_workers > 0,
-        drop_last=True  # Drop last incomplete batch for stable gradient accumulation
-    )
-    
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=args.batch_size,
-        shuffle=False,
-        num_workers=args.num_workers,
-        pin_memory=True,
-        prefetch_factor=args.prefetch_factor,
-        persistent_workers=args.num_workers > 0
-    )
+    if val_loader is None:
+        print("Warning: No validation data available")
+        from torch.utils.data import TensorDataset
+        empty_dataset = TensorDataset(torch.zeros(0, 1, 60, 90), torch.zeros(0, 3), torch.zeros(0, 4), torch.zeros(0, 3))
+        val_loader = DataLoader(
+            empty_dataset,
+            batch_size=args.batch_size,
+            shuffle=False,
+            num_workers=0,
+            pin_memory=True
+        )
     
     print(f"\nDataLoader configuration:")
     print(f"  Workers: {args.num_workers}")
-    print(f"  Prefetch factor: {args.prefetch_factor}")
     print(f"  Pin memory: True")
     
     # Train each branch
