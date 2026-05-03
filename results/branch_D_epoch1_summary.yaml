@@ -1,0 +1,6 @@
+Success: false
+number_crashes: 1
+segment_times:
+  '10': 2.1599998474121094
+  '20': 4.199999809265137
+time_to_finish: 4.199999809265137

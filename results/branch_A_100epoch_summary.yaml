@@ -1,0 +1,29 @@
+branch: A
+model_name: VMambaLSTM
+training_epochs: 100
+model_path: experiments/mamba_branches/optimized_training/branch_A/best_model.pth
+test_date: 2026-05-02
+
+results:
+  success: false
+  number_crashes: 1
+  time_to_finish: 4.21
+  segment_times:
+    segment_10: 2.17
+    segment_20: 4.21
+
+velocity_analysis:
+  total_outputs: 217
+  vy_range: [0.0199, 0.0356]
+  vy_sample_values:
+    - 0.0356
+    - 0.0299
+    - 0.0279
+    - 0.0291
+  variation: "Low variation, small positive values"
+  mode_collapse: false
+
+notes: |
+  Branch A failed with 1 crash at 4.21s. Velocity outputs show low variation
+  with small positive vy values (0.02-0.04 range). Model is producing varied
+  outputs but still crashes during flight.

@@ -1,0 +1,29 @@
+branch: C
+model_name: CNNMamba3
+training_epochs: 100
+model_path: experiments/mamba_branches/optimized_training/branch_C/best_model.pth
+test_date: 2026-05-02
+
+results:
+  success: false
+  number_crashes: 1
+  time_to_finish: 4.21
+  segment_times:
+    segment_10: 2.17
+    segment_20: 4.21
+
+velocity_analysis:
+  total_outputs: 244
+  vy_range: [0.0632, 0.3507]
+  vy_sample_values:
+    - 0.3507
+    - 0.1136
+    - 0.0932
+    - 0.0632
+  variation: "Good variation, positive vy values (right steering)"
+  mode_collapse: false
+
+notes: |
+  Branch C failed with 1 crash at 4.21s. Velocity outputs show good variation
+  with positive vy values (0.06-0.35 range), indicating active right steering.
+  Model is producing varied outputs but still crashes during flight.
