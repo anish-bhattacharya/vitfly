@@ -2,5 +2,5 @@ Success: true
 number_crashes: 0
 segment_times:
   '10': 2.190000057220459
-  '20': 4.2200000286102295
-time_to_finish: 4.2200000286102295
+  '20': 4.240000009536743
+time_to_finish: 4.240000009536743

@@ -33,6 +33,7 @@ from model import *
 _BRANCH_MODEL_DIRS = [
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_A_vmamba_lstm/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_B_mambavision_ssm/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_Bplus_mambavision_mamba3/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_C_cnn_mamba3/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_D_sth_mamba/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_E_decisionmamba/models'),
@@ -47,6 +48,7 @@ try:
     from cnn_mamba3_model import CNNMamba3Net, create_cnn_mamba3_model
     from sth_mamba_model import STHMambaNet, create_sth_mamba_model
     from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
+    from bplus_model import BPlusModel
 except ImportError as _e:
     print(f"[RUN_COMPETITION] Warning: branch model import failed: {_e}")
 
@@ -149,6 +151,9 @@ class AgilePilotNode:
             elif model_type == 'CNNMamba3':
                 self.model = create_cnn_mamba3_model({'ssm_d_state': 16}).to(self.device).float()
                 print(f"[RUN_COMPETITION] Branch C — CNNMamba3Net loaded (ssm_d_state=16)")
+            elif model_type == 'BPlusModel':
+                self.model = BPlusModel().to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch B+ — BPlusModel loaded (MambaVision + Mamba3 hybrid)")
             elif model_type == 'STHMamba':
                 self.model = create_sth_mamba_model({}).to(self.device).float()
                 print(f"[RUN_COMPETITION] Branch D — STHMambaNet loaded")
