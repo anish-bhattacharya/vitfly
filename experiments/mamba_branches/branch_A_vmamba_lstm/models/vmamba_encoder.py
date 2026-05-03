@@ -2,7 +2,17 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
+import os, sys
 from einops import rearrange
+
+_training_dir = os.path.join(os.path.dirname(__file__), *[os.pardir]*4, 'training')
+if _training_dir not in sys.path:
+    sys.path.insert(0, _training_dir)
+try:
+    from models.pscan import pscan
+    HAS_PSCAN = True
+except ImportError:
+    HAS_PSCAN = False
 
 
 class PositionEmbedding(nn.Module):
@@ -69,23 +79,29 @@ class SS2D(nn.Module):
     def selective_scan_pytorch(self, x, dt, A, B, C, D):
         B_batch, K, D_inner, L = x.shape
         N = A.shape[-1]
-        
+
         dt = F.softplus(dt + self.dt_projs_bias.view(1, K, D_inner, 1))
-        
         dA = torch.exp(A.view(K, D_inner, N, 1) * dt.view(B_batch, K, D_inner, 1, L))
-        
-        h = torch.zeros(B_batch, K, D_inner, N, device=x.device, dtype=x.dtype)
-        ys = []
-        
-        for t in range(L):
-            dB_t = dt[:, :, :, t].unsqueeze(-1) * B[:, :, :, t].unsqueeze(2)
-            h = dA[:, :, :, :, t] * h + dB_t * x[:, :, :, t].unsqueeze(-1)
-            y_t = (h * C[:, :, :, t].unsqueeze(2)).sum(dim=-1)
-            ys.append(y_t)
-        
-        y = torch.stack(ys, dim=-1)
+
+        if HAS_PSCAN and L > 64 and x.is_cuda:
+            dB = dt.unsqueeze(3) * B.unsqueeze(2)
+            X = dB * x.unsqueeze(3)
+            A_ps = dA.permute(0, 1, 2, 4, 3).reshape(B_batch * K, L, D_inner, N)
+            X_ps = X.permute(0, 1, 2, 4, 3).reshape(B_batch * K, L, D_inner, N)
+            H = pscan(A_ps, X_ps)
+            H = H.reshape(B_batch, K, L, D_inner, N).permute(0, 1, 3, 4, 2)
+            y = (H * C[:, :, None, :, :]).sum(dim=3)
+        else:
+            h = torch.zeros(B_batch, K, D_inner, N, device=x.device, dtype=x.dtype)
+            ys = []
+            for t in range(L):
+                dB_t = dt[:, :, :, t].unsqueeze(-1) * B[:, :, :, t].unsqueeze(2)
+                h = dA[:, :, :, :, t] * h + dB_t * x[:, :, :, t].unsqueeze(-1)
+                y_t = (h * C[:, :, :, t].unsqueeze(2)).sum(dim=-1)
+                ys.append(y_t)
+            y = torch.stack(ys, dim=-1)
+
         y = y + x * D.view(1, K, D_inner, 1)
-        
         return y
     
     def forward(self, x):
