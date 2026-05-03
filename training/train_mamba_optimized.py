@@ -171,7 +171,7 @@ def create_model(branch_name, config, device, args=None):
     
     model = model.to(device)
     
-    if args and args.compile and branch_name != 'A':
+    if args and args.compile and branch_name not in ('A', 'Bplus'):
         try:
             model = torch.compile(model, mode="reduce-overhead", dynamic=True)
             print(f"  torch.compile enabled (mode=reduce-overhead)")
