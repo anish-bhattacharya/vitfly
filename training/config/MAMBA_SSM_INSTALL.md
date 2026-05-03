@@ -7,20 +7,16 @@
 - ~10 minutes compile time
 - 8GB+ free disk space for build artifacts
 
-## Install
+## Current Status
+✅ **Installed successfully (2026-05-03)**
+- causal-conv1d v1.6.1 (CUDA 12.8, PyTorch 2.6 ABI)
+- mamba-ssm v2.3.1 (built with --no-build-isolation)
+
+### Install Commands (autodl environment)
 ```bash
-# Install causal convolution (dependency)
-# NOTE: Must match PyTorch's CUDA version
-# Current env: PyTorch 2.8.0+cu128, CUDA 12.8
-# If pip build fails with CUDA version mismatch, try:
-pip install causal-conv1d --no-build-isolation
-
-# If still failing, install from pre-compiled wheels:
-# https://github.com/Dao-AILab/causal-conv1d/releases
-pip install causal-conv1d --find-links https://github.com/Dao-AILab/causal-conv1d/releases
-
-# Install mamba-ssm (compiles CUDA kernels)
-pip install mamba-ssm
+source /etc/network_turbo                    # Enable network acceleration
+git config --global http.sslVerify false      # Disable SSL for git
+pip install mamba-ssm --no-build-isolation    # Build with system PyTorch CUDA
 ```
 
 ## What This Enables
