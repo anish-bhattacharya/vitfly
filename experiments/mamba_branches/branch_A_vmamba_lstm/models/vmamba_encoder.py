@@ -1,12 +1,22 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from einops import rearrange
 import math
+from einops import rearrange
+
+
+class PositionEmbedding(nn.Module):
+    """Learnable position embedding for 2D feature maps."""
+    def __init__(self, height=15, width=22, dim=64):
+        super().__init__()
+        self.pos_embed = nn.Parameter(torch.randn(1, height, width, dim) * 0.02)
+
+    def forward(self, x):
+        return x + self.pos_embed
 
 
 class SS2D(nn.Module):
-    def __init__(self, dim=64, d_state=16, dt_rank="auto", d_conv=3, dropout=0.0):
+    def __init__(self, dim=64, d_state=64, dt_rank="auto", d_conv=3, dropout=0.0):
         super().__init__()
         self.d_model = dim
         self.d_state = d_state
@@ -134,9 +144,10 @@ class PatchEmbedding(nn.Module):
 
 
 class VSSBlock(nn.Module):
-    def __init__(self, dim=64, d_state=16, dropout=0.0):
+    def __init__(self, dim=64, d_state=64, dropout=0.0):
         super().__init__()
         self.norm1 = nn.LayerNorm(dim)
+        self.pe = PositionEmbedding(height=15, width=22, dim=dim)
         self.ss2d = SS2D(dim=dim, d_state=d_state, dropout=dropout)
         self.norm2 = nn.LayerNorm(dim)
         self.mlp = nn.Sequential(
@@ -148,13 +159,13 @@ class VSSBlock(nn.Module):
         )
     
     def forward(self, x):
-        x = x + self.ss2d(self.norm1(x))
+        x = x + self.ss2d(self.pe(self.norm1(x)))
         x = x + self.mlp(self.norm2(x))
         return x
 
 
 class VMambaEncoder(nn.Module):
-    def __init__(self, in_channels=1, embed_dim=64, depth=4, d_state=16, dropout=0.1, output_dim=512):
+    def __init__(self, in_channels=1, embed_dim=64, depth=4, d_state=64, dropout=0.1, output_dim=512):
         super().__init__()
         self.patch_embed = PatchEmbedding(in_channels, embed_dim, patch_size=4)
         self.blocks = nn.ModuleList([
@@ -183,7 +194,7 @@ def create_vmamba_encoder(config):
         in_channels=config.get('in_channels', 1),
         embed_dim=config.get('embed_dim', 64),
         depth=config.get('depth', 4),
-        d_state=config.get('d_state', 16),
+        d_state=config.get('d_state', 64),
         dropout=config.get('dropout', 0.0),
         output_dim=config.get('output_dim', 512),
     )

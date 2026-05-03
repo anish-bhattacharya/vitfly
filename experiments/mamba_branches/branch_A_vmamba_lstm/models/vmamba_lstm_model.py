@@ -64,7 +64,7 @@ class VMambaLSTMNet(nn.Module):
                 'in_channels': 1,
                 'embed_dim': 64,
                 'depth': 4,
-                'd_state': 16,
+                'd_state': 64,
                 'dropout': dropout,
                 'output_dim': 512
             }
@@ -149,7 +149,7 @@ def create_vmamba_lstm_model(config):
         'in_channels': 1,
         'embed_dim': 64,
         'depth': 4,
-        'd_state': 16,
+        'd_state': 64,
         'dropout': 0.1,
         'output_dim': 512
     })
@@ -187,7 +187,7 @@ if __name__ == '__main__':
         'vmamba': {
             'embed_dim': 64,
             'depth': 4,
-            'd_state': 16,
+            'd_state': 64,
             'output_dim': 512
         },
         'lstm_hidden': 128,
