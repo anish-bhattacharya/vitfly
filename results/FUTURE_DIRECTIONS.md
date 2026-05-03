@@ -49,18 +49,39 @@ All operations are **geometric/image transforms only** — they don't change the
 A depth image flipped horizontally should still map to the same velocity target if the scene is symmetric.
 For asymmetric scenes, this creates useful adversarial examples.
 
-### C. Knowledge Distillation (Branch B → Others)
+### C. Cross-Architecture Knowledge Distillation (ViT+LSTM → Mamba)
 **Status**: ⏳ 待实现。
-Branch B passes simulation ✅. Use it as teacher:
+
+**文献依据**：
+- MOHAWK (NeurIPS 2024): 三阶段蒸馏 Transformer → Mamba-2，3B token即有效
+- CAB (2025): 跨架构注意力桥 Transformer Q,K ↔ Mamba B,C
+- X-Distill (ICLR 2026): DINOv2 ViT → ResNet 用于机器人控制
+- TransMamba (2025): 视觉Mamba的多方向扫描蒸馏
+
+**关键结论**：naive蒸馏（只匹配输出）在跨架构时失败（MOHAWK证明），需要多阶段对齐。
+
+**设计**：用上游ViT+LSTM（best model, 7m/s实飞）作为教师，蒸馏到所有Mamba分支：
+
 ```python
-teacher = load_model('B').eval()
-with torch.no_grad():
-    soft_target = teacher(depth, vel, quat)
-hard_target = expert_velcmd  # original ground truth
-loss = alpha * mse(student_out, soft_target) \
-     + (1-alpha) * mse(student_out, hard_target)
+teacher = load_ViTLSTM().eval()  # 上游最佳模型
+student = create_mamba_model(branch)  # B/C/D/E/B+/A
+
+# 阶段1: 特征对齐（参考MOHAWK的stage 1-2）
+loss_feat = MSE(student_encoder_features, teacher_encoder_features)
+
+# 阶段2: 端到端蒸馏（参考MOHAWK的stage 3）
+loss_distill = MSE(student_out, teacher_out)
+loss_gt = MSE(student_out, ground_truth)
+loss = alpha * loss_distill + beta * loss_feat + gamma * loss_gt
 ```
-Alpha can be annealed from 1.0 → 0.0 during training (start with imitation of the working model, gradually shift to ground truth).
+
+**科学问题**：
+1. 跨架构（ViT→Mamba）知识能否有效转移？
+2. 6种不同Mamba架构的蒸馏效率对比——什么架构吸收最好？
+3. 蒸馏后的Mamba vs 纯BC的Mamba，仿真性能对比
+4. 首次：跨架构蒸馏在机器人控制领域的系统性研究
+
+**预期价值**：高。这是NLP/视觉之外跨架构蒸馏的首次机器人应用。
 
 ### D. Pseudo-Label 62K Skipped Images
 **Status**: ⏳ 待实现。
