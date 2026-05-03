@@ -10,8 +10,9 @@ origin: local
 
 - Starting a simulation test session after WSL2 restart
 - Diagnosing ZMQ port conflicts, IP mismatches, or ROS master failures
-- Running evaluation tests for Mamba branches (A–E)
-- Diagnosing model mode collapse or unexpected flight behavior
+- Running evaluation tests for Mamba branches (A, B, B+, C, D, E)
+- Diagnosing model load failures, mode collapse, or unexpected flight behavior
+- Generating per-branch `summary.yaml` for reporting
 
 ---
 
@@ -33,7 +34,7 @@ fi
 ip route get 127.0.0.1
 ```
 
-Required environment variables:
+Required environment variables (must export in EVERY shell that runs ROS commands — they don't persist between bash invocations):
 
 ```bash
 export ROS_MASTER_URI=http://192.168.233.250:11311
@@ -44,7 +45,7 @@ export MESA_GL_VERSION_OVERRIDE=4.5
 export MESA_GLSL_VERSION_OVERRIDE=450
 ```
 
-**Critical**: Always use the fixed IP `192.168.233.250`, never `$(hostname -I)`. The dynamic IP causes ROS master connection failures when the loopback alias is set to the fixed IP.
+**Critical**: Always use the fixed IP `192.168.233.250`, never `$(hostname -I)`. The dynamic IP causes ROS master connection failures when the loopback alias is set to the fixed IP. The default shell has `ROS_MASTER_URI=http://localhost:11311` which **will not reach** the fixed-IP master — every manual `rostopic`/`roslaunch` invocation must export these variables first.
 
 ---
 
@@ -76,29 +77,111 @@ rostopic pub /kingfisher/dodgeros_pilot/start std_msgs/Empty "{}" --once
 
 ---
 
+## Understanding RViz Depth Image Display (IMPORTANT)
+
+**Common misconception**: "RViz isn't showing depth images, so the simulator is broken."
+
+There are TWO separate depth topics:
+
+| Topic | Publisher | When Active |
+|-------|-----------|-------------|
+| `/kingfisher/dodgeros_pilot/unity/depth` | Simulator (`visionsim_node`) | After simulator launches |
+| `/kingfisher/dodgeros_pilot/unity/depth_viz` | `run_competition.py` (inference node) | **Only when inference is running** |
+
+**RViz subscribes to `depth_viz`** (per `envsim/resources/rviz/envsim.rviz`). So:
+- Simulator alone → RViz empty (this is **normal**, not a bug)
+- Simulator + `run_competition.py` → RViz shows depth images
+- Verify raw depth is publishing: `rostopic echo /kingfisher/dodgeros_pilot/unity/depth --noarr -n 1`
+
+If raw `depth` topic exists but `depth_viz` doesn't, the simulator is fine — the inference node just isn't running yet.
+
+---
+
+## Post-Goal Collisions Are Not Counted
+
+**Observation**: In RViz you may see the drone collide with an obstacle right after reaching 20m.
+
+**Explanation**: `evaluation_node.py` stops monitoring after the 20m segment. The drone continues by inertia and may collide afterward, but this is **not** counted in `number_crashes`. A `Success: true, number_crashes: 0` result is valid even if RViz shows a post-goal collision.
+
+---
+
 ## Model Testing Workflow
 
-Use `test_mamba_branch.bash` (project root) to test a single branch:
+### Option A: Single Test (Fast, Reusable Simulator)
+
+Use `run_full_test.bash` when the simulator is already running — fastest for sequential branch tests:
+
+```bash
+bash run_full_test.bash <BRANCH> <MODEL_TYPE>
+```
+
+This script:
+- Resets/arms the drone in the existing simulator
+- Spawns evaluation_node + run_competition.py
+- Polls `start_navigation` until evaluation finishes
+- Saves `summary.yaml` to `results/branch_<X>_full_summary.yaml`
+
+### Option B: Full Test (Restarts Simulator Each Run)
+
+Use `launch_mamba_evaluation.bash` for a complete cycle including simulator launch:
+
+```bash
+bash launch_mamba_evaluation.bash <N_ROLLOUTS> vision dummy <MODEL_TYPE> <ABSOLUTE_PATH_TO_PTH>
+```
+
+Generates `evaluation.yaml` and `envtest/ros/summary.yaml`.
+
+### Option C: Single-Branch Quick Test
 
 ```bash
 bash test_mamba_branch.bash <BRANCH> <MODEL_TYPE>
 ```
 
-Branch reference:
+Self-contained: launches simulator, runs test, kills everything. Slowest but fully isolated.
 
-| Branch | Model Type | Architecture |
-|--------|-----------|-------------|
-| A | `VMambaLSTM` | VMamba + LSTM (stateful) |
-| B | `MambaVisionSSM` | MambaVision + SSM |
-| C | `CNNMamba3` | CNN + Mamba3 |
-| D | `STHMamba` | STH-Mamba |
-| E | `DecisionMamba` | DecisionMamba |
+### Branch Reference
 
-Weights are at `experiments/mamba_branches/optimized_training/branch_<X>/best_model.pth`.
+| Branch | Model Type | Architecture | Stateful? |
+|--------|-----------|-------------|-----------|
+| A | `VMambaLSTM` | VMamba + LSTM | Yes (LSTM hidden state) |
+| B | `MambaVisionSSM` | MambaVision + SSM | No |
+| B+ | `BPlusModel` | MambaVision + Mamba3 hybrid | No |
+| C | `CNNMamba3` | CNN + Mamba3 | No |
+| D | `STHMamba` | STH-Mamba | No |
+| E | `DecisionMamba` | DecisionMamba | No |
 
-Results saved to `results/branch_<X>_epoch1_summary.yaml` and `evaluation.yaml`.
+Weights at `experiments/mamba_branches/optimized_training/branch_<X>/best_model.pth`.
 
 For the original ViTLSTM baseline: `bash launch_evaluation.bash 1 vision`.
+
+---
+
+## Adding a New Branch (e.g. B+)
+
+When the training pipeline introduces a new architecture, two files need updating:
+
+1. **`envtest/ros/run_competition.py`**:
+   - Add model directory to `_BRANCH_MODEL_DIRS`
+   - Import the model class in the `try:` block
+   - Add an `elif model_type == '<NewType>'` branch in `__init__`
+
+2. **`envtest/ros/user_code.py`**:
+   - Add the model class name to `_is_branch_bce` set if it's stateless (returns `(output, None)` and takes 3D velocity)
+   - Or add a separate handling block if it has unique input/output requirements
+
+Verify the model loads standalone before testing in simulation:
+
+```python
+import torch
+sys.path.insert(0, '<branch_models_dir>')
+from <model_module> import <ModelClass>
+m = <ModelClass>()
+ckpt = torch.load('<weight_path>', map_location='cpu')
+sd = ckpt.get('model_state_dict', ckpt)
+if any(k.startswith('_orig_mod.') for k in sd.keys()):
+    sd = {k.replace('_orig_mod.', ''): v for k, v in sd.items()}
+m.load_state_dict(sd)  # ← if this raises, architecture/weight mismatch
+```
 
 ---
 
@@ -107,21 +190,45 @@ For the original ViTLSTM baseline: `bash launch_evaluation.bash 1 vision`.
 Check velocity output lines after a test:
 
 ```bash
-grep "RUN_COMPETITION.*velocity" /tmp/branch_B_epoch1.log | head -10
+grep "RUN_COMPETITION.*velocity" /tmp/comp_<X>.log | head -10
+wc -l < <(grep "RUN_COMPETITION.*velocity" /tmp/comp_<X>.log)  # output count
 ```
 
 | Symptom | Diagnosis | Fix |
 |---------|-----------|-----|
+| **0 velocity outputs** AND `Success: true` | Model failed to load — drone reached 20m by takeoff inertia alone | Check `/tmp/comp_<X>.log` head for `RuntimeError: Error(s) in loading state_dict` |
 | `vy ≈ 0, vz ≈ 0` constant | Mode collapse — model copies input velocity | Retrain with correct target cols 13:16 |
 | `vx_out ≈ vx_in` regardless of image | Wrong training target (cols 2:5 used) | See training fix below |
-| Zero velocity lines in log | `run_competition.py` crashed silently | Run directly to see error |
+| Extreme `vz` (>1.5) near obstacles | Panic-response model (over-trained, val_loss low but unstable) | Use earlier-epoch weights (early stopping) |
 | `Not in hover` repeated | Model never sent commands | Check ROS_MASTER_URI matches running rosmaster |
+| `size mismatch for ...` in log | Weight architecture mismatch | Architecture was upgraded; retrain weights |
+
+**False-positive Success warning**: If `summary.yaml` shows `Success: true` but `comp_<X>.log` has 0 velocity outputs, the model **did not run**. Drone reached 20m by takeoff trajectory inertia. Always verify velocity output count matches expected (~240 for 4-second flight at ~60Hz).
 
 **Training target fix** (commit `9152c01`): `train_mamba_optimized.py` must use `traj_meta[idx, 13:16]` (expert velocity command) as target, NOT `traj_meta[idx, 2:5]` (model input). Using cols 2:5 causes identity mapping — model ignores depth images entirely.
 
 ---
 
 ## Failure Modes & Fixes
+
+### Model Load Failure (architecture/weight mismatch)
+
+Symptom in `/tmp/comp_<X>.log`:
+```
+RuntimeError: Error(s) in loading state_dict for <ModelClass>:
+    size mismatch for ...ss2d.x_proj_weight: copying a param with shape torch.Size([4, 36, 64])
+    from checkpoint, the shape in current model is torch.Size([4, 132, 64]).
+```
+
+Cause: Model code architecture (e.g. `d_state`, `embed_dim`) was upgraded but weights weren't retrained.
+
+Diagnosis:
+```bash
+git log --oneline -- experiments/mamba_branches/branch_<X>_*/models/  # find architecture changes
+python3 -c "import torch; print(torch.load('<weight_path>')['epoch'])"  # check weight epoch
+```
+
+Fix: Either revert architecture to match weights, OR retrain weights with new architecture. Document in commit which is intentional.
 
 ### ZMQ "Address already in use"
 
@@ -138,12 +245,15 @@ If ports persist: run `wsl --shutdown` from Windows PowerShell, then restart WSL
 
 ### "Unable to communicate with master"
 
+Most common cause: `ROS_MASTER_URI` defaulted to `http://localhost:11311` instead of `http://192.168.233.250:11311` in the current shell.
+
 ```bash
-pgrep -a rosmaster          # check if running
-ss -tlnp | grep 11311       # check which IP it's on
+echo $ROS_MASTER_URI                  # verify it's pointing to 192.168.233.250:11311
+pgrep -a rosmaster                    # check master is running
+ss -tlnp | grep 11311                 # check which IP master listens on
 ```
 
-Kill everything and restart with fixed IP `192.168.233.250`.
+If env vars wrong → re-export. If master dead → kill everything and restart simulator.
 
 ### `visionsim_node` already running — skips relaunch
 
@@ -155,14 +265,16 @@ killall -9 visionsim_node rviz flight_render
 
 ### `run_competition.py` produces no output
 
-Run directly to see errors (the launch script swallows stderr):
+Background-launched scripts swallow stderr. Run directly to see errors:
 
 ```bash
-cd envtest/ros
+cd /root/catkin_ws/src/vitfly-mambatest/envtest/ros
 python3 -u run_competition.py --vision_based --des_vel 5.0 \
   --model_type CNNMamba3 \
   --model_path /root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_C/best_model.pth
 ```
+
+**Important**: `cd` chained with `&&` may not propagate correctly for background-launched python — use absolute paths or wrap in a separate script.
 
 ### `torch.compile()` weight prefix
 
@@ -172,6 +284,28 @@ Weights saved with `torch.compile()` have `_orig_mod.` key prefix. `run_competit
 if any(k.startswith('_orig_mod.') for k in state_dict.keys()):
     state_dict = {k.replace('_orig_mod.', ''): v for k, v in state_dict.items()}
 ```
+
+---
+
+## Multi-Branch Test Strategy
+
+When testing many branches sequentially, persistent simulator is much faster than restarting:
+
+```bash
+# Step 1: Launch simulator ONCE
+roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True &
+sleep 15
+
+# Step 2: Loop through branches with run_full_test.bash
+for BRANCH_INFO in "B:MambaVisionSSM" "Bplus:BPlusModel" "C:CNNMamba3" "D:STHMamba" "E:DecisionMamba"; do
+  BRANCH="${BRANCH_INFO%%:*}"
+  MODEL="${BRANCH_INFO##*:}"
+  echo "=== Testing Branch $BRANCH ($MODEL) ==="
+  bash run_full_test.bash $BRANCH $MODEL
+done
+```
+
+Saves ~20 seconds per branch (no simulator relaunch).
 
 ---
 
@@ -187,17 +321,32 @@ sleep 5
 ip addr add 192.168.233.250/32 dev lo 2>/dev/null
 export ROS_MASTER_URI=http://192.168.233.250:11311
 export ROS_IP=192.168.233.250
+unset ROS_HOSTNAME
 
-# Check ROS is alive
+# Source ROS + conda
+source /opt/ros/noetic/setup.bash && source /root/catkin_ws/devel/setup.bash
+source ~/miniconda3/etc/profile.d/conda.sh && conda activate ros_py38
+export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7
+export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
+
+# Verify ROS is alive
 rostopic list | head -5
 
-# Check depth images publishing
-rostopic hz /kingfisher/dodgeros_pilot/unity/depth --window=3
+# Verify raw depth publishes (works after simulator launch)
+rostopic echo /kingfisher/dodgeros_pilot/unity/depth --noarr -n 1
 
-# Run single branch test
+# Verify model loads standalone (catches architecture mismatch BEFORE running simulator)
+python3 -c "import torch; ckpt=torch.load('<path>'); print(ckpt.get('epoch'), ckpt.get('val_loss'))"
+
+# Run single branch test (with persistent simulator)
+bash run_full_test.bash D STHMamba
+
+# Run single branch test (self-contained)
 bash test_mamba_branch.bash D STHMamba
 
+# Verify model actually ran (not just inertia)
+grep "RUN_COMPETITION.*velocity" /tmp/comp_D.log | wc -l   # ~240 for 4s flight
+
 # Check results
-cat evaluation.yaml
-grep "RUN_COMPETITION.*velocity" /tmp/branch_D_epoch1.log | wc -l
+cat results/branch_D_full_summary.yaml
 ```
