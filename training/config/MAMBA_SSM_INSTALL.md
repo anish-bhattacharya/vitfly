@@ -9,14 +9,18 @@
 
 ## Install
 ```bash
-# 1. Install causal convolution (dependency)
-pip install causal-conv1d>=1.4.0
+# Install causal convolution (dependency)
+# NOTE: Must match PyTorch's CUDA version
+# Current env: PyTorch 2.8.0+cu128, CUDA 12.8
+# If pip build fails with CUDA version mismatch, try:
+pip install causal-conv1d --no-build-isolation
 
-# 2. Install mamba-ssm (compiles CUDA kernels)
+# If still failing, install from pre-compiled wheels:
+# https://github.com/Dao-AILab/causal-conv1d/releases
+pip install causal-conv1d --find-links https://github.com/Dao-AILab/causal-conv1d/releases
+
+# Install mamba-ssm (compiles CUDA kernels)
 pip install mamba-ssm
-
-# 3. Verify
-python3 -c "from mamba_ssm import Mamba; print('OK')"
 ```
 
 ## What This Enables
