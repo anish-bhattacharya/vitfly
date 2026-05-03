@@ -152,7 +152,7 @@ def set_seed(seed=42):
     torch.backends.cudnn.benchmark = False
 
 
-def create_model(branch_name, config, device):
+def create_model(branch_name, config, device, args=None):
     """Create model based on branch name."""
     if branch_name == 'A':
         model = create_vmamba_lstm_model(config)
@@ -170,6 +170,14 @@ def create_model(branch_name, config, device):
         raise ValueError(f"Unknown branch: {branch_name}")
     
     model = model.to(device)
+    
+    if args and args.compile and branch_name != 'A':
+        try:
+            model = torch.compile(model, mode="reduce-overhead", dynamic=True)
+            print(f"  torch.compile enabled (mode=reduce-overhead)")
+        except Exception as e:
+            print(f"  torch.compile skipped: {e}")
+    
     return model
 
 
@@ -292,7 +300,7 @@ def train_branch(branch_name, args, train_loader, val_loader, device):
     }
     
     # Create model
-    model = create_model(branch_name, config, device)
+    model = create_model(branch_name, config, device, args)
     param_count = sum(p.numel() for p in model.parameters())
     print(f"Model parameters: {param_count:,} ({param_count/1e6:.2f}M)")
     
@@ -410,7 +418,9 @@ def main():
     parser.add_argument('--warmup_epochs', type=int, default=5,
                        help='Number of warmup epochs')
     parser.add_argument('--clip_grad_norm', type=float, default=1.0,
-                       help='Gradient clipping norm')
+                        help='Gradient clipping norm')
+    parser.add_argument('--compile', action='store_true', default=False,
+                        help='Enable torch.compile (mode=reduce-overhead) for non-A branches')
     
     # System arguments
     parser.add_argument('--num_workers', type=int, default=4,
