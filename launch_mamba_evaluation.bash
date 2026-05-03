@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Set ROS environment for WSL - dynamically get current IP
-CURRENT_IP=$(hostname -I | awk '{print $1}')
+# Set ROS environment for WSL - use fixed loopback IP (not dynamic hostname -I)
+CURRENT_IP=192.168.233.250
+ip addr add ${CURRENT_IP}/32 dev lo 2>/dev/null
 export ROS_MASTER_URI=http://${CURRENT_IP}:11311
 export ROS_IP=${CURRENT_IP}
 unset ROS_HOSTNAME
