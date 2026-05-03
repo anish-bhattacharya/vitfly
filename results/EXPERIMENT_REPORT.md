@@ -162,6 +162,45 @@ Note: For branches B-E, the model is compute-light (2-3M parameters) and
 GPU utilization is only 3-5%, so kernel fusion from torch.compile has
 limited impact. The bottleneck is Python/CPU overhead, not GPU compute.
 
+### 4.3 NVIDIA MPS (Multi-Process Service)
+
+For parallel training of multiple branches on a single GPU, NVIDIA MPS
+reduces CUDA context-switching overhead between independent training processes.
+
+**Without MPS**: Each process creates its own CUDA context. The GPU
+time-slices between contexts, adding ~30-50% idle overhead from context
+switching.
+
+**With MPS**: All processes share a single CUDA context via the MPS server.
+Kernels from different processes execute concurrently on the GPU
+(Hyper-Q), filling idle cycles.
+
+```
+GPU Time (No MPS):  [C][idle][D][idle][E][idle][B+]          GPU@3%
+GPU Time (With MPS):[C][D][E][B+][C][D][E][B+]...concurrent  GPU@12%
+```
+
+**Measured improvement** (RTX 5090, 4 parallel branches):
+
+| Metric | Without MPS | With MPS | Improvement |
+|--------|-------------|----------|-------------|
+| GPU utilization | 3% | 12% | 4× |
+| GPU memory | 1025 MB | 1634 MB | 1.6× |
+| Total CPU usage | ~200% | ~700% | 3.5× |
+| Time to completion | ~4.4h (sequential) | ~1.5h (parallel) | 2.9× |
+
+**Usage**:
+```bash
+nvidia-cuda-mps-control -d                      # Start daemon
+export CUDA_MPS_ACTIVE_THREAD_PERCENTAGE=25      # 25% per process (4-way)
+python3 train_C.py & python3 train_D.py & ...    # Launch in parallel
+echo quit | nvidia-cuda-mps-control              # Stop daemon
+```
+
+MPS is most effective when individual processes underutilize the GPU (our
+<3M parameter models use <3% of RTX 5090 compute). It is not beneficial
+for large models that already saturate the GPU.
+
 ## 5. Results
 
 ### 5.1 Epoch-1 Validation
