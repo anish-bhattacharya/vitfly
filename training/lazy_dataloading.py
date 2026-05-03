@@ -13,6 +13,7 @@ Solves the memory exhaustion issue where loading all 580 trajectories
 import cv2
 import glob
 import os
+import os
 from os.path import join as opj
 import numpy as np
 import torch
@@ -224,3 +225,93 @@ def create_lazy_dataloader(data_dir, val_split=0.2, batch_size=32, num_workers=4
     }
     
     return train_loader, val_loader, stats_dict
+
+
+class SequenceFlightmareDataset(Dataset):
+    """Multi-step sequence dataset for temporal training.
+    Groups consecutive frames from same trajectory into sequences.
+    """
+    def __init__(self, sample_paths, seq_len=8, cropH=60, cropW=90):
+        self.seq_len = seq_len
+        self.cropH = cropH
+        self.cropW = cropW
+        self._csv_cache = {}
+        self.sequences = self._build_sequences(sample_paths)
+
+    def _build_sequences(self, samples):
+        traj_groups = {}
+        for img_path, csv_path, row_idx in samples:
+            traj = csv_path  # group by csv (trajectory)
+            if traj not in traj_groups:
+                traj_groups[traj] = []
+            traj_groups[traj].append((img_path, csv_path, row_idx))
+        seqs = []
+        for traj, frames in traj_groups.items():
+            frames.sort(key=lambda x: x[2])
+            for i in range(0, len(frames), self.seq_len):
+                chunk = frames[i:i + self.seq_len]
+                if len(chunk) == self.seq_len:
+                    seqs.append(chunk)
+        print(f"[SEQ DATASET] Built {len(seqs)} sequences of length {self.seq_len} from {len(samples)} samples")
+        return seqs
+
+    def __len__(self):
+        return len(self.sequences)
+
+    def __getitem__(self, idx):
+        frames = self.sequences[idx]
+        depths, vels, quats, targets = [], [], [], []
+        for img_path, csv_path, row_idx in frames:
+            img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+            img = img.astype(np.float32) / 255.0
+            img = cv2.resize(img, (self.cropW, self.cropH))
+            depths.append(torch.from_numpy(img).unsqueeze(0).float())
+            if csv_path not in self._csv_cache:
+                meta = np.genfromtxt(csv_path, delimiter=',', dtype=np.float64)[1:]
+                self._csv_cache[csv_path] = meta
+            row = self._csv_cache[csv_path][row_idx]
+            vels.append(row[10:13].tolist())
+            quats.append(row[3:7].tolist())
+            targets.append(row[13:16].tolist())
+        return (torch.stack(depths), torch.tensor(vels).float(),
+                torch.tensor(quats).float(), torch.tensor(targets).float())
+
+
+def create_sequence_dataloader(data_dir, seq_len=8, val_split=0.2, batch_size=32,
+                                num_workers=0, short=0, seed=42, pin_memory=True):
+    np.random.seed(seed)
+    random.seed(seed)
+    traj_folders = sorted(glob.glob(opj(data_dir, '*')))
+    if short > 0:
+        traj_folders = traj_folders[:short]
+    all_samples = []
+    skipped = 0
+    for folder in traj_folders:
+        if not os.path.isdir(folder):
+            continue
+        csv_files = glob.glob(opj(folder, 'data.csv'))
+        png_files = sorted(glob.glob(opj(folder, '*.png')))
+        if not csv_files or not png_files:
+            continue
+        meta = np.genfromtxt(csv_files[0], delimiter=',', dtype=np.float64)
+        n_rows = len(meta) - 1
+        n_imgs = len(png_files)
+        if n_imgs != n_rows:
+            skipped += 1
+            continue
+        for i, png in enumerate(png_files):
+            if i < n_rows:
+                all_samples.append((png, csv_files[0], i))
+    np.random.shuffle(all_samples)
+    split = int(len(all_samples) * (1 - val_split))
+    train_seqs = all_samples[:split]
+    val_seqs = all_samples[split:]
+    train_ds = SequenceFlightmareDataset(train_seqs, seq_len=seq_len)
+    val_ds = SequenceFlightmareDataset(val_seqs, seq_len=seq_len)
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True,
+                              num_workers=num_workers, pin_memory=pin_memory)
+    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False,
+                            num_workers=num_workers, pin_memory=pin_memory)
+    stats = {'num_train': len(train_ds), 'num_val': len(val_ds),
+             'trajectories': len(traj_folders) - skipped, 'skipped': skipped}
+    return train_loader, val_loader, stats

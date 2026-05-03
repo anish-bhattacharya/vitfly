@@ -56,7 +56,7 @@ except ImportError as e:
 
 # Import dataloaders
 from dataloading import dataloader
-from lazy_dataloading import create_lazy_dataloader
+from lazy_dataloading import create_lazy_dataloader, create_sequence_dataloader
 
 
 class OptimizedFlightmareDataset(Dataset):
@@ -434,8 +434,9 @@ def main():
     
     # Branch selection
     parser.add_argument('--branches', nargs='+', default=['A', 'B', 'C', 'D', 'E'],
-                       help='Branches to train (A, B, C, D, E)')
-    
+                        help='Branches to train (A, B, C, D, E, Bplus)')
+    parser.add_argument('--sequence_length', type=int, default=1,
+                        help='Sequence length for multi-step temporal training (1=standard single-frame)')
     # Output arguments
     parser.add_argument('--save_dir', default='/root/vitfly/experiments/mamba_branches/optimized_training',
                        help='Directory to save checkpoints and logs')
@@ -460,20 +461,30 @@ def main():
     # Create save directory
     os.makedirs(args.save_dir, exist_ok=True)
     
-    print("\nLoading data with lazy dataloader...")
-    train_loader, val_loader, stats = create_lazy_dataloader(
-        data_dir=args.data_dir,
-        val_split=args.val_split,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        short=args.short,
-        seed=args.seed,
-        pin_memory=True
-    )
-    
-    print(f"Training samples: {stats['num_train_samples']}")
-    print(f"Validation samples: {stats['num_val_samples']}")
-    print(f"Trajectories loaded: {stats['num_trajectories']}")
+    if args.sequence_length > 1:
+        print(f"\nLoading data with SEQUENCE dataloader (seq_len={args.sequence_length})...")
+        train_loader, val_loader, stats = create_sequence_dataloader(
+            data_dir=args.data_dir, seq_len=args.sequence_length,
+            val_split=args.val_split, batch_size=args.batch_size,
+            num_workers=args.num_workers, short=args.short, seed=args.seed,
+            pin_memory=True
+        )
+        print(f"Training sequences: {stats['num_train']}")
+        print(f"Validation sequences: {stats['num_val']}")
+    else:
+        print("\nLoading data with lazy dataloader...")
+        train_loader, val_loader, stats = create_lazy_dataloader(
+            data_dir=args.data_dir,
+            val_split=args.val_split,
+            batch_size=args.batch_size,
+            num_workers=args.num_workers,
+            short=args.short,
+            seed=args.seed,
+            pin_memory=True
+        )
+        print(f"Training samples: {stats['num_train_samples']}")
+        print(f"Validation samples: {stats['num_val_samples']}")
+        print(f"Trajectories loaded: {stats['num_trajectories']}")
     
     if val_loader is None:
         print("Warning: No validation data available")
