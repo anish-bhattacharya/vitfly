@@ -84,12 +84,17 @@ Not all 42K samples are equally valuable. Identify hard examples by:
 These samples can be upweighted in the loss function or oversampled.
 
 ### F. Ensemble Inference
-**Status**: ⏳ 待测试。
+**Status**: ⏳ 待测试，但需注意部署限制。
+
 Average predictions across multiple branches:
 ```python
 v_final = (v_B + v_Bplus + v_C + v_D + v_E) / 5
 ```
 Simple, zero-cost improvement in inference stability.
+
+**⚠️ 部署限制**：上游部署环境为CPU-only（Intel NUC 10, i7, 16GB RAM），单模型推理即需25ms。5模型集成推理需125ms（8Hz），**不满足30Hz控制频率要求**。
+
+**替代方案**：将集成转化为**知识蒸馏（方向C）**——用5个teacher模型生成软标签，训练一个单一学生模型，推理延迟25ms不变，但吸收了多分支的集体智慧。
 
 ## Recommended Order
 
@@ -107,4 +112,4 @@ Simple, zero-cost improvement in inference stability.
 - C: 仿真通过 (0 crash, 4.20s)
 - D: 仿真通过 (0 crash, 4.21s)
 - E: 仿真通过 (0 crash, 4.21s)
-- A: 重训中 (Epoch 5/100, Val Loss 0.0219, 目标<0.0194)
+- A: 重训中（后台agent验收中，待结果）
