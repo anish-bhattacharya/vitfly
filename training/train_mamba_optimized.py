@@ -182,7 +182,7 @@ def create_model(branch_name, config, device, args=None):
 
 
 def train_epoch(model, loader, optimizer, criterion, scaler, device, epoch, 
-                grad_accum_steps=1, clip_grad_norm=1.0):
+                grad_accum_steps=1, clip_grad_norm=1.0, seq_len=1):
     """Train for one epoch with mixed precision."""
     model.train()
     total_loss = 0.0
@@ -201,8 +201,18 @@ def train_epoch(model, loader, optimizer, criterion, scaler, device, epoch,
             continue
         
         with autocast(device_type='cuda', dtype=torch.float16):
-            output, _ = model([depth, velocity, quat])
-            loss = criterion(output, target)
+            if seq_len > 1:
+                B, S = depth.shape[:2]
+                depth_f = depth.view(B * S, 1, depth.shape[-2], depth.shape[-1])
+                vel_f = velocity.reshape(B * S, -1)
+                quat_f = quat.reshape(B * S, -1)
+                output, _ = model([depth_f, vel_f, quat_f])
+                output = output.reshape(B, S, -1)
+                target_f = target.reshape(B, S, -1)
+            else:
+                output, _ = model([depth, velocity, quat])
+                target_f = target
+            loss = criterion(output, target_f)
             
             if torch.isnan(loss) or torch.isinf(loss):
                 print(f"  Warning: NaN/Inf loss at batch {batch_idx}, skipping")
@@ -237,16 +247,11 @@ def train_epoch(model, loader, optimizer, criterion, scaler, device, epoch,
     return total_loss / len(loader)
 
 
-def validate(model, loader, criterion, device):
+def validate(model, loader, criterion, device, seq_len=1):
     """Validate model performance."""
     model.eval()
     total_loss = 0.0
-    
-    # Handle empty validation set
-    if len(loader) == 0:
-        print("  Warning: Empty validation set, skipping validation")
-        return float('inf')
-    
+
     with torch.no_grad():
         for depth, velocity, quat, target in loader:
             depth = depth.to(device, non_blocking=True)
@@ -255,10 +260,19 @@ def validate(model, loader, criterion, device):
             target = target.to(device, non_blocking=True)
             
             with autocast(device_type='cuda', dtype=torch.float16):
-                output, _ = model([depth, velocity, quat])
-                loss = criterion(output, target)
+                if seq_len > 1:
+                    B, S = depth.shape[:2]
+                    depth_f = depth.view(B * S, 1, depth.shape[-2], depth.shape[-1])
+                    vel_f = velocity.reshape(B * S, -1)
+                    quat_f = quat.reshape(B * S, -1)
+                    output, _ = model([depth_f, vel_f, quat_f])
+                    output = output.reshape(B, S, -1)
+                    target_f = target.reshape(B, S, -1)
+                else:
+                    output, _ = model([depth, velocity, quat])
+                    target_f = target
             
-            total_loss += loss.item()
+            total_loss += criterion(output, target_f).item()
     
     return total_loss / len(loader)
 
@@ -333,11 +347,12 @@ def train_branch(branch_name, args, train_loader, val_loader, device):
         # Train
         train_loss = train_epoch(
             model, train_loader, optimizer, criterion, scaler, device, epoch,
-            grad_accum_steps=args.grad_accum_steps, clip_grad_norm=args.clip_grad_norm
+            grad_accum_steps=args.grad_accum_steps, clip_grad_norm=args.clip_grad_norm,
+            seq_len=args.sequence_length
         )
         
         # Validate
-        val_loss = validate(model, val_loader, criterion, device)
+        val_loss = validate(model, val_loader, criterion, device, seq_len=args.sequence_length)
         
         # Update learning rate
         scheduler.step()
