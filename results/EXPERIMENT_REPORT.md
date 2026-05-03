@@ -233,9 +233,13 @@ The collapse is structural, not a training issue.
 **Proposed fix**: Increase `d_state` to 64 (4× capacity) and add learnable
 position embeddings to preserve spatial information through the scan.
 
-### 5.3 Full 100-Epoch Training (In Progress)
+### 5.3 Full 100-Epoch Training (MPS Parallel)
 
 - Branch B: Completed 100 epochs, Best Val Loss: 0.0194 ✅
+- Branch C: Completed 100 epochs, Best Val Loss: 0.0183 ✅ (MPS)
+- Branch D: Completed 100 epochs, Best Val Loss: 0.0164 ✅ (MPS, best)
+- Branch E: Completed 100 epochs, Best Val Loss: 0.0171 ✅ (MPS)
+- Branch B+: Completed 100 epochs, Best Val Loss: 0.0191 ✅ (MPS, no compile)
 - Branch C: 21/100 epochs, Val Loss: 0.0199 (running)
 - Branches D, E, B+: Queued (sequential)
 
