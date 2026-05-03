@@ -87,11 +87,8 @@ class LazyFlightmareDataset(Dataset):
             
         except Exception as e:
             print(f"[LAZY DATASET] Error loading sample {idx} from {img_path}: {e}")
-            depth = torch.zeros(1, self.cropHeight, self.cropWidth, dtype=torch.float32)
-            velocity = torch.zeros(3, dtype=torch.float32)
-            quat = torch.tensor([1.0, 0.0, 0.0, 0.0], dtype=torch.float32)
-            target = torch.tensor([1.0, 0.0, 0.0], dtype=torch.float32)
-            return depth, velocity, quat, target
+            fallback_idx = torch.randint(0, len(self.samples), (1,)).item()
+            return self.__getitem__(fallback_idx)
 
 
 def create_lazy_dataloader(data_dir, val_split=0.2, batch_size=32, num_workers=4,

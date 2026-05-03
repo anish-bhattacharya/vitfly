@@ -1,6 +1,11 @@
 """
 分支 D: STH-Mamba 时空解耦架构
 用于无人机端到端避障任务
+
+架构:
+- CNN 空间编码器 (~1.5M)
+- Mamba-2 SSM 时序头 (~1.3M)
+- 总计: ~2.8M
 """
 
 import torch
@@ -46,63 +51,102 @@ class SpatialEncoder(nn.Module):
         return x
 
 
-class MambaTemporalFusion(nn.Module):
-    """Mamba 时序融合器"""
-    def __init__(self, input_dim, d_state=16, hidden_dim=256, num_layers=3):
+class Mamba2SSMBlock(nn.Module):
+    """Mamba-2 SSM Block with proper state-space modeling"""
+    def __init__(self, input_dim, d_state=16, d_inner=None, dropout=0.1):
         super().__init__()
-        self.input_proj = nn.Linear(input_dim, hidden_dim)
-        
-        self.ssm_layers = nn.ModuleList()
-        self.A_params = nn.ParameterList()
-        self.D_params = nn.ParameterList()
-        
-        for _ in range(num_layers):
-            self.ssm_layers.append(nn.ModuleDict({
-                'in_proj': nn.Linear(hidden_dim, hidden_dim * 2),
-                'x_proj': nn.Linear(hidden_dim, d_state, bias=False),
-                'out_proj': nn.Linear(hidden_dim, hidden_dim),
-                'mlp': nn.Sequential(
-                    nn.Linear(hidden_dim, hidden_dim * 4),
-                    nn.GELU(),
-                    nn.Linear(hidden_dim * 4, hidden_dim)
-                ),
-                'norm1': nn.LayerNorm(hidden_dim),
-                'norm2': nn.LayerNorm(hidden_dim)
-            }))
-            self.A_params.append(nn.Parameter(torch.ones(d_state)))
-            self.D_params.append(nn.Parameter(torch.ones(hidden_dim) * 0.1))
-            
-        self.out_norm = nn.LayerNorm(hidden_dim)
+        self.input_dim = input_dim
         self.d_state = d_state
-        self.hidden_dim = hidden_dim
+        self.d_inner = d_inner or input_dim * 2
+        
+        self.in_proj = nn.Linear(input_dim, self.d_inner * 2)
+        
+        self.dt_proj = nn.Linear(self.d_inner, self.d_inner)
+        self.B_proj = nn.Linear(self.d_inner, d_state)
+        self.C_proj = nn.Linear(self.d_inner, d_state)
+        
+        self.A_log = nn.Parameter(torch.randn(d_state))
+        self.D = nn.Parameter(torch.ones(self.d_inner))
+        
+        self.out_proj = nn.Linear(self.d_inner, input_dim)
+        self.dropout = nn.Dropout(dropout)
+        
+        self.norm = nn.LayerNorm(input_dim)
+        
+        self._init_weights()
+        
+    def _init_weights(self):
+        nn.init.uniform_(self.A_log, -4, -1)
+        nn.init.ones_(self.D)
         
     def forward(self, x, state=None):
-        x = self.input_proj(x).unsqueeze(1)
-        B = x.shape[0]
+        batch_size = x.shape[0]
         
         if state is None:
-            state = torch.zeros(B, self.d_state, device=x.device)
-            
-        for i, layer in enumerate(self.ssm_layers):
-            x_norm = layer['norm1'](x)
-            xz = layer['in_proj'](x_norm)
-            x_inner, z = xz.chunk(2, dim=-1)
-            
-            B_state = layer['x_proj'](x_inner)
-            A = self.A_params[i].unsqueeze(0).unsqueeze(0)
-            
-            h = torch.cumsum(B_state * A, dim=1)
-            y = h @ self.A_params[i].unsqueeze(-1)
-            y = y.squeeze(-1).unsqueeze(-1).expand(-1, -1, self.hidden_dim)
-            
-            y = y * torch.sigmoid(z)
-            y = layer['out_proj'](y)
-            y = y + x
-            y = y + layer['mlp'](layer['norm2'](y))
-            x = y
-            
-        x = self.out_norm(x.squeeze(1))
-        return x, state
+            state = torch.zeros(batch_size, self.d_state, device=x.device)
+        
+        x_norm = self.norm(x)
+        
+        xz = self.in_proj(x_norm)
+        x_inner, z = xz.chunk(2, dim=-1)
+        
+        dt = F.softplus(self.dt_proj(x_inner))
+        B = self.B_proj(x_inner)
+        C = self.C_proj(x_inner)
+        
+        A = -torch.exp(self.A_log)
+        
+        dA = torch.exp(dt.mean(dim=-1, keepdim=True) * A.unsqueeze(0))
+        dB = dt.mean(dim=-1, keepdim=True) * B
+        
+        state = dA * state + dB * x_inner.mean(dim=-1, keepdim=True).expand(-1, self.d_state)
+        
+        y = (C * state).sum(dim=-1, keepdim=True).expand(-1, self.d_inner)
+        
+        y = y + self.D * x_inner
+        
+        y = y * torch.sigmoid(z)
+        
+        y = self.out_proj(y)
+        y = self.dropout(y)
+        
+        y = y + x
+        
+        return y, state
+
+
+class Mamba2TemporalHead(nn.Module):
+    """Mamba-2 时序建模头"""
+    def __init__(self, input_dim, d_state=16, hidden_dim=256, num_layers=3, dropout=0.1):
+        super().__init__()
+        self.input_dim = input_dim
+        self.d_state = d_state
+        self.hidden_dim = hidden_dim
+        self.num_layers = num_layers
+        
+        self.input_proj = nn.Linear(input_dim, hidden_dim)
+        
+        self.ssm_blocks = nn.ModuleList([
+            Mamba2SSMBlock(hidden_dim, d_state, dropout=dropout)
+            for _ in range(num_layers)
+        ])
+        
+        self.out_norm = nn.LayerNorm(hidden_dim)
+        
+    def forward(self, x, hidden=None):
+        x = self.input_proj(x)
+        
+        if hidden is None:
+            hidden = [None] * self.num_layers
+        
+        new_hidden = []
+        for i, block in enumerate(self.ssm_blocks):
+            x, state = block(x, hidden[i])
+            new_hidden.append(state)
+        
+        x = self.out_norm(x)
+        
+        return x, new_hidden
 
 
 class STHMambaNet(nn.Module):
@@ -111,8 +155,8 @@ class STHMambaNet(nn.Module):
     
     参数量:
     - CNN 空间编码器: ~1.5M
-    - Mamba 时序融合器: ~1.8M
-    - 总计: ~3.3M
+    - Mamba-2 时序头: ~1.3M
+    - 总计: ~2.8M
     """
     
     def __init__(
@@ -129,8 +173,8 @@ class STHMambaNet(nn.Module):
         self.state_proj = nn.Linear(7, 64)
         
         fusion_input = spatial_dim + 64
-        self.temporal_fusion = MambaTemporalFusion(
-            fusion_input, temporal_d_state, temporal_hidden, temporal_layers
+        self.temporal_head = Mamba2TemporalHead(
+            fusion_input, temporal_d_state, temporal_hidden, temporal_layers, dropout
         )
         
         self.fc_out = nn.Sequential(
@@ -150,10 +194,10 @@ class STHMambaNet(nn.Module):
         state_feat = self.state_proj(torch.cat((X[1] * 0.1, X[2]), dim=1))
         
         fusion_input = torch.cat((spatial_feat, state_feat), dim=1)
-        x, state = self.temporal_fusion(fusion_input)
+        x, hidden = self.temporal_head(fusion_input)
         x = self.fc_out(x)
         
-        return x, state
+        return x, hidden
     
     def get_parameter_count(self):
         return sum(p.numel() for p in self.parameters())
@@ -184,4 +228,4 @@ if __name__ == '__main__':
         output, state = model(X)
     
     print(f"输入: depth={X[0].shape}, vel={X[1].shape}, quat={X[2].shape}")
-    print(f"输出: {output.shape}, state: {state.shape}")
+    print(f"输出: {output.shape}, state: {len(state)} layers")

@@ -1,0 +1,308 @@
+"""
+@authors: A Bhattacharya
+@organization: GRASP Lab, University of Pennsylvania
+@date: ...
+@license: ...
+
+@brief: This module contains the dataloading routine that was used in the paper "Utilizing vision transformer models for end-to-end vision-based
+quadrotor obstacle avoidance" by Bhattacharya, et. al
+"""
+
+import cv2
+import glob, os, time
+from os.path import join as opj
+import numpy as np
+import torch
+import random
+import getpass
+import pickle
+import sys
+uname = getpass.getuser()
+
+# Initialize error log file
+ERROR_LOG_PATH = '/root/vitfly/training/logs/dataloader_errors.log'
+
+def dataloader(data_dir, val_split=0., short=0, seed=None, train_val_dirs=None):
+    cropHeight = 60
+    cropWidth = 90
+
+    # Generate cache filename based on parameters
+    cache_dir = os.path.dirname(data_dir)
+    os.makedirs(cache_dir, exist_ok=True)
+    cache_filename = f"cached_data_short{short}_split{val_split}_seed{seed}.pkl"
+    cache_path = opj(cache_dir, cache_filename)
+    
+    # Try to load from cache
+    if os.path.exists(cache_path):
+        print(f'[DATALOADER] Loading cached data from {cache_path}')
+        try:
+            with open(cache_path, 'rb') as f:
+                cached_data = pickle.load(f)
+            print(f'[DATALOADER] Successfully loaded cached data (format: {len(cached_data)} values)')
+            return cached_data
+        except Exception as e:
+            print(f'[DATALOADER] Failed to load cache: {e}, loading from scratch')
+
+    if train_val_dirs is not None:
+        traj_folders = train_val_dirs[0] + train_val_dirs[1]
+        val_split = len(train_val_dirs[1]) / len(traj_folders)
+    else:
+        traj_folders = sorted(glob.glob(opj(data_dir, '*')))
+        random.seed(seed)
+        random.shuffle(traj_folders)
+
+    if short > 0:
+        assert short <= len(traj_folders), f"short={short} is greater than the number of folders={len(traj_folders)}"
+        traj_folders = traj_folders[:short]
+    desired_vels = []
+    traj_ims_full = []
+    traj_meta_full = []
+    curr_quats = []    
+
+    start_dataloading = time.time()
+
+    skippedImages = 0
+    skippedFolders = 0
+    collisionImages = 0
+    collisionFolders = 0
+
+    for i, traj_folder in enumerate(traj_folders):
+        print(f'[DATALOADER] Processing folder {i+1}/{len(traj_folders)}: {os.path.basename(traj_folder)}', flush=True)
+        
+        if len(traj_folders)//10 > 0 and i % (len(traj_folders)//10) == 0:
+            print(f'[DATALOADER] Loading folder {os.path.basename(traj_folder)}, folder # {i+1}/{len(traj_folders)}, time elapsed {time.time()-start_dataloading:.2f}s', flush=True)
+        
+        try:
+            print(f'[DATALOADER] Globbing PNG files in {traj_folder}', flush=True)
+            im_files = sorted(glob.glob(opj(traj_folder, '*.png')))
+            print(f'[DATALOADER] Found {len(im_files)} PNG files', flush=True)
+        except Exception as e:
+            error_msg = f'[DATALOADER ERROR] Failed to glob images in {traj_folder}: {type(e).__name__}: {e}'
+            print(error_msg, flush=True)
+            with open(ERROR_LOG_PATH, 'a') as f:
+                f.write(f'{error_msg}\n')
+            continue
+
+        if len(im_files) == 0:
+            print(f'[DATALOADER] No images in {os.path.basename(traj_folder)}, skipping', flush=True)
+            continue
+
+        csv_file = 'data.csv'
+        csv_path = opj(traj_folder, csv_file)
+        
+        try:
+            print(f'[DATALOADER] Loading CSV metadata from {csv_path}', flush=True)
+            traj_meta = np.genfromtxt(csv_path, delimiter=',', dtype=np.float64)[1:]
+            print(f'[DATALOADER] Loaded {traj_meta.shape[0]} metadata rows', flush=True)
+        except Exception as e:
+            error_msg = f'[DATALOADER ERROR] Failed to load CSV {csv_path}: {type(e).__name__}: {e}'
+            print(error_msg, flush=True)
+            with open(ERROR_LOG_PATH, 'a') as f:
+                f.write(f'{error_msg}\n')
+            continue
+        
+        try:
+            print(f'[DATALOADER] Loading collision flags from {csv_path}', flush=True)
+            traj_meta[:,-1] = np.int32(np.genfromtxt(csv_path, delimiter=',', dtype="bool")[1:,-1])
+            print(f'[DATALOADER] Collision flags loaded successfully', flush=True)
+        except Exception as e:
+            error_msg = f'[DATALOADER ERROR] Failed to load collision flags from {csv_path}: {type(e).__name__}: {e}'
+            print(error_msg, flush=True)
+            with open(ERROR_LOG_PATH, 'a') as f:
+                f.write(f'{error_msg}\n')
+            continue
+
+        # check for collisions in trajectory
+        # if traj_meta[:,-1].sum() > 0:
+        #     print(f'[DATALOADER] Collision in {os.path.basename(traj_folder)}, skipping')
+        #     collisionFolders += 1
+        #     collisionImages += int(len(traj_meta[:,0]))
+        #     continue
+
+        if np.isnan(traj_meta).any():
+            print(f'[DATALOADER] NaN in {os.path.basename(traj_folder)}, skipping', flush=True)
+            traj_meta = traj_meta[:,:-1]
+            
+        try:
+            print(f'[DATALOADER] Reading {len(im_files)} images from {os.path.basename(traj_folder)}', flush=True)
+            traj_ims_list = []
+            for idx, im_file in enumerate(im_files):
+                if idx % 50 == 0:
+                    print(f'[DATALOADER] Reading image {idx+1}/{len(im_files)}: {os.path.basename(im_file)}', flush=True)
+                try:
+                    img = cv2.imread(im_file, cv2.IMREAD_GRAYSCALE)
+                    if img is None:
+                        error_msg = f'[DATALOADER ERROR] cv2.imread returned None for {im_file}'
+                        print(error_msg, flush=True)
+                        with open(ERROR_LOG_PATH, 'a') as f:
+                            f.write(f'{error_msg}\n')
+                        raise ValueError(f'Failed to read image: {im_file}')
+                    traj_ims_list.append(img)
+                except Exception as e:
+                    error_msg = f'[DATALOADER ERROR] Failed to read image {im_file}: {type(e).__name__}: {e}'
+                    print(error_msg, flush=True)
+                    with open(ERROR_LOG_PATH, 'a') as f:
+                        f.write(f'{error_msg}\n')
+                    raise
+            
+            print(f'[DATALOADER] Converting {len(traj_ims_list)} images to numpy array', flush=True)
+            traj_ims = np.asarray(traj_ims_list, dtype=np.float32) / 255.0
+            print(f'[DATALOADER] Image array shape: {traj_ims.shape}', flush=True)
+        except Exception as e:
+            error_msg = f'[DATALOADER ERROR] Failed to process images in {traj_folder}: {type(e).__name__}: {e}'
+            print(error_msg, flush=True)
+            with open(ERROR_LOG_PATH, 'a') as f:
+                f.write(f'{error_msg}\n')
+            continue
+
+        if traj_ims.shape[0] != traj_meta.shape[0]:
+            last_im_timestamp = os.path.basename(im_files[-1])[:-4]
+            if float(last_im_timestamp) > traj_meta[-1, 1]:
+                traj_ims = traj_ims[:-1]
+                print(f'[DATALOADER] Extra image found at end of data, cutting it from {os.path.basename(traj_folder)}', flush=True)
+            if traj_ims.shape[0] != traj_meta.shape[0]:
+                print(f'[DATALOADER] Number of images and telemetry still do not match in {os.path.basename(traj_folder)}, skipping', flush=True)
+                skippedFolders += 1
+                skippedImages += int(len(traj_meta[:,0]))
+                continue
+        
+        try:
+            print(f'[DATALOADER] Resizing {len(traj_ims)} images to {cropWidth}x{cropHeight}', flush=True)
+            temp = []
+            for idx, img in enumerate(traj_ims):
+                if idx % 50 == 0:
+                    print(f'[DATALOADER] Resizing image {idx+1}/{len(traj_ims)}', flush=True)
+                resized = cv2.resize(img, (cropWidth, cropHeight))
+                temp.append(resized)
+            traj_ims = np.array(temp)
+            print(f'[DATALOADER] Resized images shape: {traj_ims.shape}', flush=True)
+        except Exception as e:
+            error_msg = f'[DATALOADER ERROR] Failed to resize images in {traj_folder}: {type(e).__name__}: {e}'
+            print(error_msg, flush=True)
+            with open(ERROR_LOG_PATH, 'a') as f:
+                f.write(f'{error_msg}\n')
+            continue
+        
+        try:
+            print(f'[DATALOADER] Processing metadata for {traj_meta.shape[0]} frames', flush=True)
+            for ii in range(traj_meta.shape[0]):
+                desired_vels.append(traj_meta[ii, 2])
+                q = traj_meta[ii, 3:7]
+                rmat = q 
+                curr_quats.append(rmat)
+            print(f'[DATALOADER] Metadata processing complete', flush=True)
+        except Exception as e:
+            error_msg = f'[DATALOADER ERROR] Failed to process metadata in {traj_folder}: {type(e).__name__}: {e}'
+            print(error_msg, flush=True)
+            with open(ERROR_LOG_PATH, 'a') as f:
+                f.write(f'{error_msg}\n')
+            continue
+        
+        try:
+            print(f'[DATALOADER] Appending trajectory data to full dataset', flush=True)
+            traj_ims_full.append(traj_ims)
+            traj_meta_full.append(traj_meta)
+            print(f'[DATALOADER] Successfully processed folder {i+1}/{len(traj_folders)}: {os.path.basename(traj_folder)}', flush=True)
+        except Exception as e:
+            error_msg = f'[DATALOADER ERROR] Failed to append data from {traj_folder}: {type(e).__name__}: {e}, shape: {traj_ims.shape}'
+            print(error_msg, flush=True)
+            with open(ERROR_LOG_PATH, 'a') as f:
+                f.write(f'{error_msg}\n')
+            continue
+
+    print(skippedFolders, skippedImages)
+    print(collisionFolders, collisionImages)
+
+    print("[ANALYZER] Analyzing the data....")
+    traj_lengths = np.array([traj_ims.shape[0] for traj_ims in traj_ims_full])
+    traj_ims_full = np.concatenate(traj_ims_full).reshape(-1, cropHeight, cropWidth)
+    traj_meta_full = np.concatenate(traj_meta_full).reshape(-1, traj_meta.shape[-1])
+    desired_vels = np.array(desired_vels)
+    curr_quats = np.array(curr_quats)
+
+
+    #Col: mean, std
+    #row: ct. brx/y/z
+    stats_ctbr = np.zeros((4, 2))
+    stats_ctbr[0, :] = np.mean(traj_meta_full[:, 16]), np.std(traj_meta_full[:, 16])
+    stats_ctbr[1, :] = np.mean(traj_meta_full[:, 17]), np.std(traj_meta_full[:, 17])
+    stats_ctbr[2, :] = np.mean(traj_meta_full[:, 18]), np.std(traj_meta_full[:, 18])
+    stats_ctbr[3, :] = np.mean(traj_meta_full[:, 19]), np.std(traj_meta_full[:, 19])
+
+    traj_meta_full[:, 16] = (traj_meta_full[:, 16] - stats_ctbr[0, 0]) / (2 * stats_ctbr[0, 1])
+    traj_meta_full[:, 17] = (traj_meta_full[:, 17] - stats_ctbr[1, 0]) / (2 * stats_ctbr[1, 1])
+    traj_meta_full[:, 18] = (traj_meta_full[:, 18] - stats_ctbr[2, 0]) / (2 * stats_ctbr[2, 1])
+    traj_meta_full[:, 19] = (traj_meta_full[:, 19] - stats_ctbr[3, 0]) / (2 * stats_ctbr[3, 1])
+
+    
+    curr_ctbr = traj_meta_full[:, 16:20]
+
+    #Col: mean, std
+    #row: ct. brx/y/z
+    stats_ctbr = np.zeros((4, 2))
+    stats_ctbr[0, :] = np.mean(traj_meta[:, 16]), np.std(traj_meta[:, 16])
+    stats_ctbr[1, :] = np.mean(traj_meta[:, 17]), np.std(traj_meta[:, 17])
+    stats_ctbr[2, :] = np.mean(traj_meta[:, 18]), np.std(traj_meta[:, 18])
+    stats_ctbr[3, :] = np.mean(traj_meta[:, 19]), np.std(traj_meta[:, 19])
+
+    traj_meta[:, 16] = (traj_meta[:, 16] - stats_ctbr[0, 0]) / (2 * stats_ctbr[0, 1])
+    traj_meta[:, 17] = (traj_meta[:, 17] - stats_ctbr[1, 0]) / (2 * stats_ctbr[1, 1])
+    traj_meta[:, 18] = (traj_meta[:, 18] - stats_ctbr[2, 0]) / (2 * stats_ctbr[2, 1])
+    traj_meta[:, 19] = (traj_meta[:, 19] - stats_ctbr[3, 0]) / (2 * stats_ctbr[3, 1])
+
+    num_val_trajs = int(val_split * len(traj_lengths))
+    if num_val_trajs == 0 and val_split > 0 and len(traj_lengths) >= 2:
+        num_val_samples = int(val_split * len(traj_meta_full))
+        indices = np.random.permutation(len(traj_meta_full))
+        val_indices = indices[:num_val_samples]
+        train_indices = indices[num_val_samples:]
+        traj_meta_train = traj_meta_full[train_indices]
+        traj_meta_val = traj_meta_full[val_indices]
+        traj_ims_train = traj_ims_full[train_indices]
+        traj_ims_val = traj_ims_full[val_indices]
+        traj_lengths_train = np.array([len(train_indices)])
+        traj_lengths_val = np.array([len(val_indices)])
+        desired_vels_train = desired_vels[train_indices]
+        desired_vels_val = desired_vels[val_indices]
+        curr_quats_train = curr_quats[train_indices]
+        curr_quats_val = curr_quats[val_indices]
+        curr_ctbr_train = curr_ctbr[train_indices]
+        curr_ctbr_val = curr_ctbr[val_indices]
+    else:
+        val_idx = np.sum(traj_lengths[:num_val_trajs], dtype=np.int32) if num_val_trajs > 0 else 0
+        traj_meta_val = traj_meta_full[:val_idx] if val_idx > 0 else traj_meta_full[:0]
+        traj_meta_train = traj_meta_full[val_idx:] if val_idx > 0 else traj_meta_full
+        traj_ims_val = traj_ims_full[:val_idx] if val_idx > 0 else traj_ims_full[:0]
+        traj_ims_train = traj_ims_full[val_idx:] if val_idx > 0 else traj_ims_full
+        traj_lengths_val = traj_lengths[:num_val_trajs] if num_val_trajs > 0 else np.array([])
+        traj_lengths_train = traj_lengths[num_val_trajs:] if num_val_trajs > 0 else traj_lengths
+        desired_vels_val = desired_vels[:val_idx] if val_idx > 0 else desired_vels[:0]
+        desired_vels_train = desired_vels[val_idx:] if val_idx > 0 else desired_vels
+        curr_quats_val = curr_quats[:val_idx] if val_idx > 0 else curr_quats[:0]
+        curr_quats_train = curr_quats[val_idx:] if val_idx > 0 else curr_quats
+        curr_ctbr_val = curr_ctbr[:val_idx] if val_idx > 0 else curr_ctbr[:0]
+        curr_ctbr_train = curr_ctbr[val_idx:] if val_idx > 0 else curr_ctbr
+
+    result = (traj_meta_train, traj_ims_train, traj_lengths_train, desired_vels_train, curr_quats_train, curr_ctbr_train), (traj_meta_val, traj_ims_val, traj_lengths_val, desired_vels_val, curr_quats_val, curr_ctbr_val), 1, (traj_folders[num_val_trajs:], traj_folders[:num_val_trajs])
+    
+    try:
+        with open(cache_path, 'wb') as f:
+            pickle.dump(result, f)
+        print(f'[DATALOADER] Saved cache to {cache_path}')
+    except Exception as e:
+        print(f'[DATALOADER] Failed to save cache: {e}')
+    
+    return result
+
+def parse_meta_str(meta_str):
+
+    meta = torch.zeros_like(meta_str)
+
+    meta_str
+
+    return meta
+
+
+def preload(items, device='cpu'):
+
+    return [torch.from_numpy(item).to(device).float() for item in items]

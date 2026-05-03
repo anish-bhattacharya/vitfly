@@ -1,0 +1,4 @@
+Looking in indexes: http://mirrors.aliyun.com/pypi/simple
+Collecting causal-conv1d
+  Downloading http://mirrors.aliyun.com/pypi/packages/63/15/ec51d77a2df03ee93410f8ee97fceeb7181da213813c51243e9dd6d7e144/causal_conv1d-1.6.1.tar.gz (29 kB)
+  Installing build dependencies: started
