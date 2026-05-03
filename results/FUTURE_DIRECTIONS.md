@@ -1,110 +1,100 @@
 # Future Directions: Beyond Behavior Cloning
 
 A brainstorm based on literature review (May 2026).
+Revised with project constraints.
 
-## 1. RL Fine-Tuning on Top of BC (Bootstrapping RL with IL)
+## Hard Constraints
 
-**Reference**: Bootstrapping RL with Imitation for Vision-Based Agile Flight (CoRL 2024, Xing et al.)
+- **Flightmare/Unity simulation**: Cannot be modified (fixed environment)
+- **Expert data**: Pre-collected offline dataset, no online expert queries possible
+- **Simulation pipeline**: Separately managed, cannot integrate RL rollouts
+- **Available**: 253 valid trajectories (42,156 images) + 327 skipped trajectories (62,920 images)
+- **Data**: Pre-recorded depth images + telemetry + expert velocity commands at 25-30Hz
 
-**Concept**: Three-stage pipeline proven for quadrotor racing:
-1. Train teacher policy with **privileged information** (state-based) via RL
-2. Distill to student policy via **Behavior Cloning** (vision-based)
-3. **Adaptive RL fine-tuning** on the student policy
+Any proposed method must work within these constraints.
 
-**Why it applies here**: We already have a working BC policy (Branch B). Stage 3 (RL fine-tuning) is the incremental step. The RL reward can be `collision_avoidance + path_progress - time_penalty`.
+## Feasibility Matrix
 
-**Effort**: High (need RL training loop + simulator integration)
-**Expected gain**: Robustness improvement, handles covariate shift
+| # | Approach | Within Constraints? | Effort | Expected Gain |
+|---|----------|-------------------|--------|---------------|
+| A | Multi-step sequence prediction (`--sequence_length N`) | ✅ Yes | Low | Medium |
+| B | Data augmentation (rotation, flip, noise, brightness) | ✅ Yes | Low | Medium |
+| C | Knowledge distillation (B → A/C/D/E/B+) | ✅ Yes | Low | High |
+| D | Utilize 62K skipped images via pseudo-labeling | ✅ Yes | Medium | High |
+| E | Hard example mining / sample reweighting | ✅ Yes | Low | Medium |
+| F | Ensemble inference (weighted voting) | ✅ Yes | Low | Low |
+| G | DAgger (online data collection) | ❌ Needs simulator interaction | High | High |
+| H | RL fine-tuning | ❌ Needs RL env + reward | Very High | Very High |
+| I | Curriculum terrain generation | ❌ Needs environment modification | Very High | High |
+| J | APC data augmentation | ❌ Needs online expert queries | Medium | High |
 
-## 2. DAgger (Dataset Aggregation)
+## Feasible Directions (A-F)
 
-**Reference**: DAgger for Autonomous Driving (Ross et al., A* DAgger 2021)
+### A. Multi-Step Sequence Prediction
+**Status**: Implemented (`--sequence_length N`).
+Train with trajectory sequences (seq_len=8,16,32) instead of single frames.
+Matches the upstream vitfly training approach (LSTM over trajectory segments).
 
-**Concept**: Iteratively collect data from the learned policy, get expert labels, and retrain:
-1. Rollout current policy → collects states the policy actually visits
-2. Expert relabels those states with correct actions
-3. Aggregate into training set → retrain
+### B. Data Augmentation (No Expert Needed)
+Augment the 42K image dataset with:
+- Horizontal/vertical flip (left-right obstacle mirroring)
+- Random rotation (±5°)
+- Gaussian noise (simulate sensor noise)
+- Brightness/contrast jitter (simulate lighting variation)
+- Random crop + resize
 
-**Why it applies**: Our expert (Flightmare simulator with privileged planner) can be queried on-policy. The A* planner variant shows pseudo-experts work.
+All operations are **geometric/image transforms only** — they don't change the expert command.
+A depth image flipped horizontally should still map to the same velocity target if the scene is symmetric.
+For asymmetric scenes, this creates useful adversarial examples.
 
-**Effort**: Medium (need DAgger loop + expert query mechanism)
-**Expected gain**: Addresses covariate shift, our primary failure mode
+### C. Knowledge Distillation (Branch B → Others)
+Branch B passes simulation ✅. Use it as teacher:
+```python
+teacher = load_model('B').eval()
+with torch.no_grad():
+    soft_target = teacher(depth, vel, quat)
+hard_target = expert_velcmd  # original ground truth
+loss = alpha * mse(student_out, soft_target) \
+     + (1-alpha) * mse(student_out, hard_target)
+```
+Alpha can be annealed from 1.0 → 0.0 during training (start with imitation of the working model, gradually shift to ground truth).
 
-## 3. Curriculum Learning: Easy-to-Hard Terrain Generation
+### D. Pseudo-Label 62K Skipped Images
+The 327 skipped trajectories (62,920 images) have valid PNGs but CSV row count mismatches.
+The best current model can generate pseudo-labels for these images:
+```python
+for img in skipped_images:
+    pred = best_model.predict(img)
+    # Add to training set with confidence weighting
+    dataset.append((img, pred))
+```
+This nearly triples the dataset size (42K → 105K) at zero additional simulation cost.
 
-**Reference**: Eurekaverse (LLM-based curriculum, arXiv 2024), GACL (ICRA 2025)
+### E. Hard Example Mining
+Not all 42K samples are equally valuable. Identify hard examples by:
+- High prediction error (model uncertainty)
+- Collision-adjacent frames (near-miss events)
+- Obstacle-dense scenarios
 
-**Concept**: Use LLM/algorithm to generate terrain of increasing difficulty:
-1. Start with simple obstacles (single sphere in open space)
-2. Progressively add: narrow corridors → U-shaped walls → dense forests → dynamic obstacles
-3. Adapt difficulty based on policy performance
+These samples can be upweighted in the loss function or oversampled.
 
-**Why it applies**: Our current data has fixed difficulty distribution. A curriculum lets the policy master simple cases before tackling hard ones.
+### F. Ensemble Inference
+Average predictions across multiple branches:
+```python
+v_final = (v_B + v_Bplus + v_C + v_D + v_E) / 5
+```
+Simple, zero-cost improvement in inference stability.
 
-**Effort**: High (need terrain generator + difficulty scoring)
-**Expected gain**: Smoother training, better generalization
+## Recommended Order
 
-## 4. Asymmetric Expert: Reduce Student-Expert Gap
+1. **B (data augmentation)** → Immediate, no code changes needed
+2. **A (multi-step)** → Already implemented, just run experiment
+3. **D (pseudo-label)** → Data multiplier
+4. **C (distillation)** → Leverage Branch B's success
+5. **E (hard example mining)** → Fine-tune on critical cases
 
-**Reference**: LEAD: Minimizing Learner-Expert Asymmetry (NeurIPS 2024)
+## Training Status
 
-**Concept**: Three types of expert-student mismatch:
-- **Visibility**: Expert sees privileged info (e.g., obstacle centers) → student doesn't
-- **Uncertainty**: Expert on noise-free state → student on noisy vision
-- **Intent**: Expert's navigation goal underspecified
-
-**Why it applies**: Our expert uses full privileged state. Our student sees only depth images. Reducing this gap (e.g., adding noise to expert during demonstration) produces more learnable demonstrations.
-
-**Effort**: Low-Medium (modify expert data generation)
-**Expected gain**: Better BC performance without changing model architecture
-
-## 5. Data Augmentation via Counterfactual/APC
-
-**Reference**: Augmented Policy Cloning (NeurIPS 2022), CF-Driver (2024)
-
-**Concept**: Generate additional training data by:
-- **APC**: Perturb the state slightly, query expert for corrected action → teaches feedback responses
-- **CF**: Generate edge cases near decision boundaries (e.g., obstacle just barely on left vs right)
-- **Dynamic agents**: Extract trajectories from nearby dynamic objects as additional expert data
-
-**Why it applies**: Our 42K-image dataset is small by modern standards. These methods can generate 5-10x more data without new simulation runs.
-
-**Effort**: Medium (need expert query loop)
-**Expected gain**: 2-5x data efficiency improvement
-
-## 6. Multi-Agent: Dynamic Obstacle Generator for Easy-to-Hard
-
-**Reference**: Curriculum RL from Avoiding Collisions (IEEE RAL 2023)
-
-**Concept**: A generative agent that spawns obstacles with adaptive difficulty:
-- Easy mode: static spheres, large gaps
-- Medium mode: moving obstacles, narrow corridors
-- Hard mode: adversarial obstacle placement, occluded paths
-- Dynamic: adapt difficulty based on policy success rate
-
-**Why it applies**: Directly addresses your idea of "a generative agent that creates dynamically changing terrain for easy2hard training."
-
-**Effort**: Very High (need multi-agent training + environment generation)
-**Expected gain**: Most comprehensive training regime
-
-## Implementation Priority
-
-| # | Approach | Effort | Expected Gain | Dependencies |
-|---|----------|--------|---------------|--------------|
-| 1 | **DAgger** | Medium | High | Expert query, rollout pipeline |
-| 2 | **Asymmetric expert** | Low | Medium | Expert config change |
-| 3 | **APC augmentation** | Medium | High | Expert query loop |
-| 4 | **RL fine-tuning** | High | Very High | RL env + reward design |
-| 5 | **Curriculum terrain** | Very High | High | Terrain generator |
-| 6 | **Multi-agent terrain** | Very High | Very High | Multi-agent env |
-
-**Recommended first step**: Start with #2 (asymmetric expert, low effort) + #1 (DAgger, high impact). The infrastructure for #1 also enables #3 and #4.
-
-## Key Literature
-
-1. Xing et al., "Bootstrapping RL with Imitation for Vision-Based Agile Flight" (CoRL 2024)
-2. Codevilla et al., "Exploring the Limitations of Behavior Cloning" (ICCV 2019)
-3. LEAD: "Minimizing Learner-Expert Asymmetry" (NeurIPS 2024)
-4. APC: "Data Augmentation for Efficient Learning from Parametric Experts" (NeurIPS 2022)
-5. Eurekaverse: "Environment Curriculum Generation via LLMs" (2024)
-6. GACL: "Grounded Adaptive Curriculum Learning" (2025)
+⚠️ The previous full training (C/D/E/B+, 100 epochs with --compile) was killed.
+Branch B (100 epochs) checkpoints are intact.
+C/D/E/B+ need retraining. Use `--compile` flag.
