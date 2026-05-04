@@ -87,6 +87,33 @@ Val Loss
 - Split: 80/20 train/validation
 - Image resolution: cropped to 60×90 grayscale
 
+### 3.1.1 Expert Data Distribution Bias
+
+The expert velocity commands in the dataset exhibit a significant
+distributional bias between lateral (left/right) and vertical (up/down)
+control:
+
+| Direction | Mean | Std | Active Samples (>0.05) |
+|-----------|------|-----|----------------------|
+| VX (forward velocity) | 0.079 | 0.664 | — |
+| **VY (lateral steering)** | **4.033** | **0.975** | **100%** |
+| **VZ (vertical lift)** | **-0.024** | **0.662** | **41.5%** |
+
+**Finding**: 100% of training samples contain non-zero lateral velocity
+commands, but only 41.5% contain significant vertical commands. The
+expert policy predominantly avoids obstacles by steering left/right
+while maintaining a fixed altitude. This creates an inherent label
+imbalance: MSE-optimal solutions will prioritize lateral accuracy over
+vertical accuracy, and models with more expressive temporal heads
+(LSTM in Branch A) may leverage the 41.5% minority samples more
+effectively than frame-independent MLP heads.
+
+This imbalance must be accounted for when interpreting per-branch
+performance differences (Section 5). A model achieving lower validation
+loss does not necessarily generalize better to vertical obstacle
+avoidance; it may simply fit the dominant lateral distribution more
+efficiently.
+
 ### 3.2 Data Loading Architecture
 
 A lazy-loading dataset was implemented to avoid OOM crashes from pre-loading all 110K images:
