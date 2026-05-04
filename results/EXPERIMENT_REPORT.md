@@ -114,6 +114,19 @@ loss does not necessarily generalize better to vertical obstacle
 avoidance; it may simply fit the dominant lateral distribution more
 efficiently.
 
+**Theoretical support**: This phenomenon is well-documented in the
+imitation learning literature. Parekh et al. (2025, arXiv 2508.06319)
+formally prove that imbalanced action distributions in behavior cloning
+lead to policies biased toward frequently observed behaviors — the MSE
+objective inherently weights majority actions more heavily. Zhu et al.
+(2026, ICRA 2026, arXiv 2602.06512) further show that data scarcity on
+"tail" actions degrades spatial reasoning capability by up to 4×.
+Guillen-Perez (2025, arXiv 2509.21961) confirms the same effect in
+autonomous driving: unbalanced training data biases planners toward
+frequent patterns, reducing reliability in corner cases. Our VY/VZ
+imbalance (100% vs 41.5%) is a concrete instance of this general
+problem in quadrotor obstacle avoidance.
+
 ### 3.2 Data Loading Architecture
 
 A lazy-loading dataset was implemented to avoid OOM crashes from pre-loading all 110K images:
