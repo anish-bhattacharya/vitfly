@@ -12,25 +12,90 @@ Initial evaluation revealed that 4 out of 5 branches (A, C, D, E) produced model
 
 ## 2. Diagnosis: Broken SSM Implementations
 
-### 2.1 Common Pattern Across All Failing Branches
+### 2.1 Fake SSM: `torch.cumsum` Instead of Recurrence
 
-All four failing branches shared a fundamentally broken SSM implementation pattern:
-
-```python
-# BROKEN: Found across all failing branches
-h = torch.cumsum(B_state * A, dim=1)          # (B, N, d_state) - incorrect recurrence
-y = h @ self.A.unsqueeze(-1)                   # (B, N, 1) - dimension collapse
-y = y.squeeze(-1).expand(-1, -1, C)            # broadcast - loses all state information
-```
-
-The correct Mamba recurrence should be:
+All four failing branches (A, C, D, E) implemented the same fundamentally
+incorrect approximation of the Mamba selective scan. Rather than using the
+proper recurrent state update, they substituted a `torch.cumsum` operation
+that is mathematically incompatible with SSM dynamics:
 
 ```python
-# CORRECT: Proper selective scan
-dA = torch.exp(dt * A)                          # discretized state transition
-h  = dA * h_prev + dt * B * x                   # recurrent state update
-y  = C @ h + D * x                              # output with skip connection
+# BROKEN: Found verbatim in ALL four failing branches
+# Branch A vmamba_encoder.py:52-57, Branch C cnn_mamba3_model.py:~39-44,
+# Branch D sth_mamba_model.py:~35-40, Branch E decision_mamba_model.py:~38-43
+
+h = torch.cumsum(B_state * A, dim=1)          # ← NOT a recurrence
+y = h @ self.A.unsqueeze(-1)                   # (B, N, 1) dimension collapse
+y = y.squeeze(-1) * self.D[:1]                 # broadcast, loses state info
 ```
+
+The correct Mamba recurrence requires **input-dependent discretization**,
+which none of the broken implementations had:
+
+```python
+# CORRECT: Mamba-2 selective scan (from state-spaces/mamba)
+# mamba_ssm/modules/mamba2.py lines 310-337
+
+dt = F.softplus(dt + self.dt_bias)            # input-dependent Δ
+dA = torch.exp(dt * A)                         # -exp(A_log), discretized
+h = dA * h_prev + dt * B * x                   # RECURSIVE state update
+y = C @ h + D * x                              # D skip connection
+```
+
+#### Per-Branch Code Analysis
+
+**Branch A (VMamba + LSTM, vmamba_encoder.py:52-57):**
+```python
+# Three bugs in five lines:
+h = torch.cumsum(B_state * A, dim=1)          # BUG 1: not a recurrence
+y = h @ self.A.unsqueeze(-1)                   # BUG 2: @ compared to * in original
+y = y.squeeze(-1) * self.D[:1]                 # BUG 3: self.D[:1] ← only uses D[0]!
+y = y.unsqueeze(-1).expand(-1, -1, C)          # BUG 4: dimension broadcasting
+```
+Fix: Replace all five lines with proper selective scan using pscan.
+Reference implementation: MzeroMiko/VMamba `ss2d_forward_corev2`.
+
+**Branch C (CNN + Mamba3, cnn_mamba3_model.py:29-44):**
+```python
+# Mamba3Block's "SSM scan":
+B_state = self.x_proj(x_inner)  # (B, 2*d_state)
+A = self.A_log.exp()             # (d_state,)
+h = torch.cumsum(B_state * A, dim=1)   # same broken cumsum
+y = h @ self.A.unsqueeze(-1).squeeze(-1)
+y = y * self.D[:1]                      # same D[:1] bug
+```
+The input projection `x_proj` produces only `2*d_state` features
+(32 for d_state=16), then `unsqueeze(1)` collapses `seq_len` to 1 ---
+making the cumsum over dim=1 a no-op regardless.
+Fix: Replace with proper Mamba-3 SSM with trapezoidal discretization.
+Reference implementation: state-spaces/mamba `selective_scan_fn`.
+
+**Branch D (STH-Mamba, sth_mamba_model.py:35-44):**
+```python
+# MambaTemporalFusion:
+B_state = self.B_proj(x_inner)   # (B, N, d_state)
+h = torch.cumsum(B_state * self.A, dim=1)
+y = h.matmul(self.A.unsqueeze(-1)).squeeze(-1)
+y = y.unsqueeze(1).expand(-1, -1, self.hidden_dim)
+```
+Same cumsum pattern. `seq_len=1` at this stage makes the scan meaningless.
+The `self.A` parameter is used as both decay AND output matrix ---
+cross-purpose parameterization.
+Fix: Replace with proper Mamba-2 SSD recurrence with separate A, B, C, D.
+
+**Branch E (DecisionMamba, decision_mamba_model.py:38-43):**
+```python
+# CoarseSSM and FineSSM:
+h = torch.cumsum(B_state * A, dim=1)
+y = h @ A.unsqueeze(-1)
+y = y.squeeze(-1) * self.D        # D is created but this line is NOP
+```
+The `self.D` parameter is defined as `nn.Parameter(torch.ones(N))` in
+`__init__` but `N` here equals `d_state`, not `dim`. This parameter
+is effectively dead code. The actual output is computed entirely from
+the `@ A.unsqueeze(-1)` projection.
+Fix: Proper Mamba recurrence with correct D skip connection.
+Reference: aopolin-lv/DecisionMamba uses HuggingFace MambaForCausalLM.
 
 *Table 1: SSM Implementation Issues by Branch*
 
