@@ -104,52 +104,39 @@ class CoarseSSM(nn.Module):
         self.out_proj = nn.Linear(dim, dim)
         self.norm = nn.LayerNorm(dim)
         
-    def forward(self, x):
+    def forward(self, x, state=None):
         """
         x: (B, dim)
-        返回: (B, dim)
+        state: (B, d_state) or None
+        返回: (B, dim), (B, d_state)
         """
         B, C = x.shape
         x_norm = self.norm(x)
         
-        # 输入投影和门控
-        xz = self.in_proj(x_norm)  # (B, dim*2)
-        x_inner, z = xz.chunk(2, dim=-1)  # 各 (B, dim)
+        xz = self.in_proj(x_norm)
+        x_inner, z = xz.chunk(2, dim=-1)
         
-        # 计算 SSM 参数
-        BC = self.x_proj(x_inner)  # (B, d_state*2)
-        B_state, C_state = BC.chunk(2, dim=-1)  # 各 (B, d_state)
+        BC = self.x_proj(x_inner)
+        B_state, C_state = BC.chunk(2, dim=-1)
         
-        # 输入依赖的 delta (时间步长)
-        dt = F.softplus(self.dt_proj(x_inner))  # (B, dim)
+        dt = F.softplus(self.dt_proj(x_inner))
+        A = -torch.exp(self.A_log)
         
-        # A 矩阵 (负指数确保稳定性)
-        A = -torch.exp(self.A_log)  # (d_state,)
+        dt_mean = dt.mean(dim=-1, keepdim=True)
+        dA = torch.exp(dt_mean * A.unsqueeze(0))
+        dB = dt_mean * B_state
         
-        # 离散化: dA = exp(dt * A)
-        # dt: (B, dim), A: (d_state,) -> 需要广播
-        # 简化版本: 使用平均 dt
-        dt_mean = dt.mean(dim=-1, keepdim=True)  # (B, 1)
-        dA = torch.exp(dt_mean * A.unsqueeze(0))  # (B, d_state)
+        if state is None:
+            state = torch.zeros(B, self.d_state, device=x.device)
+        state = dA * state + dB * x_inner[:, :self.d_state]
         
-        # 离散化: dB = dt_mean * B
-        dB = dt_mean * B_state  # (B, d_state)
+        y = (C_state * state).sum(dim=-1, keepdim=True)
+        y = y.expand(-1, C)
+        y = y + self.D * x_inner
         
-        # 状态更新: h = dA * h + dB * x
-        # 这里 x_inner 需要投影到 d_state 维度
-        # 简化: 直接使用 dB 作为输入贡献
-        h = dB  # (B, d_state)
-        
-        # 输出: y = C @ h + D * x
-        y = (C_state * h).sum(dim=-1, keepdim=True)  # (B, 1)
-        y = y.expand(-1, C)  # (B, dim)
-        y = y + self.D * x_inner  # 添加跳跃连接
-        
-        # 门控和输出投影
         y = y * torch.sigmoid(z)
         y = self.out_proj(y)
-        
-        return y
+        return y, state
 
 
 class FineSSM(nn.Module):
@@ -180,10 +167,11 @@ class FineSSM(nn.Module):
             nn.Linear(dim * 4, dim)
         )
         
-    def forward(self, x):
+    def forward(self, x, state=None):
         """
         x: (B, dim)
-        返回: (B, dim)
+        state: (B, d_state) or None
+        返回: (B, dim), (B, d_state)
         """
         B, C = x.shape
         x_norm = self.norm(x)
@@ -201,19 +189,21 @@ class FineSSM(nn.Module):
         dA = torch.exp(dt_mean * A.unsqueeze(0))
         dB = dt_mean * B_state
         
-        h = dB
-        y = (C_state * h).sum(dim=-1, keepdim=True)
+        if state is None:
+            state = torch.zeros(B, self.d_state, device=x.device)
+        state = dA * state + dB * x_inner[:, :self.d_state]
+        
+        y = (C_state * state).sum(dim=-1, keepdim=True)
         y = y.expand(-1, C)
         y = y + self.D * x_inner
         
         y = y * torch.sigmoid(z)
         y = self.out_proj(y)
-        y = y + x  # 残差连接
+        y = y + x
         
-        # 额外的 MLP 处理
         y = y + self.mlp(self.norm(y))
         
-        return y
+        return y, state
 
 
 class DecisionMambaNet(nn.Module):
@@ -257,27 +247,19 @@ class DecisionMambaNet(nn.Module):
         
         self.fc_out = nn.Linear(256, 3)
         
-    def forward(self, X):
+    def forward(self, X, coarse_state=None, fine_state=None):
         X = self.refine(X)
+        vision_feat = self.cnn_encoder(X[0])
+        state_feat = self.state_proj(torch.cat((X[1] * 0.1, X[2]), dim=1))
         
-        # 视觉编码
-        vision_feat = self.cnn_encoder(X[0])  # (B, embed_dim)
+        coarse_feat, coarse_state = self.coarse_ssm(vision_feat, coarse_state)
+        fine_feat, fine_state = self.fine_ssm(vision_feat, fine_state)
         
-        # 状态编码
-        state_feat = self.state_proj(torch.cat((X[1] * 0.1, X[2]), dim=1))  # (B, embed_dim)
-        
-        # 粗粒度 SSM (全局场景)
-        coarse_feat = self.coarse_ssm(vision_feat)  # (B, embed_dim)
-        
-        # 细粒度 SSM (局部细节)
-        fine_feat = self.fine_ssm(vision_feat)  # (B, embed_dim)
-        
-        # 特征融合
         fusion_input = torch.cat((vision_feat, state_feat, coarse_feat, fine_feat), dim=1)
         x = self.fusion(fusion_input)
         x = self.fc_out(x)
         
-        return x, None
+        return x, (coarse_state, fine_state)
     
     def get_parameter_count(self):
         return sum(p.numel() for p in self.parameters())
