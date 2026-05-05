@@ -229,6 +229,8 @@ All 6 branches were tested in Flightmare (ROS Noetic + Unity renderer) using `ru
 
 - **Desired velocity**: 5.0 m/s (upstream standard)
 - **Trajectory length**: **60m** (upstream standard, vs 20m caveat noted in early tests)
+- **Prediction mode**: **Single-step (seq_len=1)** — all models process one depth frame at a time. Stateful models (A/ViTLSTM) maintain LSTM hidden state across frames; stateless models (B/B+/C/D/E) have no temporal memory.
+- **Teacher model**: `TeacherVITLSTM` (input_size=517, 3-layer LSTM, hidden=128), loaded via `model.TeacherVITLSTM` — same single-step inference as all other models. The teacher uses scalar desired_vel (matching upstream checkpoint), while student Mamba branches use 3D velocity.
 - **Environment**: Spheres medium (static + dynamic obstacles)
 - **Evaluation metrics**: Success, collision count, segment times, velocity output count
 - **Evaluation standard**: Upstream vitfly (`obstacles[0]` collision detection)
