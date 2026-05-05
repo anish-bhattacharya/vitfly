@@ -1,7 +1,24 @@
 #!/bin/bash
-# Usage: bash run_full_test.bash <BRANCH> <MODEL_TYPE>
+# Usage: bash run_full_test.bash <BRANCH> <MODEL_TYPE> [VARIANT]
+#   VARIANT: empty or "bc"       → branch_X/best_model.pth (default, BC baseline)
+#            "distill"           → branch_X/distill_best_model.pth
+#            "distill_from_bc"   → branch_X/distill_frombc_best_model.pth
+#            <any>               → branch_X/<variant>_best_model.pth
+# Example:
+#   bash run_full_test.bash B MambaVisionSSM           # test BC model
+#   bash run_full_test.bash B MambaVisionSSM distill   # test distilled model
 BRANCH=$1
 MODEL_TYPE=$2
+VARIANT=${3:-""}
+
+BASE_DIR="/root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_${BRANCH}"
+if [ -n "$VARIANT" ] && [ "$VARIANT" != "bc" ]; then
+  MODEL_PATH="${BASE_DIR}/${VARIANT}_best_model.pth"
+  SUMMARY_TAG="${VARIANT}"
+else
+  MODEL_PATH="${BASE_DIR}/best_model.pth"
+  SUMMARY_TAG="bc"
+fi
 
 export ROS_MASTER_URI=http://192.168.233.250:11311
 export ROS_IP=192.168.233.250
@@ -24,12 +41,12 @@ sleep 2
 
 cd /root/catkin_ws/src/vitfly-mambatest/envtest/ros
 
-python3 evaluation_node.py branch_${BRANCH}_full > /tmp/eval_${BRANCH}.log 2>&1 &
+python3 evaluation_node.py branch_${BRANCH}_${SUMMARY_TAG} > /tmp/eval_${BRANCH}.log 2>&1 &
 EVAL_PID=$!
 
 python3 -u run_competition.py --vision_based --des_vel 5.0 \
   --model_type ${MODEL_TYPE} \
-  --model_path /root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_${BRANCH}/best_model.pth \
+  --model_path ${MODEL_PATH} \
   > /tmp/comp_${BRANCH}.log 2>&1 &
 COMP_PID=$!
 
@@ -49,5 +66,6 @@ echo "=== Branch $BRANCH Summary ==="
 cat /root/catkin_ws/src/vitfly-mambatest/envtest/ros/summary.yaml
 echo "=== Velocity outputs: $(grep -c "RUN_COMPETITION.*velocity" /tmp/comp_${BRANCH}.log) ==="
 
-# Save summary
-cp /root/catkin_ws/src/vitfly-mambatest/envtest/ros/summary.yaml /root/catkin_ws/src/vitfly-mambatest/results/branch_${BRANCH}_full_summary.yaml
+# Save summary (with variant tag to avoid confusion)
+cp /root/catkin_ws/src/vitfly-mambatest/envtest/ros/summary.yaml \
+  /root/catkin_ws/src/vitfly-mambatest/results/branch_${BRANCH}_${SUMMARY_TAG}_summary.yaml

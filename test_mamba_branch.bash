@@ -1,11 +1,22 @@
 #!/bin/bash
-# Usage: bash test_mamba_branch.bash <BRANCH> <MODEL_TYPE>
+# Usage: bash test_mamba_branch.bash <BRANCH> <MODEL_TYPE> [VARIANT]
+#   VARIANT: empty/"bc" → best_model.pth, "distill" → distill_best_model.pth
 # Example: bash test_mamba_branch.bash C CNNMamba3
+# Example: bash test_mamba_branch.bash C CNNMamba3 distill
 
 BRANCH=$1
 MODEL_TYPE=$2
-MODEL_PATH="/root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_${BRANCH}/best_model.pth"
-LOG="/tmp/branch_${BRANCH}_epoch1.log"
+VARIANT=${3:-""}
+
+BASE_DIR="/root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_${BRANCH}"
+if [ -n "$VARIANT" ] && [ "$VARIANT" != "bc" ]; then
+  MODEL_PATH="${BASE_DIR}/${VARIANT}_best_model.pth"
+  SUMMARY_TAG="${VARIANT}"
+else
+  MODEL_PATH="${BASE_DIR}/best_model.pth"
+  SUMMARY_TAG="bc"
+fi
+LOG="/tmp/branch_${BRANCH}_${SUMMARY_TAG}.log"
 
 # Fixed IP (matches loopback alias)
 export ROS_MASTER_URI=http://192.168.233.250:11311
@@ -74,10 +85,11 @@ kill -SIGINT $SIM_PID 2>/dev/null
 sleep 3
 
 # Save results
-cp /root/catkin_ws/src/vitfly-mambatest/envtest/ros/summary.yaml /root/catkin_ws/src/vitfly-mambatest/results/branch_${BRANCH}_epoch1_summary.yaml 2>/dev/null
+cp /root/catkin_ws/src/vitfly-mambatest/envtest/ros/summary.yaml \
+  /root/catkin_ws/src/vitfly-mambatest/results/branch_${BRANCH}_${SUMMARY_TAG}_summary.yaml 2>/dev/null
 
-echo "=== Branch $BRANCH Results ===" | tee -a $LOG
-cat /root/catkin_ws/src/vitfly-mambatest/results/branch_${BRANCH}_epoch1_summary.yaml 2>/dev/null | tee -a $LOG
+echo "=== Branch $BRANCH ($SUMMARY_TAG) Results ===" | tee -a $LOG
+cat /root/catkin_ws/src/vitfly-mambatest/results/branch_${BRANCH}_${SUMMARY_TAG}_summary.yaml 2>/dev/null | tee -a $LOG
 echo "Velocity outputs:" | tee -a $LOG
 grep "RUN_COMPETITION.*velocity" $LOG | wc -l | xargs echo "  Count:" | tee -a $LOG
 grep "RUN_COMPETITION.*velocity" $LOG | head -5 | tee -a $LOG
