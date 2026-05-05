@@ -467,30 +467,32 @@ def train_distill_epoch(
             continue
         
         with autocast(device_type='cuda', dtype=torch.float16):
-            # ── Teacher forward (frozen, no grad) ──
-            with torch.no_grad():
-                hook.clear()
-                teacher([depth, velocity, quat])
-                teacher_out = teacher([depth, velocity, quat])[0]  # (B, 3)
-                teacher_feat = hook.get_teacher_feat()
-            
-            # ── Student forward ──
-            hook.clear()
+            # Reshape for seq_len > 1: (B, S, ...) -> (B*S, ...)
             if seq_len > 1:
                 B, S = depth.shape[:2]
                 depth_f = depth.reshape(B * S, 1, depth.shape[-2], depth.shape[-1])
                 vel_f = velocity.reshape(B * S, -1)
                 quat_f = quat.reshape(B * S, -1)
-                student_out, _ = student([depth_f, vel_f, quat_f])
-                student_out = student_out.reshape(B, S, -1)
-                # For feature alignment with seq_len>1, use the last timestep's features
-                # or average across sequence
                 target_f = target.reshape(B, S, -1)
             else:
-                student_out, _ = student([depth, velocity, quat])
+                depth_f, vel_f, quat_f = depth, velocity, quat
                 target_f = target
             
+            # ── Teacher forward (frozen, no grad) ──
+            with torch.no_grad():
+                hook.clear()
+                teacher([depth_f, vel_f, quat_f])
+                teacher_out = teacher([depth_f, vel_f, quat_f])[0]
+                teacher_feat = hook.get_teacher_feat()
+            
+            # ── Student forward ──
+            hook.clear()
+            student_out, _ = student([depth_f, vel_f, quat_f])
             student_feat = hook.get_student_feat()
+            
+            # Reshape output back to (B, S, 3) for seq mode
+            if seq_len > 1:
+                student_out = student_out.reshape(B, S, -1)
             
             # ── Compute distillation loss ──
             if seq_len > 1:
@@ -579,20 +581,27 @@ def validate_distill(teacher, student, projector, loader, device, hook, seq_len=
         target = target.to(device, non_blocking=True)
         n_batches += 1
         
+        # Reshape for seq_len > 1: (B, S, ...) -> (B*S, ...)
+        if seq_len > 1:
+            B, S = depth.shape[:2]
+            depth_f = depth.reshape(B * S, 1, depth.shape[-2], depth.shape[-1])
+            vel_f = velocity.reshape(B * S, -1)
+            quat_f = quat.reshape(B * S, -1)
+            target_f = target.reshape(B, S, -1)
+        else:
+            depth_f, vel_f, quat_f = depth, velocity, quat
+            target_f = target
+        
         with autocast(device_type='cuda', dtype=torch.float16):
             # ── Teacher forward ──
             hook.clear()
-            teacher([depth, velocity, quat])
-            teacher_out = teacher([depth, velocity, quat])[0]
+            teacher([depth_f, vel_f, quat_f])
+            teacher_out = teacher([depth_f, vel_f, quat_f])[0]
             teacher_feat = hook.get_teacher_feat()
             
             # ── Student forward ──
             hook.clear()
             if seq_len > 1:
-                B, S = depth.shape[:2]
-                depth_f = depth.reshape(B * S, 1, depth.shape[-2], depth.shape[-1])
-                vel_f = velocity.reshape(B * S, -1)
-                quat_f = quat.reshape(B * S, -1)
                 student_out, _ = student([depth_f, vel_f, quat_f])
                 student_out = student_out.reshape(B, S, -1)
                 target_f = target.reshape(B, S, -1)
