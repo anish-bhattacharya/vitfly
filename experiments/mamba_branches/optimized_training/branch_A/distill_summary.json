@@ -1,0 +1,17 @@
+{
+  "branch": "A",
+  "epochs": 50,
+  "best_val_score": 0.026615880079837305,
+  "best_val_loss_gt": 0.01836618295364491,
+  "best_val_distill_gap": 0.016499394252384787,
+  "loss_weights": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "gamma": 1.0
+  },
+  "student_params": 974275,
+  "first_epoch_loss": 10.736151237415408,
+  "last_epoch_loss": 10.388427177009365,
+  "teacher_checkpoint": "/root/vitfly/models/ViTLSTM_model.pth",
+  "init_from_bc": false
+}

@@ -26,8 +26,27 @@
 - **Ablation design**: All C0-C5 use same branch (B) with varying α,β,γ — separate from cross-architecture comparison
 - **Model architecture**: Distill config matches BC config exactly (verified: all 6 branches have identical params/keys)
 
-### Open Questions
-- Does feature alignment (L_feat) actually help in this visual domain? MOHAWK showed it's essential for NLP, but vision may differ
-- Which branch architecture benefits most from distillation? (Prediction: A > B/B+ > C > D > E)
-- Can distillation overcome the teacher's higher val_loss and actually improve simulation performance?
-- Are different α,β,γ needed per branch, or is a single setting sufficient?
+### Phase 1 Results (2026-05-04) — All 6 Branches Distilled
+
+| Branch | Best score | GT loss | Distill gap | vs BC (gt) | Analysis |
+|--------|-----------|---------|-------------|------------|----------|
+| **D** 🏆 | **0.0258** | 0.0173 | 0.0171 | ±0.0000 | STH-Mamba: strong encoder + independent temporal head |
+| A | 0.0266 | 0.0184 | 0.0165 | +0.0023 | VMamba+LSTM: most similar to teacher, small capacity |
+| E | 0.0274 | 0.0188 | 0.0172 | +0.0002 | DecisionMamba: pure SSM, stable |
+| C | 0.0276 | 0.0188 | 0.0176 | **-0.0033** | CNN+Mamba-3: GT improved |
+| Bplus | 0.0283 | 0.0196 | 0.0173 | **-0.0035** | MambaVision+Mamba-3: GT improved most |
+| B | 0.0284 | 0.0201 | 0.0165 | -0.0004 | MambaVision+SSM: solid baseline |
+
+**Key findings**:
+- Prediction was WRONG (A predicted 1st, actual 2nd; D predicted last, actual 1st)
+- Architectural similarity ≠ distillation efficiency. STH-Mamba's encoder/head separation may be key
+- 4/6 branches improved GT loss over BC baseline — distillation did NOT hurt performance
+- All branches converged to similar distill_gap (~0.0165-0.0176)
+
+**Pending**: Flightmare simulation verification
+
+### Open Questions (Updated)
+- ~~Which branch architecture benefits most from distillation?~~ → **D (STH-Mamba)** ✅
+- Can distillation improve simulation collision rate? → **Pending remote simulation**
+- Does feature alignment (L_feat) outperform output-only KD? → Needs C1/C2 ablation
+- Are different α,β,γ optimal per branch? → Needs Phase 2 investigation

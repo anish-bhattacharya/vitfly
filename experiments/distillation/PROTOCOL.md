@@ -80,6 +80,22 @@ Phase 3: Joint training with GT grounding
    - Monitor val_loss for divergence/collapse, not for ranking
 3. At least one branch shows significant improvement in simulation
 
+### Phase 1 Results (2026-05-04, all 6 branches distlled)
+
+**Training**: 50 epochs each, C3 config (α=β=γ=1), 42K images, from scratch
+**Verification**: All branches converged without NaN/divergence ✅
+
+| Branch | Best score | GT loss | Distill gap | vs BC (gt) |
+|--------|-----------|---------|-------------|------------|
+| **D** 🏆 | **0.0258** | 0.0173 | 0.0171 | ±0.0000 |
+| A | 0.0266 | 0.0184 | 0.0165 | +0.0023 |
+| E | 0.0274 | 0.0188 | 0.0172 | +0.0002 |
+| C | 0.0276 | 0.0188 | 0.0176 | -0.0033 |
+| Bplus | 0.0283 | 0.0196 | 0.0173 | -0.0035 |
+| B | 0.0284 | 0.0201 | 0.0165 | -0.0004 |
+
+**Pending**: Flightmare simulation to verify collision rate improvement
+
 ### Shared Infrastructure (inherited from `mambatest`)
 - Model definitions under `experiments/mamba_branches/branch_{name}/models/`
 - Training pipeline under `training/` (`train_mamba_optimized.py`, `lazy_dataloading.py`)
