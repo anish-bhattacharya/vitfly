@@ -43,10 +43,24 @@
 - 4/6 branches improved GT loss over BC baseline — distillation did NOT hurt performance
 - All branches converged to similar distill_gap (~0.0165-0.0176)
 
-**Pending**: Flightmare simulation verification
+### Phase 2 Results (2026-05-05) — Simulation @ 20m
+
+**BC vs Distill @ 5m/s:**
+- E (DecisionMamba): 0 crashes at both speeds ✅ **clear winner**
+- A/B: 1 crash at 5m/s → **0 crashes at 7m/s** 🎉 (distill transferred teacher's high-speed strategy)
+- B+/C/D: 1 crash regardless of speed — systematic policy issue, not speed-dependent
+- Only val_loss rank D (STH-Mamba) ≠ simulation rank — val_loss is not predictive
+
+**Updated architecture ranking**: E > A ≈ B > D ≈ C ≈ B+
+- E won because it's pure SSM with least architectural similarity to teacher
+- Architectural similarity ≠ distillation quality (contradicts initial prediction)
+
+**Test limitation**: All runs at 20m (evaluation_config target:20, not 60). Full course pending.
 
 ### Open Questions (Updated)
-- ~~Which branch architecture benefits most from distillation?~~ → **D (STH-Mamba)** ✅
-- Can distillation improve simulation collision rate? → **Pending remote simulation**
+- ~~Which branch architecture benefits most from distillation?~~ → ✅ **E (DecisionMamba)** in simulation
+- Can distillation improve simulation collision rate? → ✅ **Partially**: A/B improve at 7m/s; E preserves; B+/C/D degraded
+- ~~Does val_loss predict flight quality?~~ → ❌ **No correlation found**
 - Does feature alignment (L_feat) outperform output-only KD? → Needs C1/C2 ablation
 - Are different α,β,γ optimal per branch? → Needs Phase 2 investigation
+- What are BC baseline crash rates at 7m/s? → ⏳ Pending 60m full evaluation

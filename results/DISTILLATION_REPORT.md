@@ -5,7 +5,7 @@ Date: 2026-05-04
 Last updated: 2026-05-05 (Phase 1 + Phase 2 simulation results)
 Based on literature survey in `literature/survey.md`
 
-> **Experiment Status**: Phase 1 complete ✅ — All 6 branches distilled (50 epochs each). Phase 2 simulation verification complete ✅ — All 6 branches tested in Flightmare (BC vs Distill comparison).
+> **Experiment Status**: Phase 1 ✅ (distillation training). Phase 2 ✅ (simulation @ 20m, 5/7m/s). Phase 3 ⏳ (full 60m course evaluation pending).
 
 ---
 
@@ -374,7 +374,9 @@ Key findings at 7m/s:
 | Feature dimensions mismatch | D (256-dim) and E (256-dim) used projector → worked | ✅ Handled |
 | Teacher too different from student | A (has LSTM) ranked 3rd, not 1st | ⚠️ Less important than expected |
 | Distillation collapses to teacher mean | No collapse observed — all models produce diverse outputs | ✅ GT loss prevented this |
-| **No simulation improvement** | **Confirmed risk: distill degrades most branches** | **Increasing γ may help** |
+| **No simulation improvement** | **Confirmed: distill degrades 4/6 branches at 5m/s** | **Increasing γ may help** |
+| **Speed mismatch** | Teacher flies 7m/s, tests ran at 5m/s → A/B recover at 7m/s | ⚠️ Mitigated by DES_VEL param |
+| **Evaluation scope limited** | All tests at 20m only (config target:20); full course is 60m | ⏳ Pending full rerun |
 | Training too slow | 50 epochs completed in reasonable time | ✅ Handled |
 
 ## 7. References
