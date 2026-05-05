@@ -226,10 +226,11 @@ Teacher = 0.027 (val_loss) vs BC = 0.016-0.023 (val_loss), but teacher flies 7m/
 ### 5.1 Flightmare Simulation Setup
 
 All 6 branches were tested in Flightmare (ROS Noetic + Unity renderer) using `run_full_test.bash` with the `VARIANT` parameter. Each branch was tested with both BC baseline and distilled weights under identical conditions:
-- **Desired velocity**: 5.0 m/s
+- **Desired velocity**: 5.0 m/s (BC baseline) and 7.0 m/s (teacher speed for distill)
 - **Trajectory length**: 20m
 - **Environment**: Spheres medium (static + dynamic obstacles)
 - **Evaluation metrics**: Success, collision count, segment times, velocity output count
+- **Evaluation standard**: Upstream vitfly evaluation (`obstacles[0]` collision detection)
 
 ### 5.2 Branch-by-Branch Results
 
@@ -305,7 +306,7 @@ Best val_score branch, but distill still adds 1 crash in simulation.
 
 **Only branch where distillation preserves perfect flight (0 crashes).** Smallest model (2.19M params) with best distillation results.
 
-### 5.3 Summary Comparison
+### 5.3 Summary Comparison (@ 5m/s)
 
 | Branch | BC Crashes | Distill Crashes | Δ | BC 20m | Distill 20m | Δ | Verdict |
 |--------|-----------|-----------------|---|--------|-------------|---|---------|
@@ -316,28 +317,53 @@ Best val_score branch, but distill still adds 1 crash in simulation.
 | D (STH-Mamba) | 0 | 1 | +1 | 4.22s | 4.22s | 0.00s | ❌ Degraded |
 | **E (DecisionMamba)** | **0** | **0** | **0** | **4.19s** | **4.22s** | **+0.03s** | ✅ **Preserved** |
 
-### 5.4 Key Findings
+### 5.4 Velocity Scaling: Tests at 7m/s (Teacher Speed)
 
-1. **Val_loss does NOT predict flight quality.** Despite similar or better val_loss in 4/6 branches, simulation shows distill introduces 1 crash in most branches. The correlation between validation metrics and real flight is weak.
+Since the teacher (ViT+LSTM) was trained and tested at 7m/s, all 6 distilled branches were also tested at 7m/s to evaluate velocity scaling behavior.
 
-2. **Branch E is the clear distillation winner.** As the smallest model (2.19M params, no dedicated temporal module), DecisionMamba absorbs teacher knowledge without degrading its own flight policy. This may be because its simpler architecture is less disrupted by feature alignment constraints.
+#### 5.4.1 Results @ 7m/s
 
-3. **Flight speed is completely unaffected.** All branches maintain ~4.2s for 20m regardless of distillation — velocity magnitude control is robust.
+| Branch | Distill @ 5m/s | Distill @ 7m/s | Δ | 20m @ 5m/s | 20m @ 7m/s |
+|--------|---------------|---------------|-----------------|-------------|-------------|
+| A (VMamba+LSTM) | ❌ 1 crash | ✅ **0 crash** 🎉 | **-1 crash** | 4.23s | 3.06s |
+| B (MambaVision+SSM) | ❌ 1 crash | ✅ **0 crash** 🎉 | **-1 crash** | 4.22s | 3.03s |
+| B+ (BPlusModel) | ❌ 1 crash | ❌ 1 crash | 0 | 4.24s | 3.04s |
+| C (CNN+Mamba-3) | ❌ 1 crash | ❌ 1 crash | 0 | 4.20s | 3.03s |
+| D (STH-Mamba) | ❌ 1 crash | ❌ 1 crash | 0 | 4.22s | 3.03s |
+| **E (DecisionMamba)** | ✅ **0 crash** | ✅ **0 crash** | **0** | 4.22s | 3.04s |
 
-4. **All models produce healthy inference.** Velocity output counts (215-270 per run) confirm all distilled models are computing commands at expected frequency (~60Hz).
+Key findings at 7m/s:
+- **Branch A and B are fully recovered at 7m/s** — 0 crashes vs 1 crash at 5m/s. Higher speed reduces time spent near obstacles, possibly avoiding the collision region entirely.
+- **Branch E remains perfect** at both speeds (0 crashes) — the most robust distillation result.
+- **B+/C/D are speed-independent** — they crash once regardless of velocity, suggesting a systematic policy limitation rather than a speed-dependent issue.
+- All branches complete 20m in ~3.0s at 7m/s (as expected for the higher speed).
 
-5. **Loss weight tuning may improve results.** The default α=β=γ=1.0 weights were used for all branches. The consistent +1 crash pattern suggests the GT loss weight (γ) may need to be higher to prevent distillation from overriding the student's own learned policy.
+### 5.5 Key Findings
 
-### 5.5 Updated Architecture Ranking
+1. **Val_loss does NOT predict flight quality.** Despite similar or better val_loss in 4/6 branches, simulation shows distill introduces 1 crash in most branches at 5m/s. The correlation between validation metrics and real flight is weak.
 
-| Rank | Branch | Simulation Verdict | Notes |
-|------|--------|-------------------|-------|
-| 🥇 | **E** (DecisionMamba) | ✅ Perfect flight | Smallest model, best distillation |
-| 🥈 | **D** (STH-Mamba) | ⚠️ 1 crash | Best val_loss, but degraded in sim |
-| 🥉 | **A** (VMamba+LSTM) | ⚠️ 1 crash | BC already had 1 crash (d_state=16) |
-| — | **C** (CNN+Mamba-3) | ❌ 1 crash | Degraded from BC |
-| — | **B+** (BPlusModel) | ❌ 1 crash | Degraded from BC |
-| — | **B** (MambaVision+SSM) | ❌ 1 crash | Degraded from BC |
+2. **Branch E is the clear distillation winner across all speeds.** As the smallest model (2.19M params, no dedicated temporal module), DecisionMamba absorbs teacher knowledge without degrading its own flight policy.
+
+3. **Higher velocity helps some branches.** Branches A and B go from 1 crash @ 5m/s to 0 crashes @ 7m/s, suggesting the distillation degradation is speed-dependent and may not affect real-world deployment at higher speeds.
+
+4. **Flight speed scaling is linear.** All branches scale cleanly from 5m/s (~4.2s) to 7m/s (~3.0s) without instability.
+
+5. **All models produce healthy inference.** Velocity output counts confirm all distilled models are computing commands at expected frequency (~60Hz) at both speeds.
+
+6. **Loss weight tuning may improve results.** The default α=β=γ=1.0 weights were used for all branches. The consistent +1 crash pattern at 5m/s suggests the GT loss weight (γ) may need to be higher.
+
+### 5.6 Updated Architecture Ranking
+
+| Rank | Branch | 5m/s | 7m/s | Overall Verdict |
+|------|--------|------|------|-----------------|
+| 🥇 | **E** (DecisionMamba) | ✅ 0 crash | ✅ 0 crash | **Best distillation — all speeds** |
+| 🥈 | **A** (VMamba+LSTM) | ⚠️ 1 crash | ✅ 0 crash | BC already degraded; recovers at speed |
+| 🥈 | **B** (MambaVision+SSM) | ❌ 1 crash | ✅ 0 crash | Degraded at 5m/s, perfect at 7m/s |
+| — | **D** (STH-Mamba) | ❌ 1 crash | ❌ 1 crash | Degraded regardless of speed |
+| — | **C** (CNN+Mamba-3) | ❌ 1 crash | ❌ 1 crash | Degraded regardless of speed |
+| — | **B+** (BPlusModel) | ❌ 1 crash | ❌ 1 crash | Degraded regardless of speed |
+
+---
 
 ---
 
