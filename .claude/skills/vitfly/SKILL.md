@@ -16,6 +16,44 @@ origin: local
 
 ---
 
+## Experimental Design Matrix
+
+Before running ANY simulation, identify where your test fits in the overall experimental matrix. This determines what conclusions the results support.
+
+### Dimensions
+
+| Dimension | Values | Status | Notes |
+|-----------|--------|--------|-------|
+| **Model** | Teacher (ViT+LSTM), A, B, B+, C, D, E | All 7 evaluated ✅ | Teacher = upstream best (7m/s real flight) |
+| **Training** | BC baseline, Distill (α=β=γ=1.0) | BC + Distill ✅ | No ablation variants tested yet |
+| **Track length** | 60m (upstream), 20m (early tests) | 60m is correct ✅ | 20m data was misleading — obstacles only fully sampled at 60m |
+| **Desired velocity** | 5m/s (standard), 7m/s (teacher speed) | 5m/s @ 60m ✅; 7m/s @ 20m only ⚠️ | Teacher flies 7m/s but was only tested at 5m/s on 60m |
+| **Prediction mode** | Single-step (seq_len=1) | All tests seq_len=1 | Multi-step (seq_len > 1) not evaluated yet |
+
+### Current Coverage (60m track, seq_len=1)
+
+| Model | BC @ 5m/s | Distill @ 5m/s | Teacher @ 5m/s |
+|-------|-----------|----------------|----------------|
+| Teacher | — | — | ✅ 2 crashes |
+| A | ✅ 3 crashes | ✅ 3 crashes | — |
+| B | ❌ DNF | ✅ 2 crashes | — |
+| B+ | ✅ 3 crashes | ✅ **1 crash** 🏆 | — |
+| C | ✅ 3 crashes | ✅ 3 crashes | — |
+| D | ✅ 2 crashes | ✅ 2 crashes | — |
+| E | ✅ 3 crashes | ✅ **1 crash** 🏆 | — |
+
+### What Has NOT Been Tested
+
+- **Multi-step prediction** (seq_len=4, 8) for any model — the teacher was trained with seq_len=1 and upstream evaluation is single-step, but multi-step could improve temporal awareness
+- **Loss weight ablation** (different α, β, γ) — all distill tests used α=β=γ=1.0
+- **Teacher @ 7m/s on 60m track** — only tested at 5m/s
+- **Any model at 60m + 7m/s** — all 60m tests at 5m/s
+- **init_from_bc distillation** — current distill is random init only
+
+Always check this matrix before running a new test. If you're filling a gap, note it. If you're duplicating an existing result, skip it.
+
+---
+
 ## Environment Setup (WSL2 Network)
 
 Run once per WSL2 session before any ROS commands:
