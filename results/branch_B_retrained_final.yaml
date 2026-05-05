@@ -1,0 +1,7 @@
+rollout_1:
+  Success: false
+  number_crashes: 1
+  segment_times:
+    '10': 1.9500000476837158
+    '20': 3.9800000190734863
+  time_to_finish: 3.9800000190734863

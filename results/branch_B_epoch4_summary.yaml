@@ -1,0 +1,63 @@
+branch: B
+model_name: MambaVisionSSM
+epoch: 4
+val_loss: 0.0205
+model_path: experiments/mamba_branches/optimized_training/branch_B/best_model.pth
+test_date: 2026-05-03
+
+results:
+  success: true
+  number_crashes: 0
+  time_to_finish: 4.28
+  segment_times:
+    segment_10: 2.19
+    segment_20: 4.28
+
+velocity_analysis:
+  total_outputs: 235
+  vy_range: [-1.4080, 0.6256]
+  vy_mean: -0.2141
+  vz_range: [-0.8763, 2.9781]
+  vz_mean: 0.1701
+  variation: "Wide variation — much more aggressive steering than epoch 1"
+  mode_collapse: false
+  note: "vz_max=2.9781 indicates occasional sharp upward climbs; may be erratic"
+
+comparison_vs_epoch1:
+  epoch1_val_loss: 0.0231
+  epoch4_val_loss: 0.0205
+  val_loss_improvement: 11.3%
+
+  epoch1_results:
+    success: true
+    crashes: 0
+    time_to_finish: 4.24
+    velocity_count: 239
+    vy_range: [-0.3827, 0.3855]
+    vy_mean: 0.1520
+    vz_range: [-0.7107, 0.2576]
+    vz_mean: -0.3097
+
+  epoch4_results:
+    success: true
+    crashes: 0
+    time_to_finish: 4.28
+    velocity_count: 235
+    vy_range: [-1.4080, 0.6256]
+    vy_mean: -0.2141
+    vz_range: [-0.8763, 2.9781]
+    vz_mean: 0.1701
+
+  time_delta_seconds: +0.04
+  steering_behavior_change: "Epoch 4 shows 3.7x wider vy range and 11.5x wider vz range"
+
+recommendation: epoch1
+recommendation_reason: |
+  Both epoch 1 and epoch 4 pass (0 crashes, course completed).
+  Epoch 4 has lower val_loss (0.0205 vs 0.0231) but shows notably more erratic
+  velocity outputs — vz_max jumped from 0.26 to 2.98, and vy range tripled.
+  Completion time is nearly identical (4.24s vs 4.28s, epoch 4 is marginally slower).
+  The aggressive vz excursions in epoch 4 suggest the model may be overfitting to
+  training distribution edge cases or starting to develop instability.
+  Epoch 1 (Bplus) weights show tighter, more stable steering commands and a
+  slightly faster run. Stick with epoch 1 for deployment reliability.

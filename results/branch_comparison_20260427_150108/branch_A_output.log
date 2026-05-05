@@ -1,0 +1,677 @@
+vision
+
+[LAUNCH SCRIPT] Vision based!
+
+25044
+QStandardPaths: wrong ownership on runtime directory /mnt/wslg/runtime-dir, 1000 instead of 0
+[33m[WARN] [1777273272.422843293]: Pilot Config:        simple_sim_pilot.yaml[0m
+[33m[WARN] [1777273272.423537326]: Agi Param Directory: /root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params[0m
+[33m[WARN] [1777273272.423551410]: ROS Param Directory: /root/catkin_ws/src/vitfly/envsim/parameters[0m
+[0m[INFO] [1777273272.423560652]: Loading Pilot Params from simple_sim_pilot.yaml in /root/catkin_ws/src/vitfly/envsim/parameters[0m
+Loading Pilot parameters from "/root/catkin_ws/src/vitfly/envsim/parameters/simple_sim_pilot.yaml"
+[33m[PilotParams]  Did not create inner controller ''![0m
+[33m[Pilot]        Did not create bridge 'ROS'.
+Using debug bridge, register externally![0m
+[0m[INFO] [1777273272.428570256]: Loaded pipeline:
+Estimator:
+Type: Feedthrough
+File: "/root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params/feedthrough.yaml"
+Sampler:
+Type: Time
+File: ""
+Outer Controller:
+Type: GEO
+File: "/root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params/geo.yaml"
+Inner Controller:
+Type: 
+File: ""
+Bridge:
+Type: ROS
+File: ""
+[0m
+[Pilot]        Register external bridge: [ROS Bridge]   
+ which was not active and used.
+[33m[VisionEnv]    [loadParam] Scene ID: 2[0m
+[33m[VisionEnv]    [loadParam] Unity Render: 1[0m
+[VisionEnv]    Datagen: 1
+[VisionEnv]    Rollout: 0
+[VisionEnv]    Move Obstacle Trigger: 1
+[VisionEnv]    Configuring dynamic objects from: /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/dynamic_obstacles.yaml
+[VisionEnv]    Configuring static objects from: /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/static_obstacles.csv
+[33m[VisionEnv]    Camera has been added. Skipping the camera configuration.[0m
+[UnityBridge]  Initializing ZMQ connection!
+[UnityBridge]  Initializing ZMQ connections done!
+[VisionEnv]    Flightmare Bridge created.
+[33m[UnityBridge]  Scene ID is set to 2.[0m
+[UnityBridge]  Trying to Connect Unity.
+[......................................................................................................................[UnityBridge]  Flightmare Unity is connected.
+[0m[INFO] [1777273286.784992124, 1777273282.398830652]: OFF command received![0m
+[ROS Bridge]   Deactivated!
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777273290.893169629, 1777273283.798830748]: Resetting simulator![0m
+[VisionEnv]    Calling moveDynamicObstacles
+[VisionEnv]    Moving Static (faked dynamic) Obstacles
+[VisionEnv]    Number of dynamic objects found: 132
+[VisionEnv]    /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/static_kr_0.csv
+[33m[VisionEnv]    [readTrainingObs] Configuration file  does not exists.[0m
+[33m[VisionEnv]    [changeObsLoc] Function not moving obstacles.[0m
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777273294.900759787, 1777273285.158830643]: Computing active: true![0m
+[ROS Bridge]   Deactivated!
+[ROS Bridge]   Activated!
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777273298.808659247, 1777273286.438830614]: START command received![0m
+[Pilot]        Z-position smaller than takeoff height, taking off!
+[Pipeline]     1 references set:
+[Pipeline]     Minimum Snap Trajectory         | 15:01:26.286 --> 5.83s --> 15:01:32.292 |
+publishing and latching message for 3.0 seconds
+rollout_1
+/root/catkin_ws/src/vitfly-mambatest
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+publishing and latching message for 3.0 seconds
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[Pipeline]     2 references set:
+[Pipeline]     Minimum Snap Trajectory         | 15:01:26.286 --> 5.83s --> 15:01:32.292 |
+[Pipeline]     Hover Reference                 | 15:01:32.292 --> infs --> inf |
+[Pipeline]     Removing old reference: Minimum Snap Trajectory
+[Pipeline]     2 references set:
+[Pipeline]     Hover Reference                 | 15:01:32.292 --> 0.01s --> 15:01:32.292 |
+[Pipeline]     Velocity Reference              | 15:01:32.292 --> infs --> inf |
+[Pipeline]     Removing old reference: Hover Reference
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+[RUN_COMPETITION] Initializing agile_pilot_node...
+
+[RUN_COMPETITION] Desired velocity = 5.0
+
+[RUN_COMPETITION] Model loading from /root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_A/best_model.pth ...
+[RUN_COMPETITION] Branch A — VMambaLSTMNet loaded
+[RUN_COMPETITION] Removed '_orig_mod.' prefix from compiled model weights
+[RUN_COMPETITION] Model loaded
+[RUN_COMPETITION] Initialization completed!
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.05885205 0.07301923]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.05992549 0.06618737]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.0577314  0.06431913]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.06241025 0.05563316]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.04580609 0.05423528]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.04294495 0.04271832]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.04087979 0.03519806]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.03117421 0.03577825]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.03123768 0.03052552]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.03603891 0.02664062]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.04407104 0.02214076]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.04540727 0.01567594]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.03609578 0.01361419]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.04382462 0.00977276]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.05138966 0.00561728]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.05168809 0.00478534]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.        0.0526504 0.0035759]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.         0.05155239 0.00114249]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 1.          0.04835388 -0.00363391]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 1.000000e+00  3.957209e-02 -6.425632e-04]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [1.000000e+00 3.281429e-02 5.498490e-04]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 1.          0.03652522 -0.00190681]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 1.          0.04249833 -0.00116824]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [1.         0.03916605 0.00105609]
+[RUN_COMPETITION] Published velocity: [1.         0.03649628 0.00185788]
+[RUN_COMPETITION] Published velocity: [ 1.          0.03712761 -0.00204893]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04239684 -0.00333066]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04450116 -0.00314126]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04462064 -0.00338224]
+[RUN_COMPETITION] compute_command_vision_based took 0.0060596466064453125 seconds
+[RUN_COMPETITION] Published velocity: [ 1.          0.04310652 -0.00334787]
+[RUN_COMPETITION] Published velocity: [ 1.          0.0450574  -0.00453765]
+[RUN_COMPETITION] Published velocity: [ 1.          0.0485215  -0.00541489]
+[RUN_COMPETITION] Published velocity: [ 1.          0.05085756 -0.0078382 ]
+[RUN_COMPETITION] Published velocity: [ 1.          0.0500741  -0.00813009]
+[RUN_COMPETITION] Published velocity: [ 1.          0.0519347  -0.00899594]
+[RUN_COMPETITION] Published velocity: [ 1.          0.05492976 -0.01062708]
+[RUN_COMPETITION] Published velocity: [ 1.          0.05812657 -0.01150921]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06001796 -0.01199635]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06344059 -0.01306318]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06293698 -0.01369466]
+[RUN_COMPETITION] Published velocity: [ 1.          0.0629473  -0.01369823]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06167253 -0.0146561 ]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06416453 -0.01497279]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06436361 -0.01469575]
+[RUN_COMPETITION] Published velocity: [ 1.         0.0650749 -0.0152694]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06439318 -0.01530518]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06561765 -0.01635582]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06541684 -0.01652235]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06447545 -0.01638241]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06446644 -0.01651648]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06293502 -0.01599192]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06333937 -0.01603336]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06326587 -0.01589067]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06355124 -0.01611381]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06314781 -0.01593795]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06317678 -0.01595561]
+[RUN_COMPETITION] Published velocity: [ 1.          0.0633001  -0.01590114]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06330785 -0.01592581]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06342136 -0.01597712]
+[RUN_COMPETITION] compute_command_vision_based took 0.008008241653442383 seconds
+[RUN_COMPETITION] Published velocity: [ 1.          0.06354447 -0.01588332]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06346837 -0.01584961]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06347165 -0.01585418]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06351428 -0.01620481]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04979052 -0.01262753]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04323802 -0.02438744]
+[RUN_COMPETITION] Published velocity: [ 1.          0.07281072 -0.04407173]
+[RUN_COMPETITION] Published velocity: [ 1.          0.06044149 -0.05715272]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04942138 -0.03438587]
+[RUN_COMPETITION] Published velocity: [ 1.          0.05464366 -0.02809966]
+[RUN_COMPETITION] Published velocity: [ 1.          0.05583394 -0.03102443]
+[RUN_COMPETITION] Published velocity: [ 1.          0.0517745  -0.02682908]
+[RUN_COMPETITION] Published velocity: [ 1.          0.05195074 -0.02750589]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04951369 -0.03161703]
+[RUN_COMPETITION] Published velocity: [ 1.          0.04966611 -0.03740033]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 1.          0.04249371 -0.03390503]
+[RUN_COMPETITION] Published velocity: [ 1.          0.02820706 -0.03768802]
+[RUN_COMPETITION] Published velocity: [ 1.          0.02507264 -0.0450352 ]
+[RUN_COMPETITION] Published velocity: [ 1.          0.03186603 -0.05376267]
+[RUN_COMPETITION] Published velocity: [ 1.          0.02340837 -0.04829176]
+[RUN_COMPETITION] Published velocity: [ 1.0582734   0.04517902 -0.04103157]
+[RUN_COMPETITION] Published velocity: [ 1.1260015   0.02634713 -0.04784776]
+[RUN_COMPETITION] Published velocity: [ 1.2985694   0.03625303 -0.02835245]
+[RUN_COMPETITION] Published velocity: [ 1.4038272   0.04309933 -0.02978961]
+[RUN_COMPETITION] Published velocity: [ 1.5815042   0.05170957 -0.02170575]
+[RUN_COMPETITION] Published velocity: [ 1.7258456   0.03304838 -0.04440117]
+[RUN_COMPETITION] Published velocity: [ 1.9103818   0.03160208 -0.04389438]
+[RUN_COMPETITION] Published velocity: [ 1.9860249   0.03029066 -0.04177758]
+[RUN_COMPETITION] Published velocity: [ 2.2221658   0.04021581 -0.03895611]
+[RUN_COMPETITION] Published velocity: [ 2.389762    0.02960712 -0.01897912]
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+[RUN_COMPETITION] compute_command_vision_based took 0.006391763687133789 seconds
+[RUN_COMPETITION] Published velocity: [2.4773202  0.03166686 0.00610931]
+[RUN_COMPETITION] Published velocity: [ 2.7573905e+00  5.1010869e-02 -1.2712616e-03]
+[RUN_COMPETITION] Published velocity: [ 2.9082007e+00  5.9015378e-02 -9.4738376e-04]
+[RUN_COMPETITION] Published velocity: [3.121252   0.04829802 0.01978979]
+[RUN_COMPETITION] Published velocity: [3.4073567  0.04945192 0.0238266 ]
+[RUN_COMPETITION] Published velocity: [3.5280733  0.06585427 0.01311671]
+[RUN_COMPETITION] Published velocity: [3.8458893  0.04368682 0.03919628]
+[RUN_COMPETITION] Published velocity: [4.117031   0.05311314 0.03505537]
+[RUN_COMPETITION] Published velocity: [4.4038434  0.03436734 0.0720966 ]
+[RUN_COMPETITION] Published velocity: [4.629719   0.09198123 0.01750701]
+[RUN_COMPETITION] Published velocity: [4.9459333  0.08147813 0.0287045 ]
+[RUN_COMPETITION] Published velocity: [4.999079   0.08953194 0.03446694]
+[RUN_COMPETITION] Published velocity: [4.9994617  0.05304547 0.05067016]
+[RUN_COMPETITION] Published velocity: [4.9994683  0.06408318 0.03480725]
+[RUN_COMPETITION] Published velocity: [4.9990325  0.09686175 0.01705966]
+[RUN_COMPETITION] Published velocity: [ 4.998926    0.10267317 -0.01394775]
+[RUN_COMPETITION] Published velocity: [ 4.998298    0.12407239 -0.04028164]
+[RUN_COMPETITION] Published velocity: [ 4.997439    0.14218916 -0.0733816 ]
+[RUN_COMPETITION] Published velocity: [ 4.997063    0.14986181 -0.08307073]
+[RUN_COMPETITION] Published velocity: [ 4.996752    0.14843895 -0.10216725]
+[RUN_COMPETITION] Published velocity: [ 4.995868    0.16505021 -0.11857045]
+[RUN_COMPETITION] Published velocity: [ 4.9935837   0.20116763 -0.15379788]
+[RUN_COMPETITION] Published velocity: [ 4.9932885   0.19473068 -0.1707257 ]
+[RUN_COMPETITION] Published velocity: [ 4.992788    0.17862423 -0.20040545]
+[RUN_COMPETITION] Published velocity: [ 4.99039     0.19052409 -0.24435943]
+[RUN_COMPETITION] Published velocity: [ 4.9874372   0.05923949 -0.34922424]
+[RUN_COMPETITION] Published velocity: [ 4.9933023  -0.21333146  0.14635067]
+[RUN_COMPETITION] Published velocity: [ 4.560402   -0.76211995  1.9031309 ]
+[RUN_COMPETITION] Published velocity: [ 4.025983  -0.8040852  2.8539288]
+[RUN_COMPETITION] Published velocity: [ 3.         -0.20243844  4.5610566 ]
+[RUN_COMPETITION] compute_command_vision_based took 0.006249427795410156 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9988489e+00 -1.0720776e-01  4.3527507e-03]
+[RUN_COMPETITION] Published velocity: [ 4.9961395  -0.1940204   0.03070754]
+[RUN_COMPETITION] Published velocity: [ 4.99414    -0.23673856  0.05020399]
+[RUN_COMPETITION] Published velocity: [ 4.9913745  -0.27774572  0.09507322]
+[RUN_COMPETITION] Published velocity: [ 4.990304   -0.29618675  0.09559649]
+[RUN_COMPETITION] Published velocity: [ 4.986862   -0.33953103  0.1262061 ]
+[RUN_COMPETITION] Published velocity: [ 4.982671   -0.38739866  0.151368  ]
+[RUN_COMPETITION] Published velocity: [ 4.9841237  -0.37248448  0.14059167]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 4.988793   -0.31534564  0.11181612]
+[RUN_COMPETITION] Published velocity: [ 4.9929433  -0.25645083  0.06893848]
+[RUN_COMPETITION] Published velocity: [ 4.9976664  -0.15063179 -0.02528826]
+[RUN_COMPETITION] Published velocity: [ 4.998229   -0.06979974 -0.11328612]
+[RUN_COMPETITION] Published velocity: [ 4.9988027  -0.06189333 -0.09021959]
+[RUN_COMPETITION] Published velocity: [ 4.9994125e+00 -1.6792748e-03 -7.6644257e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9993396   0.07813167 -0.02237028]
+[RUN_COMPETITION] Published velocity: [4.998707   0.10890745 0.03272782]
+[RUN_COMPETITION] Published velocity: [4.9949055  0.19312266 0.1167244 ]
+[RUN_COMPETITION] Published velocity: [4.992506   0.25131977 0.10824496]
+[RUN_COMPETITION] Published velocity: [4.99189    0.22209513 0.17806476]
+[RUN_COMPETITION] Published velocity: [4.993168   0.19071877 0.17860964]
+[RUN_COMPETITION] Published velocity: [4.9967375  0.0958865  0.15304011]
+[RUN_COMPETITION] Published velocity: [4.9948354  0.07040054 0.21601772]
+[RUN_COMPETITION] Published velocity: [4.9896865  0.00638297 0.32092166]
+[RUN_COMPETITION] Published velocity: [ 4.9906354  -0.08525703  0.29374653]
+[RUN_COMPETITION] Published velocity: [ 4.991641   -0.09894364  0.27153695]
+[RUN_COMPETITION] Published velocity: [ 4.990257   -0.17717376  0.2568074 ]
+[RUN_COMPETITION] Published velocity: [ 4.984653   -0.1509856   0.36116126]
+[RUN_COMPETITION] Published velocity: [ 4.984976   -0.20072341  0.33124936]
+[RUN_COMPETITION] Published velocity: [ 4.98673    -0.28143334  0.23090127]
+[RUN_COMPETITION] Published velocity: [ 4.991766   -0.18106952  0.2224538 ]
+[RUN_COMPETITION] compute_command_vision_based took 0.009866952896118164 seconds
+[RUN_COMPETITION] Published velocity: [ 4.997465   -0.11582927  0.10922123]
+[RUN_COMPETITION] Published velocity: [ 4.9975553  -0.14458047  0.05949221]
+[RUN_COMPETITION] Published velocity: [ 4.999018   -0.08906669 -0.04345197]
+[RUN_COMPETITION] Published velocity: [ 4.9992046  -0.02564351 -0.08541654]
+[RUN_COMPETITION] Published velocity: [ 4.9986     -0.03242489 -0.11376046]
+[RUN_COMPETITION] Published velocity: [ 4.9985080e+00 -4.6680085e-03 -1.2204914e-01]
+[RUN_COMPETITION] Published velocity: [ 4.99902     0.01198296 -0.09825832]
+[RUN_COMPETITION] Published velocity: [ 4.998829    0.04570944 -0.09808742]
+[RUN_COMPETITION] Published velocity: [ 4.998782    0.07792999 -0.07813595]
+[RUN_COMPETITION] Published velocity: [ 4.9978333   0.10617711 -0.10192244]
+[RUN_COMPETITION] Published velocity: [ 4.995939    0.13127762 -0.15284406]
+[RUN_COMPETITION] Published velocity: [ 4.9958186   0.13074774 -0.15717043]
+[RUN_COMPETITION] Published velocity: [ 4.9946413   0.15707034 -0.16996622]
+[RUN_COMPETITION] Published velocity: [ 4.9945097   0.15309499 -0.17729016]
+[RUN_COMPETITION] Published velocity: [ 4.9933524   0.18058227 -0.1839125 ]
+[RUN_COMPETITION] Published velocity: [ 4.993134    0.19597231 -0.17380518]
+[RUN_COMPETITION] Published velocity: [ 4.992565    0.2159872  -0.16626015]
+[RUN_COMPETITION] Published velocity: [ 4.993227    0.20491643 -0.16028838]
+[RUN_COMPETITION] Published velocity: [ 4.993881    0.2156961  -0.12093612]
+[RUN_COMPETITION] Published velocity: [ 4.996816    0.15423374 -0.08966706]
+[RUN_COMPETITION] Published velocity: [ 4.9973245   0.15883774 -0.0389626 ]
+[RUN_COMPETITION] Published velocity: [ 4.9983044   0.12984423 -0.00964279]
+[RUN_COMPETITION] Published velocity: [4.9987264  0.11003764 0.02506702]
+[RUN_COMPETITION] Published velocity: [4.9975452  0.12423988 0.0954347 ]
+[RUN_COMPETITION] Published velocity: [4.9945006  0.05727711 0.22733891]
+[RUN_COMPETITION] Published velocity: [4.99047    0.07053921 0.30039012]
+[RUN_COMPETITION] Published velocity: [4.993546   0.04492647 0.24995975]
+[RUN_COMPETITION] Published velocity: [4.995938   0.03211873 0.19893697]
+[RUN_COMPETITION] Published velocity: [ 4.998246   -0.01169886  0.13189466]
+[RUN_COMPETITION] Published velocity: [ 4.999487   -0.01172877  0.07063913]
+[RUN_COMPETITION] compute_command_vision_based took 0.006361961364746094 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9995413  -0.06190488  0.02752176]
+[RUN_COMPETITION] Published velocity: [ 4.999083   -0.09288231  0.02326916]
+[RUN_COMPETITION] Published velocity: [ 4.998489   -0.12042873  0.0245872 ]
+[RUN_COMPETITION] Published velocity: [ 4.9978     -0.14580595  0.02707581]
+[RUN_COMPETITION] Published velocity: [ 4.9972205  -0.16375138  0.03124142]
+[RUN_COMPETITION] Published velocity: [ 4.997024   -0.17137587  0.01943105]
+[RUN_COMPETITION] Published velocity: [ 4.997364   -0.16216235  0.00738695]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 4.99703    -0.17220777  0.00600501]
+[RUN_COMPETITION] Published velocity: [ 4.9977560e+00 -1.4971721e-01  4.5433855e-03]
+[RUN_COMPETITION] Published velocity: [ 4.998072   -0.13484024  0.03305354]
+[RUN_COMPETITION] Published velocity: [ 4.998019   -0.13962294  0.01751059]
+[RUN_COMPETITION] Published velocity: [ 4.996808   -0.16873604  0.05863794]
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9910693  -0.26499456  0.13786037]
+[RUN_COMPETITION] Published velocity: [ 4.9915304  -0.23458001  0.172034  ]
+[RUN_COMPETITION] Published velocity: [ 4.9894247  -0.23376587  0.22581838]
+[RUN_COMPETITION] Published velocity: [ 4.983018   -0.26799804  0.31258494]
+[RUN_COMPETITION] Published velocity: [ 4.9733043  -0.32488528  0.4008683 ]
+[RUN_COMPETITION] Published velocity: [ 4.9616933 -0.2976385  0.5413057]
+[RUN_COMPETITION] Published velocity: [ 4.941872   -0.36622393  0.6661672 ]
+[RUN_COMPETITION] Published velocity: [ 4.8877482  -0.49418527  0.9304288 ]
+[RUN_COMPETITION] Published velocity: [ 4.7670555 -0.5046693  1.4214402]
+[RUN_COMPETITION] Published velocity: [ 4.779739   -0.41174027  1.4087472 ]
+[RUN_COMPETITION] Published velocity: [ 4.6623693  -0.16833954  1.7983252 ]
+[RUN_COMPETITION] Published velocity: [ 4.5367928 -0.1745849  2.0945249]
+[RUN_COMPETITION] Published velocity: [ 4.243553   -0.11093192  2.6419597 ]
+[RUN_COMPETITION] Published velocity: [ 4.3194156  -0.05137493  2.5179381 ]
+[RUN_COMPETITION] Published velocity: [ 4.851986   -0.04777215  1.2066286 ]
+[RUN_COMPETITION] Published velocity: [4.9947186  0.02669538 0.22820014]
+[RUN_COMPETITION] Published velocity: [4.9981737  0.08015833 0.10878159]
+[RUN_COMPETITION] Published velocity: [4.996626   0.18302676 0.01527261]
+[RUN_COMPETITION] compute_command_vision_based took 0.006552457809448242 seconds
+[RUN_COMPETITION] Published velocity: [4.9893866e+00 3.2558784e-01 3.6491503e-03]
+[RUN_COMPETITION] Published velocity: [ 4.9593935   0.63582486 -0.01186729]
+[RUN_COMPETITION] Published velocity: [ 4.9520445   0.68756455 -0.06715164]
+[RUN_COMPETITION] Published velocity: [ 4.9251466   0.85065776 -0.13896139]
+[RUN_COMPETITION] Published velocity: [ 4.9050097  0.9518031 -0.1869587]
+[RUN_COMPETITION] Published velocity: [ 4.913221    0.9068457  -0.19465901]
+[RUN_COMPETITION] Published velocity: [ 4.922575    0.85405713 -0.19708878]
+[RUN_COMPETITION] Published velocity: [ 4.920077    0.8763542  -0.15762882]
+[RUN_COMPETITION] Published velocity: [4.9668245  0.57334983 0.04388797]
+[RUN_COMPETITION] Published velocity: [4.987481   0.2164264  0.27962282]
+[RUN_COMPETITION] Published velocity: [ 4.9676867  -0.1709313   0.54117846]
+[RUN_COMPETITION] Published velocity: [ 4.8881316 -0.6319921  0.840688 ]
+[RUN_COMPETITION] Published velocity: [ 4.8609    -0.8740767  0.7795119]
+[RUN_COMPETITION] Published velocity: [ 4.8303933 -0.9731186  0.8487265]
+[RUN_COMPETITION] Published velocity: [ 4.791525  -1.1276914  0.877269 ]
+[RUN_COMPETITION] Published velocity: [ 4.6902556 -1.151443   1.2944807]
+[RUN_COMPETITION] Published velocity: [ 4.5767517 -1.2029171  1.6144146]
+[RUN_COMPETITION] Published velocity: [ 4.4134827 -1.1622417  2.0421472]
+[RUN_COMPETITION] Published velocity: [ 4.446513  -1.1550292  1.9734311]
+[RUN_COMPETITION] Published velocity: [ 4.586777  -1.1142502  1.6492178]
+[RUN_COMPETITION] Published velocity: [ 4.6532087 -0.968488   1.5523131]
+[RUN_COMPETITION] Published velocity: [ 4.643087   -0.70920944  1.7142826 ]
+[RUN_COMPETITION] Published velocity: [ 3.5880973  -0.47381568  3.4497907 ]
+[RUN_COMPETITION] Published velocity: [ 3.226557  -0.3660574  3.802017 ]
+[RUN_COMPETITION] Published velocity: [ 3.2604048  -0.26898342  3.7811918 ]
+[RUN_COMPETITION] Published velocity: [ 4.2032948  -0.19136885  2.701054  ]
+[RUN_COMPETITION] Published velocity: [4.948775   0.10104199 0.7066952 ]
+[RUN_COMPETITION] Published velocity: [4.9869423  0.35972401 0.03175255]
+[RUN_COMPETITION] Published velocity: [4.926345   0.8449877  0.13085169]
+[RUN_COMPETITION] Published velocity: [ 4.7764306   1.4759637  -0.08509362]
+[RUN_COMPETITION] compute_command_vision_based took 0.007472038269042969 seconds
+[RUN_COMPETITION] Published velocity: [ 4.675954    1.7652833  -0.13868287]
+[RUN_COMPETITION] Published velocity: [ 4.4178157   2.334882   -0.17671275]
+[RUN_COMPETITION] Published velocity: [ 4.613599    1.9180816  -0.18887192]
+[RUN_COMPETITION] Published velocity: [ 4.709933    1.6618623  -0.23398226]
+[RUN_COMPETITION] Published velocity: [ 4.70125     1.6905882  -0.20038904]
+[RUN_COMPETITION] Published velocity: [ 4.7232523   1.6380124  -0.08833593]
+[RUN_COMPETITION] Published velocity: [4.6648846  1.5329064  0.94289416]
+[RUN_COMPETITION] Published velocity: [4.4475822 1.547804  1.6802721]
+[RUN_COMPETITION] Published velocity: [4.7491784  1.562093   0.07190467]
+[RUN_COMPETITION] Published velocity: [ 4.4845448   2.1997218  -0.22378573]
+[RUN_COMPETITION] Published velocity: [ 4.7390513   1.574789   -0.24785699]
+[RUN_COMPETITION] Published velocity: [ 4.840828   1.2374693 -0.1872201]
+[RUN_COMPETITION] Published velocity: [ 4.9618487   0.612596   -0.06917013]
+[RUN_COMPETITION] Published velocity: [ 4.9944954   0.23448496 -0.00611681]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 4.9991045  -0.09007542  0.02892203]
+[RUN_COMPETITION] Published velocity: [ 4.9732933  -0.48796767  0.16805673]
+[RUN_COMPETITION] Published velocity: [ 4.9476376  -0.7212824   0.02523514]
+[RUN_COMPETITION] Published velocity: [ 4.946245   -0.7304844  -0.03246159]
+[RUN_COMPETITION] Published velocity: [ 4.9492245  -0.70537627 -0.08730683]
+[RUN_COMPETITION] Published velocity: [ 4.9543552  -0.66252685 -0.12419014]
+[RUN_COMPETITION] Published velocity: [ 4.967583   -0.5585071  -0.10577574]
+[RUN_COMPETITION] Published velocity: [ 4.9723883  -0.5143566  -0.10389492]
+[RUN_COMPETITION] Published velocity: [ 4.9737434  -0.50448227 -0.08588221]
+[RUN_COMPETITION] Published velocity: [ 4.971003  -0.5313227 -0.0826081]
+[RUN_COMPETITION] Published velocity: [ 4.972585   -0.51893204 -0.06409875]
+[RUN_COMPETITION] Published velocity: [ 4.975765   -0.48827115 -0.05790634]
+[RUN_COMPETITION] Published velocity: [ 4.978016   -0.46303046 -0.07044569]
+[RUN_COMPETITION] Published velocity: [ 4.9817057 -0.4199043 -0.0793191]
+[RUN_COMPETITION] Published velocity: [ 4.9830465  -0.40481496 -0.07329135]
+[RUN_COMPETITION] Published velocity: [ 4.988967   -0.32319722 -0.0758618 ]
+[RUN_COMPETITION] compute_command_vision_based took 0.008350133895874023 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9882655  -0.3307935  -0.08823582]
+[RUN_COMPETITION] Published velocity: [ 4.9939213  -0.21849564 -0.1140377 ]
+[RUN_COMPETITION] Published velocity: [ 4.995867   -0.145874   -0.14153966]
+[RUN_COMPETITION] Published velocity: [ 4.9967055   0.08769207 -0.15889701]
+[RUN_COMPETITION] Published velocity: [ 4.9823213   0.40464702 -0.11286534]
+[RUN_COMPETITION] Published velocity: [4.940157   0.7708589  0.02505358]
+[RUN_COMPETITION] Published velocity: [ 4.8394804  1.2461131 -0.1631969]
+[RUN_COMPETITION] Published velocity: [4.5740647 1.4080229 1.447551 ]
+[RUN_COMPETITION] Published velocity: [3.2252464 0.7650495 3.7433248]
+[RUN_COMPETITION] Published velocity: [3.4399867 0.560426  3.5850265]
+[RUN_COMPETITION] Published velocity: [ 4.9654374   0.570511   -0.13765703]
+[RUN_COMPETITION] Published velocity: [ 4.976029    0.45916438 -0.16823983]
+[RUN_COMPETITION] Published velocity: [ 4.988971    0.29454026 -0.1530068 ]
+[RUN_COMPETITION] Published velocity: [ 4.9919014   0.23792961 -0.15592115]
+[RUN_COMPETITION] Published velocity: [ 4.995615    0.14066546 -0.15506281]
+[RUN_COMPETITION] Published velocity: [ 4.997257    0.01119334 -0.16522504]
+[RUN_COMPETITION] Published velocity: [ 4.9970093  -0.09741194 -0.14287041]
+[RUN_COMPETITION] Published velocity: [ 4.9916306  -0.19866595 -0.21013227]
+[RUN_COMPETITION] Published velocity: [ 4.985874   -0.31204763 -0.2090113 ]
+[RUN_COMPETITION] Published velocity: [ 4.979869   -0.41101116 -0.17882214]
+[RUN_COMPETITION] Published velocity: [ 4.966149   -0.56702024 -0.12590095]
+[RUN_COMPETITION] Published velocity: [ 4.948773   -0.7113231  -0.06053653]
+[RUN_COMPETITION] Published velocity: [ 4.8886456  -1.0385256   0.15035872]
+[RUN_COMPETITION] Published velocity: [ 4.8596325  -1.1190723   0.36283273]
+[RUN_COMPETITION] Published velocity: [ 4.8355446 -1.1076925  0.6249218]
+[RUN_COMPETITION] Published velocity: [ 4.8613367  -1.0681795   0.47581327]
+[RUN_COMPETITION] Published velocity: [ 4.880331   -1.0143529   0.39173353]
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+Crashed
+Crashed
+You did not reach the goal!
+run_competition.py:163: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(model_path, map_location=self.device)
+--- Logging error ---
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/handlers.py", line 69, in emit
+    if self.shouldRollover(record):
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/handlers.py", line 186, in shouldRollover
+    self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
+RuntimeError: reentrant call inside <_io.BufferedWriter name='/root/.ros/log/agile_pilot_node.log'>
+Call stack:
+  File "run_competition.py", line 625, in <module>
+    rospy.spin()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/client.py", line 129, in spin
+    rospy.rostime.wallsleep(0.5)
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/rostime.py", line 277, in wallsleep
+    time.sleep(duration)
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/core.py", line 633, in _ros_signal
+    signal_shutdown("signal-"+str(sig))
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/core.py", line 606, in signal_shutdown
+    h(reason)
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/impl/registration.py", line 390, in cleanup
+    tm.close_all()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 1166, in close_all
+    t.close()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 626, in close
+    _TopicImpl.close(self)
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 326, in close
+    c.close()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/impl/tcpros_base.py", line 868, in close
+    super(TCPROSTransport, self).close()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/impl/transport.py", line 104, in close
+    self.cleanup_cb(self)
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 478, in remove_connection
+    rospyinfo("topic[%s] removing connection to %s"%(self.resolved_name, c.endpoint_id))
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/core.py", line 140, in rospyinfo
+    _rospy_logger.info(msg, *args, **kwargs)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 1446, in info
+    self._log(INFO, msg, args, **kwargs)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 1589, in _log
+    self.handle(record)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 1599, in handle
+    self.callHandlers(record)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 1661, in callHandlers
+    hdlr.handle(record)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 954, in handle
+    self.emit(record)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/handlers.py", line 71, in emit
+    logging.FileHandler.emit(self, record)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 1187, in emit
+    StreamHandler.emit(self, record)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 1089, in emit
+    self.flush()
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/logging/__init__.py", line 1069, in flush
+    self.stream.flush()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/core.py", line 633, in _ros_signal
+    signal_shutdown("signal-"+str(sig))
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/core.py", line 587, in signal_shutdown
+    _logger.info("signal_shutdown [%s]"%reason)
+Message: 'signal_shutdown [signal-15]'
+Arguments: ()
+[RUN_COMPETITION] Published velocity: [ 4.9006147 -0.9343697  0.3330578]
+[RUN_COMPETITION] Published velocity: [ 4.936069  -0.7867862  0.1272392]
+[RUN_COMPETITION] Published velocity: [ 4.9562063  -0.6271194  -0.20673117]
+[RUN_COMPETITION] compute_command_vision_based took 0.008281707763671875 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9557424  -0.63774884  0.18410496]
+[RUN_COMPETITION] Published velocity: [ 4.981317   -0.35332915 -0.24827415]
+[RUN_COMPETITION] Published velocity: [ 4.998151   -0.12884486 -0.04343776]
+[RUN_COMPETITION] Published velocity: [ 4.999195    0.06687713 -0.05978944]
+[RUN_COMPETITION] Published velocity: [4.963148   0.6053795  0.02601737]
+[RUN_COMPETITION] Published velocity: [4.858146   1.0947818  0.44706833]
+[RUN_COMPETITION] Published velocity: [4.5014696 1.8040428 1.2174573]
+[RUN_COMPETITION] Published velocity: [4.290451  1.9661797 1.6511114]
+[RUN_COMPETITION] Published velocity: [3.9887178 2.1256492 2.1381638]
+[RUN_COMPETITION] Published velocity: [3.        1.1784397 4.209222 ]
+[RUN_COMPETITION] Published velocity: [3.        0.733376  4.2974205]
+[RUN_COMPETITION] Published velocity: [3.         0.41886863 4.248735  ]
+[RUN_COMPETITION] Published velocity: [3.         0.23512267 4.2299504 ]
+[RUN_COMPETITION] Published velocity: [3.         0.27732784 4.0513988 ]
+[RUN_COMPETITION] Published velocity: [3.         0.10752957 4.208709  ]
+[RUN_COMPETITION] Published velocity: [3.1855261  0.39116555 3.8339815 ]
+[RUN_COMPETITION] Published velocity: [4.832443  0.5487161 1.1603448]
+[RUN_COMPETITION] Published velocity: [ 4.6027794  -0.33492115  1.9241226 ]
+[RUN_COMPETITION] Published velocity: [ 4.624768  -0.7480606  1.746977 ]
+[RUN_COMPETITION] Published velocity: [ 4.6448646 -1.0483148  1.5252111]
+[RUN_COMPETITION] Published velocity: [ 4.7151475  -1.3550632   0.96498007]
+[RUN_COMPETITION] Published velocity: [ 4.716592  -1.498567   0.7127836]
+[RUN_COMPETITION] Published velocity: [ 4.6218214  -1.8393897   0.50538474]
+[RUN_COMPETITION] Published velocity: [ 4.4898705 -2.0885143  0.6922225]
+[RUN_COMPETITION] Published velocity: [ 4.5465746 -2.0091648  0.5402927]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 4.5266967 -2.0145235  0.6713509]
+[RUN_COMPETITION] Published velocity: [ 4.5552063 -1.8580502  0.8931674]
+[RUN_COMPETITION] Published velocity: [ 4.554397  -1.7862583  1.0328349]
+[RUN_COMPETITION] Published velocity: [ 4.534505  -1.8395083  1.0268764]
+[RUN_COMPETITION] Published velocity: [ 4.53733   -2.0152936  0.5926459]
+[RUN_COMPETITION] compute_command_vision_based took 0.007714986801147461 seconds
+[RUN_COMPETITION] Published velocity: [ 4.6505985  -1.8211049   0.23560083]
+[RUN_COMPETITION] Published velocity: [ 4.7264724  -1.614711    0.23058635]
+[RUN_COMPETITION] Published velocity: [ 4.8891015  -1.0467316   0.03222011]
+[RUN_COMPETITION] Published velocity: [ 4.9637856e+00 -6.0069197e-01 -1.2541772e-04]
+[RUN_COMPETITION] Published velocity: [ 4.9988217  -0.0794698  -0.07390641]
+[RUN_COMPETITION] Published velocity: [ 4.990571    0.22427282 -0.20952585]
+[RUN_COMPETITION] Published velocity: [ 4.975576    0.48617885 -0.08526906]
+[RUN_COMPETITION] Published velocity: [ 4.951175    0.69154626 -0.08733784]
+[RUN_COMPETITION] Published velocity: [ 4.9425097   0.7486778  -0.10525343]
+[RUN_COMPETITION] Published velocity: [ 4.940114    0.7691285  -0.06096227]
+[RUN_COMPETITION] Published velocity: [ 4.939863    0.7709101  -0.05870929]
+[RUN_COMPETITION] Published velocity: [ 4.9401813   0.76887363 -0.05869236]
+[RUN_COMPETITION] Published velocity: [ 4.9473505   0.7215084  -0.05610345]
+[RUN_COMPETITION] Published velocity: [ 4.94742     0.7228391  -0.02322703]
+[RUN_COMPETITION] Published velocity: [4.955972   0.661157   0.03481949]
+[RUN_COMPETITION] Published velocity: [4.9613147 0.6157948 0.0784734]
+[RUN_COMPETITION] Published velocity: [4.9668274  0.56891066 0.08344813]
+[RUN_COMPETITION] Published velocity: [4.9850388  0.38074687 0.06647182]
+[RUN_COMPETITION] Published velocity: [4.9857173  0.37303194 0.05891563]
+[RUN_COMPETITION] Published velocity: [4.994647   0.20246334 0.11184232]
+[RUN_COMPETITION] Published velocity: [ 4.997537   -0.01501326  0.15619719]
+[RUN_COMPETITION] Published velocity: [ 4.99785    -0.06874585  0.12950528]
+[RUN_COMPETITION] Published velocity: [ 4.9973865  -0.09442657  0.1311999 ]
+[RUN_COMPETITION] Published velocity: [ 4.9971423  -0.16157828  0.04962198]
+[RUN_COMPETITION] Published velocity: [ 4.993536   -0.25370452 -0.01521665]
+[RUN_COMPETITION] Published velocity: [ 4.9923735  -0.27479848 -0.02638323]
+[RUN_COMPETITION] Published velocity: [ 4.991109   -0.29790717 -0.00916512]
+[RUN_COMPETITION] Published velocity: [ 4.988653   -0.3362387   0.01686518]
+[RUN_COMPETITION] Published velocity: [ 4.9799194  -0.43054578  0.12260518]
+[RUN_COMPETITION] Published velocity: [ 4.960964   -0.57959926  0.22999892]
+[RUN_COMPETITION] compute_command_vision_based took 0.006560564041137695 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9313173 -0.7549616  0.3348717]
+[RUN_COMPETITION] Published velocity: [ 4.865056   -1.0136013   0.55121374]
+[RUN_COMPETITION] Published velocity: [ 4.7677894 -1.2182385  0.8854831]
+[RUN_COMPETITION] Published velocity: [ 4.234907  -1.7254506  2.0219743]
+[RUN_COMPETITION] Published velocity: [ 3.        -1.7879556  3.7782695]
+[RUN_COMPETITION] Published velocity: [ 3.        -1.3354844  4.5821543]
+[RUN_COMPETITION] Published velocity: [ 3.        -0.9992936  4.6084766]
+[RUN_COMPETITION] Published velocity: [ 3.        -0.7540696  4.245075 ]
+[RUN_COMPETITION] Published velocity: [ 3.         -0.19554602  4.0394664 ]
+[RUN_COMPETITION] Published velocity: [ 3.         -0.06117248  4.8303833 ]
+[RUN_COMPETITION] Published velocity: [ 3.         -0.05451024  4.795765  ]
+[RUN_COMPETITION] Published velocity: [ 3.         -0.04013011  4.6484118 ]
+[RUN_COMPETITION] Published velocity: [ 3.         -0.00758918  4.4168553 ]
+[RUN_COMPETITION] Published velocity: [3.         0.08982121 4.139915  ]
+[RUN_COMPETITION] Published velocity: [3.4737859  0.13061695 3.593849  ]
+[RUN_COMPETITION] Published velocity: [4.948007   0.12816346 0.7076715 ]
+[RUN_COMPETITION] Published velocity: [4.9554663  0.22790872 0.62562996]
+[RUN_COMPETITION] Published velocity: [4.8915377  0.41993883 0.94684154]
+[RUN_COMPETITION] Published velocity: [4.746854  0.8523781 1.319407 ]
+[RUN_COMPETITION] Published velocity: [4.741     1.1454506 1.1003901]
+[RUN_COMPETITION] Published velocity: [4.6663923  1.6111315  0.79311836]
+[RUN_COMPETITION] Published velocity: [4.4231596 1.8013514 1.480134 ]
+[RUN_COMPETITION] Published velocity: [4.151797  2.2590258 1.6307627]
+[RUN_COMPETITION] Published velocity: [4.1951833 2.231029  1.5565829]
+[RUN_COMPETITION] Published velocity: [4.2222776 1.9506028 1.8350793]
+[RUN_COMPETITION] Published velocity: [4.223921  1.7882144 1.9901705]
+[RUN_COMPETITION] Published velocity: [4.5341263 1.5161477 1.4638973]
+[RUN_COMPETITION] Published velocity: [4.6365614 1.372128  1.2726214]
+[RUN_COMPETITION] Published velocity: [4.559343  1.2828659 1.6020762]
+[RUN_COMPETITION] Published velocity: [4.5860004 1.0534582 1.6908062]
+[RUN_COMPETITION] compute_command_vision_based took 0.008676528930664062 seconds
+[RUN_COMPETITION] Published velocity: [4.878319  0.6134161 0.9086943]
+[RUN_COMPETITION] Published velocity: [4.9438157  0.34429818 0.6634345 ]
+[RUN_COMPETITION] Published velocity: [ 4.9783573  -0.07777626  0.45815688]
+[RUN_COMPETITION] Published velocity: [ 4.967719   -0.43519196  0.36383337]
+[ROS Bridge]   Deactivated!
+[31m[kingfisher/dodgeros_pilot-2] escalating to SIGTERM[0m
+... logging to /root/.ros/log/dfc500e2-4206-11f1-89a5-c403a85371c7/roslaunch-1917Redbanner-25044.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/root/catkin_ws/src/vitfly/envsim/launch/visionenv_sim.launch
+[1mstarted roslaunch server http://192.168.195.250:39363/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /kingfisher/dodgeros_pilot/agi_param_dir: /root/catkin_ws/s...
+ * /kingfisher/dodgeros_pilot/camera_config: /root/catkin_ws/s...
+ * /kingfisher/dodgeros_pilot/low_level_controller: Simple
+ * /kingfisher/dodgeros_pilot/pilot_config: simple_sim_pilot....
+ * /kingfisher/dodgeros_pilot/real_time_factor: 1.0
+ * /kingfisher/dodgeros_pilot/render: True
+ * /kingfisher/dodgeros_pilot/ros_param_dir: /root/catkin_ws/s...
+ * /kingfisher/dodgeros_pilot/use_bem_propeller_model: False
+ * /rosdistro: noetic
+ * /rosversion: 1.17.4
+ * /use_sim_time: True
+
+NODES
+  /
+    flight_render (flightrender/vitfly-unity.x86_64)
+  /kingfisher/
+    dodgeros_pilot (envsim/visionsim_node)
+    viz_face (rviz/rviz)
+
+auto-starting new master
+[1mprocess[master]: started with pid [25072][0m
+[1mROS_MASTER_URI=http://192.168.195.250:11311[0m
+]2;/root/catkin_ws/src/vitfly/envsim/launch/visionenv_sim.launch http://192.168.195.250:11311
+[1msetting /run_id to dfc500e2-4206-11f1-89a5-c403a85371c7[0m
+[1mprocess[rosout-1]: started with pid [25101][0m
+started core service [/rosout]
+[1mprocess[kingfisher/dodgeros_pilot-2]: started with pid [25104][0m
+[1mprocess[kingfisher/viz_face-3]: started with pid [25105][0m
+[1mprocess[flight_render-4]: started with pid [25107][0m
+[flight_render-4] killing on exit
+[kingfisher/viz_face-3] killing on exit
+[kingfisher/dodgeros_pilot-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m

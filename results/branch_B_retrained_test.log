@@ -1,0 +1,524 @@
+vision
+
+[LAUNCH SCRIPT] Vision based!
+
+19350
+QStandardPaths: wrong ownership on runtime directory /mnt/wslg/runtime-dir, 1000 instead of 0
+[33m[WARN] [1777713897.348684180]: Pilot Config:        simple_sim_pilot.yaml[0m
+[33m[WARN] [1777713897.349543462]: Agi Param Directory: /root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params[0m
+[33m[WARN] [1777713897.349557437]: ROS Param Directory: /root/catkin_ws/src/vitfly/envsim/parameters[0m
+[0m[INFO] [1777713897.349566759]: Loading Pilot Params from simple_sim_pilot.yaml in /root/catkin_ws/src/vitfly/envsim/parameters[0m
+Loading Pilot parameters from "/root/catkin_ws/src/vitfly/envsim/parameters/simple_sim_pilot.yaml"
+[33m[PilotParams]  Did not create inner controller ''![0m
+[33m[Pilot]        Did not create bridge 'ROS'.
+Using debug bridge, register externally![0m
+[0m[INFO] [1777713897.354499270]: Loaded pipeline:
+Estimator:
+Type: Feedthrough
+File: "/root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params/feedthrough.yaml"
+Sampler:
+Type: Time
+File: ""
+Outer Controller:
+Type: GEO
+File: "/root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params/geo.yaml"
+Inner Controller:
+Type: 
+File: ""
+Bridge:
+Type: ROS
+File: ""
+[0m
+[Pilot]        Register external bridge: [ROS Bridge]   
+ which was not active and used.
+[33m[VisionEnv]    [loadParam] Scene ID: 2[0m
+[33m[VisionEnv]    [loadParam] Unity Render: 1[0m
+[VisionEnv]    Datagen: 1
+[VisionEnv]    Rollout: 0
+[VisionEnv]    Move Obstacle Trigger: 1
+[VisionEnv]    Configuring dynamic objects from: /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/dynamic_obstacles.yaml
+[VisionEnv]    Configuring static objects from: /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/static_obstacles.csv
+[33m[VisionEnv]    Camera has been added. Skipping the camera configuration.[0m
+[UnityBridge]  Initializing ZMQ connection!
+[UnityBridge]  Initializing ZMQ connections done!
+[VisionEnv]    Flightmare Bridge created.
+[33m[UnityBridge]  Scene ID is set to 2.[0m
+[UnityBridge]  Trying to Connect Unity.
+[..............................................................................................................[UnityBridge]  Flightmare Unity is connected.
+[0m[INFO] [1777713911.725862294, 1777713906.920096397]: OFF command received![0m
+[ROS Bridge]   Deactivated!
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777713915.830876563, 1777713908.320096493]: Resetting simulator![0m
+[VisionEnv]    Calling moveDynamicObstacles
+[VisionEnv]    Moving Static (faked dynamic) Obstacles
+[VisionEnv]    Number of dynamic objects found: 132
+[VisionEnv]    /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/static_kr_0.csv
+[33m[VisionEnv]    [readTrainingObs] Configuration file � does not exists.[0m
+[33m[VisionEnv]    [changeObsLoc] Function not moving obstacles.[0m
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777713919.838038063, 1777713909.640096426]: Computing active: true![0m
+[ROS Bridge]   Deactivated!
+[ROS Bridge]   Activated!
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777713923.846219799, 1777713911.000096560]: START command received![0m
+[Pilot]        Z-position smaller than takeoff height, taking off!
+[Pipeline]     1 references set:
+[Pipeline]     Minimum Snap Trajectory         | 17:25:11.911 --> 5.83s --> 17:25:16.916 |
+publishing and latching message for 3.0 seconds
+rollout_1
+/root/catkin_ws/src/vitfly-mambatest
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+publishing and latching message for 3.0 seconds
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[33m[Pilot]        Not in hover, won't switch to velocity reference![0m
+[Pipeline]     2 references set:
+[Pipeline]     Minimum Snap Trajectory         | 17:25:11.911 --> 5.83s --> 17:25:16.916 |
+[Pipeline]     Hover Reference                 | 17:25:16.916 --> infs --> inf |
+[Pipeline]     Removing old reference: Minimum Snap Trajectory
+[Pipeline]     2 references set:
+[Pipeline]     Hover Reference                 | 17:25:16.916 --> 0.01s --> 17:25:16.916 |
+[Pipeline]     Velocity Reference              | 17:25:16.916 --> infs --> inf |
+[Pipeline]     Removing old reference: Hover Reference
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+[RUN_COMPETITION] Initializing agile_pilot_node...
+
+[RUN_COMPETITION] Desired velocity = 5.0
+
+[RUN_COMPETITION] Model loading from /root/catkin_ws/src/vitfly-mambatest/training/checkpoints/branch_B_best.pth ...
+[RUN_COMPETITION] Branch B — MambaVisionSSMNet loaded (stem_dim=48, stage_dims=[64,128,192])
+[RUN_COMPETITION] Model loaded
+[RUN_COMPETITION] Initialization completed!
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00283012  0.025941  ]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00282159  0.02605489]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00281477  0.02614081]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00280379  0.02625882]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.002784    0.02651431]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00275256  0.026891  ]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00272701  0.02718645]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00270992  0.027368  ]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00270997  0.0273339 ]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00271687  0.0273069 ]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00273274  0.02711799]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00273024  0.02713906]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00276665  0.02667616]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00277963  0.02652868]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00277633  0.02656739]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00277115  0.02664266]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.0027813   0.02652663]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00279343  0.02633252]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00279336  0.02630408]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.0028006   0.02621348]
+[RUN_COMPETITION] NOT publishing (publish_commands=False), velocity: [ 2.         -0.00282077  0.02599676]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284001  0.02580444]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284172  0.02579438]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284609  0.02572417]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284672  0.02569563]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.0028475   0.02568724]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.0028432   0.02573273]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00283893  0.02578912]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00283619  0.02578762]
+[RUN_COMPETITION] compute_command_vision_based took 0.013293266296386719 seconds
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00283337  0.02579053]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00283398  0.02575319]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.0028346   0.02572943]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00283643  0.02568383]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00283384  0.02569234]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00283676  0.0256541 ]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284067  0.02559021]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284133  0.02559522]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284829  0.02551938]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00284669  0.02554966]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00285136  0.0255009 ]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286135  0.02539509]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286498  0.02536277]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286341  0.02537356]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286182  0.02538251]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286239  0.0253651 ]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286723  0.02530388]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286826  0.02527913]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286879  0.02526943]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286995  0.02526673]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00287197  0.02524927]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.0028731   0.02523413]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00287114  0.02526086]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00287137  0.02525641]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00287116  0.02525984]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286994  0.02527155]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286958  0.02527448]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.0028696   0.02527451]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286955  0.0252743 ]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286953  0.02527426]
+[RUN_COMPETITION] compute_command_vision_based took 0.007376909255981445 seconds
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286904  0.02527857]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00286904  0.02527857]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.0028702   0.02526434]
+[RUN_COMPETITION] Published velocity: [ 2.        -0.0028703  0.0252642]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00287083  0.02526088]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.0027592   0.02575349]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00259963  0.02636138]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00234605  0.02725813]
+[RUN_COMPETITION] Published velocity: [ 2.         -0.00202026  0.0272228 ]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.9492314e-03  2.6452674e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.5944903e-03  2.6890106e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.4745564e-03  2.6726643e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.4069463e-03  2.6573226e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.3667441e-03  2.6570681e-02]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.3464396e-03  2.6211036e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.3195542e-03  2.6364125e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.3065775e-03  2.6343366e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.3157151e-03  2.6233600e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.3265278e-03  2.6225638e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.3576527e-03  2.6090460e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.4364204e-03  2.6291057e-02]
+[RUN_COMPETITION] Published velocity: [ 1.9999999e+00 -1.5346380e-03  2.6167728e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0000000e+00 -1.7323074e-03  2.6360821e-02]
+[RUN_COMPETITION] Published velocity: [ 2.0287330e+00 -2.0034355e-03  2.6924653e-02]
+[RUN_COMPETITION] Published velocity: [ 2.1562977  -0.00217967  0.02939586]
+[RUN_COMPETITION] Published velocity: [ 2.4176376  -0.00265486  0.03287213]
+[RUN_COMPETITION] Published velocity: [ 2.753556   -0.00320778  0.03721235]
+[RUN_COMPETITION] Published velocity: [ 3.0282042  -0.00360177  0.04051074]
+[RUN_COMPETITION] Published velocity: [ 3.307833  -0.0038405  0.0439037]
+[RUN_COMPETITION] Published velocity: [ 3.5936065  -0.00370023  0.04861876]
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+[INFO] [1777713930.687906, 1777713913.200097]: [EVAL] Position: x=-0.00, y=-0.00, z=0.85, goal=20m
+[INFO] [1777713931.303194, 1777713913.400096]: [EVAL] Position: x=-0.00, y=-0.00, z=1.08, goal=20m
+[INFO] [1777713931.949757, 1777713913.600096]: [EVAL] Position: x=-0.00, y=-0.00, z=1.33, goal=20m
+[INFO] [1777713932.584625, 1777713913.790097]: [EVAL] Position: x=-0.00, y=-0.00, z=1.57, goal=20m
+[INFO] [1777713933.163685, 1777713913.990097]: [EVAL] Position: x=-0.00, y=-0.00, z=1.84, goal=20m
+[INFO] [1777713933.751242, 1777713914.200097]: [EVAL] Position: x=-0.00, y=-0.00, z=2.11, goal=20m
+[INFO] [1777713934.343554, 1777713914.400096]: [EVAL] Position: x=-0.00, y=-0.00, z=2.36, goal=20m
+[INFO] [1777713934.950288, 1777713914.600096]: [EVAL] Position: x=-0.00, y=-0.00, z=2.59, goal=20m
+[INFO] [1777713935.512425, 1777713914.790097]: [EVAL] Position: x=-0.00, y=-0.00, z=2.79, goal=20m
+[INFO] [1777713936.099762, 1777713914.990097]: [EVAL] Position: x=-0.00, y=-0.00, z=2.99, goal=20m
+[INFO] [1777713936.732137, 1777713915.200097]: [EVAL] Position: x=-0.00, y=-0.00, z=3.14, goal=20m
+[INFO] [1777713937.298801, 1777713915.400096]: [EVAL] Position: x=-0.00, y=-0.00, z=3.27, goal=20m
+[INFO] [1777713937.859161, 1777713915.600096]: [EVAL] Position: x=-0.00, y=-0.00, z=3.36, goal=20m
+[INFO] [1777713938.420571, 1777713915.800097]: [EVAL] Position: x=-0.00, y=-0.00, z=3.42, goal=20m
+[INFO] [1777713938.984122, 1777713916.000097]: [EVAL] Position: x=0.00, y=-0.00, z=3.46, goal=20m
+[INFO] [1777713939.581430, 1777713916.200097]: [EVAL] Position: x=-0.00, y=-0.00, z=3.48, goal=20m
+[INFO] [1777713940.246638, 1777713916.410096]: [EVAL] Position: x=0.00, y=-0.00, z=3.49, goal=20m
+[INFO] [1777713940.819857, 1777713916.610096]: [EVAL] Position: x=-0.00, y=-0.00, z=3.50, goal=20m
+[INFO] [1777713941.376580, 1777713916.800097]: [EVAL] Position: x=-0.00, y=-0.00, z=3.50, goal=20m
+[INFO] [1777713941.943527, 1777713917.000097]: [EVAL] Position: x=0.00, y=-0.00, z=3.50, goal=20m
+[INFO] [1777713942.574775, 1777713917.200097]: [EVAL] Position: x=0.06, y=-0.00, z=3.51, goal=20m
+[INFO] [1777713943.221103, 1777713917.410096]: [EVAL] Position: x=0.30, y=-0.00, z=3.51, goal=20m
+[INFO] [1777713943.561285, 1777713917.530097]: [EVAL] Drone started moving! Position: x=0.51, y=-0.00, z=3.52
+[INFO] [1777713943.786919, 1777713917.610096]: [EVAL] Position: x=0.69, y=-0.00, z=3.52, goal=20m
+[INFO] [1777713944.342934, 1777713917.800097]: [EVAL] Position: x=1.18, y=-0.00, z=3.52, goal=20m
+[INFO] [1777713944.902675, 1777713918.000097]: [EVAL] Position: x=1.77, y=-0.00, z=3.53, goal=20m
+[INFO] [1777713945.535117, 1777713918.210097]: [EVAL] Position: x=2.57, y=-0.00, z=3.54, goal=20m
+[INFO] [1777713946.081842, 1777713918.420096]: [EVAL] Position: x=3.57, y=-0.00, z=3.56, goal=20m
+[INFO] [1777713946.646359, 1777713918.630096]: [EVAL] Position: x=4.72, y=-0.00, z=3.57, goal=20m
+[INFO] [1777713947.196056, 1777713918.820096]: [EVAL] Position: x=5.83, y=-0.01, z=3.58, goal=20m
+Crashed
+[INFO] [1777713947.769102, 1777713919.020097]: [EVAL] Position: x=7.05, y=-0.01, z=3.60, goal=20m
+[INFO] [1777713948.305463, 1777713919.220097]: [EVAL] Position: x=8.34, y=-0.01, z=3.61, goal=20m
+[INFO] [1777713948.905109, 1777713919.430096]: [EVAL] Position: x=9.73, y=-0.01, z=3.63, goal=20m
+[INFO] [1777713949.416740, 1777713919.630096]: [EVAL] Position: x=11.02, y=-0.01, z=3.64, goal=20m
+[INFO] [1777713949.914932, 1777713919.820096]: [EVAL] Position: x=12.16, y=-0.01, z=3.65, goal=20m
+[INFO] [1777713950.461124, 1777713920.020097]: [EVAL] Position: x=13.23, y=-0.01, z=3.67, goal=20m
+[INFO] [1777713950.960813, 1777713920.220097]: [EVAL] Position: x=14.16, y=-0.02, z=3.67, goal=20m
+[INFO] [1777713951.458956, 1777713920.430096]: [EVAL] Position: x=15.06, y=-0.02, z=3.68, goal=20m
+[INFO] [1777713951.946995, 1777713920.630096]: [EVAL] Position: x=15.90, y=-0.02, z=3.69, goal=20m
+[INFO] [1777713952.422323, 1777713920.820096]: [EVAL] Position: x=16.71, y=-0.02, z=3.70, goal=20m
+[INFO] [1777713952.929592, 1777713921.030097]: [EVAL] Position: x=17.64, y=-0.02, z=3.72, goal=20m
+[INFO] [1777713953.417120, 1777713921.230097]: [EVAL] Position: x=18.59, y=-0.03, z=3.73, goal=20m
+[INFO] [1777713953.929229, 1777713921.440096]: [EVAL] Position: x=19.65, y=-0.03, z=3.75, goal=20m
+[INFO] [1777713954.099487, 1777713921.510097]: [EVAL] Goal reached! Final position: x=20.00m (goal was 20m)
+You reached the goal in 3.980 seconds
+Your intermediate times are:
+    10: 1.950s 
+    20: 3.980s 
+You hit 1 obstacles
+Here is a plot of your trajectory in the xy plane
+┌────────────────────────────────────────────────────────────┐
+│[34m▜[0m[34m▄[0m[34m▖[0m▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔│ -0.00
+││ [34m▀[0m[34m▀[0m[34m▀[0m[34m▚[0m[34m▄[0m[34m▄[0m[34m▖[0m                                                   │
+││       [34m▀[0m[34m▀[0m[34m▀[0m[34m▜[0m[34m▄[0m[34m▄[0m[34m▄[0m[34m▖[0m                                            │
+││              [34m▀[0m[34m▀[0m[34m▀[0m[34m▄[0m[34m▄[0m[34m▖[0m                                       │
+││                   [34m▝[0m[34m▀[0m[34m▜[0m[34m▄[0m[34m▄[0m                                   │
+││                        [34m▀[0m[34m▀[0m[34m▙[0m[34m▄[0m[34m▖[0m                              │
+││                            [34m▝[0m[34m▀[0m[34m▜[0m[34m▄[0m[34m▄[0m                          │ -0.01
+││                                [34m▝[0m[34m▀[0m[34m▚[0m[34m▄[0m                       │
+││                                   [34m▝[0m[34m▀[0m[34m▙[0m[34m▖[0m                    │
+││                                      [34m▀[0m[34m▚[0m[34m▖[0m                  │
+││                                        [34m▀[0m[34m▙[0m[34m▖[0m                │
+││                                          [34m▀[0m[34m▄[0m               │
+││                                           [34m▝[0m[34m▜[0m[34m▄[0m             │ -0.02
+││                                             [34m▝[0m[34m▜[0m[34m▄[0m           │
+││                                                [34m▀[0m[34m▙[0m[34m▄[0m        │
+││                                                  [34m▝[0m[34m▀[0m[34m▚[0m[34m▄[0m[34m▄[0m    │
+││                                                      [34m▝[0m[34m▀[0m[34m▀[0m[34m▙[0m[34m▄[0m│
+└────────────────────────────────────────────────────────────┘
+ 0                           10                            20
+Here is a plot of your average velocity per 1m x-segment
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+┌────────────────────────────────────────────────────────────┐
+│                      [34m▘[0m  [34m▘[0m     [34m▝[0m                            │
+│                                                            │
+│                            [34m▘[0m                               │
+│            [34m▗[0m  [34m▗[0m   [34m▖[0m              [34m▗[0m                         │ 6
+│                                                            │
+│                                     [34m▝[0m                      │
+│                                                           [34m▝[0m│
+│[34m▖[0m        [34m▗[0m                                                  │
+│                                        [34m▗[0m               [34m▗[0m   │
+│                                                     [34m▖[0m      │
+│                                            [34m▖[0m     [34m▖[0m         │
+│      [34m▝[0m                                        [34m▘[0m            │
+│                                                            │ 4
+│                                                            │
+│                                                            │
+│                                                            │
+│   [34m▖[0m                                                        │
+└────────────────────────────────────────────────────────────┘
+             5              10              15             20
+Here is a plot of the distance to the closest obstacles
+┌────────────────────────────────────────────────────────────┐
+│          [34m▜[0m[34m▄[0m                   │                            │
+│     [34m▗[0m[34m▄[0m[34m▄[0m[34m▟[0m[34m▀[0m[34m▘[0m[34m▝[0m[34m▜[0m[34m▄[0m[34m▖[0m                │                            │
+│[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m        [34m▀[0m[34m▀[0m[34m▙[0m[34m▄[0m[34m▄[0m[34m▄[0m[34m▖[0m          │[34m▄[0m[34m▟[0m                          │
+│                    [34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▀[0m[34m▘[0m[34m▐[0m[34m▖[0m [34m▖[0m          [34m▗[0m[34m▌[0m           │
+│                               │  [34m▀[0m[34m▄[0m[34m▜[0m                       │ 2
+│                               │   [34m▝[0m[34m▀[0m[34m▖[0m                      │
+│                               │     [34m▙[0m               [34m▖[0m      │
+│                               │     [34m▐[0m         [34m▖[0m[34m▄[0m[34m▙[0m   [34m▐[0m[34m▖[0m     │
+│                               │      [34m▌[0m     [34m▝[0m[34m▙[0m[34m▟[0m[34m▘[0m [34m▐[0m[34m▖[0m   [34m▜[0m[34m▖[0m    │
+│                               │      [34m▜[0m     [34m▟[0m     [34m▜[0m[34m▄[0m[34m▄[0m[34m▖[0m   [34m▖[0m [34m▗[0m│
+│                               │      [34m▝[0m[34m▙[0m[34m▛[0m   [34m▌[0m            [34m▜[0m[34m▄[0m[34m▛[0m│
+│                               │           [34m▗[0m[34m▘[0m               │
+│                               │           [34m▐[0m           [34m▄[0m[34m▟[0m[34m▘[0m  │
+│                               │           [34m▛[0m                │
+│                               │          [34m▗[0m[34m▌[0m                │
+│───────────────────────────────│────────[34m▐[0m[34m▖[0m[34m▐[0m─────────────────│ 0
+│                               │         [34m▙[0m[34m▌[0m                 │
+└────────────────────────────────────────────────────────────┘
+  -4            -2              0             2
+[RUN_COMPETITION] compute_command_vision_based took 0.010019302368164062 seconds
+[RUN_COMPETITION] Published velocity: [ 3.8882513e+00 -3.3219231e-03  5.3563505e-02]
+[RUN_COMPETITION] Published velocity: [ 4.1954346e+00 -2.8689569e-03  5.8329493e-02]
+[RUN_COMPETITION] Published velocity: [ 4.5187221e+00 -2.5858225e-03  6.2383354e-02]
+[RUN_COMPETITION] Published velocity: [ 4.8607154e+00 -2.4876825e-03  6.7343764e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995155e+00 -2.5383523e-03  6.9536835e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995036e+00 -2.7136423e-03  7.0412934e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995227e+00 -3.0831678e-03  6.9044285e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995279e+00 -3.3150834e-03  6.8616055e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995279e+00 -3.4058818e-03  6.8638958e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995112e+00 -3.2955103e-03  6.9814660e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9994888e+00 -3.1363824e-03  7.1440980e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9994826e+00 -3.1343112e-03  7.1871668e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995227e+00 -3.4416709e-03  6.9006316e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995465e+00 -3.9697271e-03  6.7202762e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995432e+00 -4.2833053e-03  6.7457005e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995499e+00 -4.9582166e-03  6.6890597e-02]
+[RUN_COMPETITION] Published velocity: [ 4.9995527  -0.00549029  0.06663676]
+[RUN_COMPETITION] Published velocity: [ 4.999567   -0.00585662  0.06553422]
+[RUN_COMPETITION] Published velocity: [ 4.999543   -0.00590031  0.06735482]
+[RUN_COMPETITION] Published velocity: [ 4.9995813  -0.00617176  0.06443054]
+[RUN_COMPETITION] Published velocity: [ 4.999564   -0.00602055  0.06570619]
+[RUN_COMPETITION] Published velocity: [ 4.999584   -0.00608131  0.06420058]
+[RUN_COMPETITION] Published velocity: [ 4.999586   -0.00603011  0.06405749]
+[RUN_COMPETITION] Published velocity: [ 4.9995947  -0.00587386  0.06339069]
+[RUN_COMPETITION] Published velocity: [ 4.999569   -0.00571195  0.06540047]
+[RUN_COMPETITION] Published velocity: [ 4.9995522  -0.00565967  0.06666938]
+[RUN_COMPETITION] Published velocity: [ 4.9995556  -0.00570302  0.06640796]
+[RUN_COMPETITION] Published velocity: [ 4.999561   -0.00577387  0.06601451]
+[RUN_COMPETITION] Published velocity: [ 4.9995766  -0.00586534  0.06482609]
+[RUN_COMPETITION] Published velocity: [ 4.9995847  -0.00593556  0.06419212]
+[RUN_COMPETITION] compute_command_vision_based took 0.007592678070068359 seconds
+[RUN_COMPETITION] Published velocity: [ 4.999561   -0.00578065  0.06603087]
+[RUN_COMPETITION] Published velocity: [ 4.99951    -0.00552961  0.06977221]
+[RUN_COMPETITION] Published velocity: [ 4.9995165  -0.0057015   0.06926893]
+[RUN_COMPETITION] Published velocity: [ 4.9995546  -0.00611312  0.0664303 ]
+[RUN_COMPETITION] Published velocity: [ 4.999583   -0.00666456  0.06427093]
+[RUN_COMPETITION] Published velocity: [ 4.999576   -0.00693982  0.06471926]
+[RUN_COMPETITION] Published velocity: [ 4.9995956  -0.00734472  0.06318207]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 4.999612   -0.00774033  0.06180082]
+[RUN_COMPETITION] Published velocity: [ 4.9996033  -0.00796397  0.06248858]
+[RUN_COMPETITION] Published velocity: [ 4.9995975  -0.00806753  0.06289677]
+[RUN_COMPETITION] Published velocity: [ 4.9996166  -0.00850019  0.06133124]
+[RUN_COMPETITION] Published velocity: [ 4.9996076  -0.00861475  0.06206524]
+[RUN_COMPETITION] Published velocity: [ 4.999631   -0.00899858  0.06009529]
+[RUN_COMPETITION] Published velocity: [ 4.9996357  -0.00926974  0.05963125]
+[RUN_COMPETITION] Published velocity: [ 4.999644   -0.00964404  0.05887808]
+[RUN_COMPETITION] Published velocity: [ 4.9996624  -0.00989098  0.05724015]
+[RUN_COMPETITION] Published velocity: [ 4.9996815  -0.01024966  0.0554447 ]
+[RUN_COMPETITION] Published velocity: [ 4.99971    -0.01065907  0.05280959]
+[RUN_COMPETITION] Published velocity: [ 4.999732   -0.01095222  0.05058543]
+[RUN_COMPETITION] Published velocity: [ 4.9997373  -0.01117562  0.05001005]
+[RUN_COMPETITION] Published velocity: [ 4.99973    -0.01111182  0.05072374]
+[RUN_COMPETITION] Published velocity: [ 4.9997244  -0.01105246  0.05136298]
+[RUN_COMPETITION] Published velocity: [ 4.9997077  -0.01085906  0.0529807 ]
+[RUN_COMPETITION] Published velocity: [ 4.999715   -0.01084054  0.05228418]
+[RUN_COMPETITION] Published velocity: [ 4.999687   -0.01026739  0.05492874]
+[RUN_COMPETITION] Published velocity: [ 4.9996815  -0.00976574  0.05555126]
+[RUN_COMPETITION] Published velocity: [ 4.999661   -0.00929966  0.05747366]
+[RUN_COMPETITION] Published velocity: [ 4.999645   -0.00884067  0.05889544]
+[RUN_COMPETITION] Published velocity: [ 4.999655   -0.00859247  0.05815955]
+[RUN_COMPETITION] Published velocity: [ 4.999636   -0.00819296  0.05975235]
+[RUN_COMPETITION] compute_command_vision_based took 0.01245880126953125 seconds
+[RUN_COMPETITION] Published velocity: [ 4.999638   -0.00804471  0.05962955]
+[RUN_COMPETITION] Published velocity: [ 4.999634   -0.00791944  0.05998594]
+[RUN_COMPETITION] Published velocity: [ 4.9996347  -0.00786609  0.05990442]
+[RUN_COMPETITION] Published velocity: [ 4.9996347  -0.00783347  0.0599247 ]
+[RUN_COMPETITION] Published velocity: [ 4.9996386  -0.00785075  0.05959392]
+[RUN_COMPETITION] Published velocity: [ 4.9996405  -0.00774528  0.05947376]
+[RUN_COMPETITION] Published velocity: [ 4.999633   -0.00750187  0.06014127]
+[RUN_COMPETITION] Published velocity: [ 4.9996033  -0.00703483  0.06258765]
+[RUN_COMPETITION] Published velocity: [ 4.9995604  -0.00667056  0.06600222]
+[RUN_COMPETITION] Published velocity: [ 4.9995794  -0.00664797  0.06451283]
+[RUN_COMPETITION] Published velocity: [ 4.9995604  -0.00637825  0.06597235]
+[RUN_COMPETITION] Published velocity: [ 4.9995584  -0.00628348  0.06615935]
+[RUN_COMPETITION] Published velocity: [ 4.999562   -0.0061804   0.06589837]
+[RUN_COMPETITION] Published velocity: [ 4.9995623  -0.00604177  0.06590299]
+[RUN_COMPETITION] Published velocity: [ 4.999552   -0.00583263  0.06667747]
+[RUN_COMPETITION] Published velocity: [ 4.9995728  -0.00581289  0.06509838]
+[RUN_COMPETITION] Published velocity: [ 4.999565   -0.00570825  0.06569222]
+[RUN_COMPETITION] Published velocity: [ 4.999552   -0.00548218  0.0667264 ]
+[RUN_COMPETITION] Published velocity: [ 4.9995384  -0.00533367  0.06770659]
+[RUN_COMPETITION] Published velocity: [ 4.999544   -0.00531923  0.06726022]
+[RUN_COMPETITION] Published velocity: [ 4.9995604  -0.00537083  0.06609337]
+[RUN_COMPETITION] Published velocity: [ 4.9995484  -0.00538742  0.06695664]
+[RUN_COMPETITION] Published velocity: [ 4.9995575  -0.00562606  0.06630139]
+[RUN_COMPETITION] Published velocity: [ 4.99957    -0.00585855  0.0653372 ]
+[RUN_COMPETITION] Published velocity: [ 4.999566   -0.00608113  0.06559679]
+[RUN_COMPETITION] Published velocity: [ 4.999568   -0.006199    0.06541658]
+[RUN_COMPETITION] Published velocity: [ 4.9995747  -0.0064252   0.06490985]
+[RUN_COMPETITION] Published velocity: [ 4.9995737  -0.00657229  0.06495437]
+[RUN_COMPETITION] Published velocity: [ 4.9995728  -0.00665082  0.06505648]
+[RUN_COMPETITION] Published velocity: [ 4.999599   -0.00688872  0.06292707]
+[RUN_COMPETITION] compute_command_vision_based took 0.007104396820068359 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9995985  -0.00696228  0.06295834]
+[RUN_COMPETITION] Published velocity: [ 4.99961    -0.00709898  0.06206656]
+[RUN_COMPETITION] Published velocity: [ 4.999607   -0.00714141  0.06225487]
+[RUN_COMPETITION] Published velocity: [ 4.9995995  -0.00711877  0.06289769]
+[RUN_COMPETITION] Published velocity: [ 4.9996147  -0.00731566  0.06160656]
+[RUN_COMPETITION] Published velocity: [ 4.999594   -0.00725044  0.06325991]
+[RUN_COMPETITION] Published velocity: [ 4.999541   -0.00693936  0.06738025]
+[RUN_COMPETITION] Start publishing commands!
+[RUN_COMPETITION] Published velocity: [ 4.9995346  -0.00694063  0.06784012]
+[RUN_COMPETITION] Published velocity: [ 4.9995995  -0.00743533  0.06283236]
+[RUN_COMPETITION] Published velocity: [ 4.9996166  -0.00755443  0.06149632]
+publishing and latching message for 3.0 seconds
+run_competition.py:163: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(model_path, map_location=self.device)
+[RUN_COMPETITION] Published velocity: [ 4.9996     -0.00743655  0.06282292]
+[RUN_COMPETITION] Published velocity: [ 4.9996147  -0.00754063  0.06164019]
+[RUN_COMPETITION] Published velocity: [ 4.999606   -0.00750947  0.06232084]
+[RUN_COMPETITION] Published velocity: [ 4.9996037  -0.00749747  0.06247542]
+[RUN_COMPETITION] Published velocity: [ 4.999599   -0.00747819  0.06286571]
+[RUN_COMPETITION] Published velocity: [ 4.999585   -0.00744101  0.06397322]
+[RUN_COMPETITION] Published velocity: [ 4.9995832  -0.00741002  0.06410195]
+[RUN_COMPETITION] Published velocity: [ 4.999572   -0.00732424  0.06501467]
+[RUN_COMPETITION] Published velocity: [ 4.9995956  -0.00744387  0.06317408]
+[RUN_COMPETITION] Published velocity: [ 4.99959    -0.00744291  0.06361756]
+[RUN_COMPETITION] Published velocity: [ 4.9995937  -0.00736603  0.06331588]
+[RUN_COMPETITION] Published velocity: [ 4.999605   -0.0074217   0.06239264]
+[RUN_COMPETITION] Published velocity: [ 4.9996066  -0.00739766  0.06228437]
+[RUN_COMPETITION] Published velocity: [ 4.9996133  -0.00744377  0.06173234]
+[RUN_COMPETITION] Published velocity: [ 4.999618   -0.00743623  0.06133385]
+[RUN_COMPETITION] Published velocity: [ 4.9996114  -0.00737863  0.06191968]
+[RUN_COMPETITION] Published velocity: [ 4.999587   -0.00718708  0.06384899]
+[RUN_COMPETITION] Published velocity: [ 4.9995856  -0.00717537  0.06397522]
+[RUN_COMPETITION] Published velocity: [ 4.999592   -0.00722595  0.0634819 ]
+[RUN_COMPETITION] Published velocity: [ 4.9995775  -0.00714268  0.0645673 ]
+[RUN_COMPETITION] compute_command_vision_based took 0.012810945510864258 seconds
+[RUN_COMPETITION] Published velocity: [ 4.9995637  -0.00703106  0.06565647]
+[RUN_COMPETITION] Published velocity: [ 4.999576   -0.00714397  0.0646898 ]
+[RUN_COMPETITION] Published velocity: [ 4.999588   -0.0072373   0.06376819]
+[RUN_COMPETITION] Published velocity: [ 4.9995785  -0.00713993  0.06455883]
+[RUN_COMPETITION] Published velocity: [ 4.9995737  -0.00710319  0.06491593]
+[RUN_COMPETITION] Published velocity: [ 4.9995766  -0.00712813  0.06467482]
+[RUN_COMPETITION] Published velocity: [ 4.999574   -0.00712551  0.06487694]
+[RUN_COMPETITION] Published velocity: [ 4.9995894  -0.00720651  0.06367545]
+[RUN_COMPETITION] Published velocity: [ 4.999591   -0.00723215  0.06351962]
+[RUN_COMPETITION] Published velocity: [ 4.999605   -0.00736673  0.0623959 ]
+[RUN_COMPETITION] Published velocity: [ 4.999585   -0.00716138  0.06398446]
+[RUN_COMPETITION] Published velocity: [ 4.9996     -0.00726221  0.06283347]
+[RUN_COMPETITION] Published velocity: [ 4.9995775  -0.00707552  0.06461056]
+[RUN_COMPETITION] Published velocity: [ 4.999572   -0.0070257   0.06507266]
+[RUN_COMPETITION] Published velocity: [ 4.999585   -0.00714033  0.06400415]
+[RUN_COMPETITION] Published velocity: [ 4.9996176  -0.00738065  0.06142915]
+[RUN_COMPETITION] Published velocity: [ 4.9995704  -0.00702889  0.06517842]
+[RUN_COMPETITION] Published velocity: [ 4.9995832  -0.00712198  0.06414094]
+[RUN_COMPETITION] Published velocity: [ 4.9995933  -0.00717963  0.0633784 ]
+[RUN_COMPETITION] Published velocity: [ 4.9996257  -0.00740069  0.06070307]
+[RUN_COMPETITION] Published velocity: [ 4.999624   -0.00733416  0.06090615]
+[RUN_COMPETITION] Published velocity: [ 4.9995966  -0.00714059  0.06311036]
+[RUN_COMPETITION] Published velocity: [ 4.999574   -0.00696461  0.06489401]
+[RUN_COMPETITION] Published velocity: [ 4.999581   -0.00702355  0.064376  ]
+[RUN_COMPETITION] Published velocity: [ 4.9996004  -0.00719189  0.0627683 ]
+[RUN_COMPETITION] Published velocity: [ 4.9995966  -0.00709637  0.06309143]
+[RUN_COMPETITION] Published velocity: [ 4.9996     -0.00719171  0.06281339]
+[RUN_COMPETITION] Published velocity: [ 4.9995956  -0.00717486  0.06316569]
+[RUN_COMPETITION] Published velocity: [ 4.9995894  -0.00715376  0.06366953]
+[RUN_COMPETITION] Published velocity: [ 4.9995794  -0.00710792  0.06448203]
+[RUN_COMPETITION] compute_command_vision_based took 0.007142782211303711 seconds
+[RUN_COMPETITION] Published velocity: [ 4.999572   -0.00704472  0.06503386]
+[RUN_COMPETITION] Published velocity: [ 4.999572   -0.00703141  0.06502568]
+[RUN_COMPETITION] Published velocity: [ 4.9995823  -0.00709516  0.06422551]
+[RUN_COMPETITION] Published velocity: [ 4.999582   -0.00710173  0.06425983]
+[RUN_COMPETITION] Published velocity: [ 4.999601   -0.00719827  0.06276741]
+[RUN_COMPETITION] Published velocity: [ 4.999591   -0.0071789   0.06352024]
+[RUN_COMPETITION] Published velocity: [ 4.999589   -0.00715426  0.06373309]
+[RUN_COMPETITION] Published velocity: [ 4.9995933  -0.00720646  0.06335817]
+[RUN_COMPETITION] Published velocity: [ 4.9996095  -0.00730224  0.06207775]
+[RUN_COMPETITION] Published velocity: [ 4.9996176  -0.00733776  0.06145357]
+[RUN_COMPETITION] Published velocity: [ 4.9996066  -0.00725968  0.06227637]
+[ROS Bridge]   Deactivated!

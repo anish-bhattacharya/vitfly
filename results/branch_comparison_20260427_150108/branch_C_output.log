@@ -1,0 +1,337 @@
+vision
+
+[LAUNCH SCRIPT] Vision based!
+
+31473
+QStandardPaths: wrong ownership on runtime directory /mnt/wslg/runtime-dir, 1000 instead of 0
+[33m[WARN] [1777273664.482941829]: Pilot Config:        simple_sim_pilot.yaml[0m
+[33m[WARN] [1777273664.483747544]: Agi Param Directory: /root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params[0m
+[33m[WARN] [1777273664.483763538]: ROS Param Directory: /root/catkin_ws/src/vitfly/envsim/parameters[0m
+[0m[INFO] [1777273664.483772876]: Loading Pilot Params from simple_sim_pilot.yaml in /root/catkin_ws/src/vitfly/envsim/parameters[0m
+Loading Pilot parameters from "/root/catkin_ws/src/vitfly/envsim/parameters/simple_sim_pilot.yaml"
+[33m[PilotParams]  Did not create inner controller ''![0m
+[33m[Pilot]        Did not create bridge 'ROS'.
+Using debug bridge, register externally![0m
+[0m[INFO] [1777273664.486531102]: Loaded pipeline:
+Estimator:
+Type: Feedthrough
+File: "/root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params/feedthrough.yaml"
+Sampler:
+Type: Time
+File: ""
+Outer Controller:
+Type: GEO
+File: "/root/catkin_ws/src/vitfly/dodgedrone_simulation/dodgelib/params/geo.yaml"
+Inner Controller:
+Type: 
+File: ""
+Bridge:
+Type: ROS
+File: ""
+[0m
+[Pilot]        Register external bridge: [ROS Bridge]   
+ which was not active and used.
+[33m[VisionEnv]    [loadParam] Scene ID: 2[0m
+[33m[VisionEnv]    [loadParam] Unity Render: 1[0m
+[VisionEnv]    Datagen: 1
+[VisionEnv]    Rollout: 0
+[VisionEnv]    Move Obstacle Trigger: 1
+[VisionEnv]    Configuring dynamic objects from: /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/dynamic_obstacles.yaml
+[VisionEnv]    Configuring static objects from: /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/static_obstacles.csv
+[33m[VisionEnv]    Camera has been added. Skipping the camera configuration.[0m
+[UnityBridge]  Initializing ZMQ connection!
+[UnityBridge]  Initializing ZMQ connections done!
+[VisionEnv]    Flightmare Bridge created.
+[33m[UnityBridge]  Scene ID is set to 2.[0m
+[UnityBridge]  Trying to Connect Unity.
+[...................................................................................................[UnityBridge]  Flightmare Unity is connected.
+[0m[INFO] [1777273679.409723201, 1777273673.989755154]: OFF command received![0m
+[ROS Bridge]   Deactivated!
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777273683.416654128, 1777273675.359755039]: Resetting simulator![0m
+[VisionEnv]    Calling moveDynamicObstacles
+[VisionEnv]    Moving Static (faked dynamic) Obstacles
+[VisionEnv]    Number of dynamic objects found: 132
+[VisionEnv]    /root/catkin_ws/src/vitfly/flightmare/flightpy/configs/vision/spheres_medium/environment_0/static_kr_0.csv
+[33m[VisionEnv]    [readTrainingObs] Configuration file  does not exists.[0m
+[33m[VisionEnv]    [changeObsLoc] Function not moving obstacles.[0m
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777273687.323812236, 1777273676.709755182]: Computing active: true![0m
+[ROS Bridge]   Deactivated!
+[ROS Bridge]   Activated!
+publishing and latching message for 3.0 seconds
+[0m[INFO] [1777273691.436367303, 1777273678.149755001]: START command received![0m
+[Pilot]        Z-position smaller than takeoff height, taking off!
+[Pipeline]     1 references set:
+[Pipeline]     Minimum Snap Trajectory         | 15:07:58.678 --> 5.83s --> 15:08:03.683 |
+publishing and latching message for 3.0 seconds
+rollout_1
+/root/catkin_ws/src/vitfly-mambatest
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+run_competition.py:163: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(model_path, map_location=self.device)
+[RUN_COMPETITION] Initializing agile_pilot_node...
+
+[RUN_COMPETITION] Desired velocity = 5.0
+
+[RUN_COMPETITION] Model loading from /root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_C/best_model.pth ...
+[RUN_COMPETITION] Branch C â€” CNNMamba3Net loaded (ssm_d_state=16)
+[RUN_COMPETITION] Removed '_orig_mod.' prefix from compiled model weights
+Traceback (most recent call last):
+  File "run_competition.py", line 624, in <module>
+    agile_pilot_node = AgilePilotNode(vision_based=args.vision_based, model_type=args.model_type, model_path=args.model_path, desVel=args.des_vel, keyboard=args.keyboard)
+  File "run_competition.py", line 171, in __init__
+    self.model.load_state_dict(state_dict)
+  File "/root/miniconda3/envs/ros_py38/lib/python3.8/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for CNNMamba3Net:
+	Unexpected key(s) in state_dict: "ssm_head.ssm_layers.1.A_log", "ssm_head.ssm_layers.1.D", "ssm_head.ssm_layers.1.in_proj.weight", "ssm_head.ssm_layers.1.in_proj.bias", "ssm_head.ssm_layers.1.x_proj.weight", "ssm_head.ssm_layers.1.dt_proj.weight", "ssm_head.ssm_layers.1.dt_proj.bias", "ssm_head.ssm_layers.1.out_proj.weight", "ssm_head.ssm_layers.1.out_proj.bias", "ssm_head.ssm_layers.1.mlp.0.weight", "ssm_head.ssm_layers.1.mlp.0.bias", "ssm_head.ssm_layers.1.mlp.3.weight", "ssm_head.ssm_layers.1.mlp.3.bias", "ssm_head.ssm_layers.1.norm1.weight", "ssm_head.ssm_layers.1.norm1.bias", "ssm_head.ssm_layers.1.norm2.weight", "ssm_head.ssm_layers.1.norm2.bias". 
+	size mismatch for ssm_head.input_proj.weight: copying a param with shape torch.Size([256, 263]) from checkpoint, the shape in current model is torch.Size([128, 263]).
+	size mismatch for ssm_head.input_proj.bias: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.D: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.in_proj.weight: copying a param with shape torch.Size([512, 256]) from checkpoint, the shape in current model is torch.Size([256, 128]).
+	size mismatch for ssm_head.ssm_layers.0.in_proj.bias: copying a param with shape torch.Size([512]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for ssm_head.ssm_layers.0.x_proj.weight: copying a param with shape torch.Size([16, 256]) from checkpoint, the shape in current model is torch.Size([16, 128]).
+	size mismatch for ssm_head.ssm_layers.0.dt_proj.weight: copying a param with shape torch.Size([256, 256]) from checkpoint, the shape in current model is torch.Size([128, 128]).
+	size mismatch for ssm_head.ssm_layers.0.dt_proj.bias: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.out_proj.weight: copying a param with shape torch.Size([256, 256]) from checkpoint, the shape in current model is torch.Size([128, 128]).
+	size mismatch for ssm_head.ssm_layers.0.out_proj.bias: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.mlp.0.weight: copying a param with shape torch.Size([1024, 256]) from checkpoint, the shape in current model is torch.Size([512, 128]).
+	size mismatch for ssm_head.ssm_layers.0.mlp.0.bias: copying a param with shape torch.Size([1024]) from checkpoint, the shape in current model is torch.Size([512]).
+	size mismatch for ssm_head.ssm_layers.0.mlp.3.weight: copying a param with shape torch.Size([256, 1024]) from checkpoint, the shape in current model is torch.Size([128, 512]).
+	size mismatch for ssm_head.ssm_layers.0.mlp.3.bias: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.norm1.weight: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.norm1.bias: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.norm2.weight: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.ssm_layers.0.norm2.bias: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.out_norm.weight: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for ssm_head.out_norm.bias: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+	size mismatch for fc_out.weight_orig: copying a param with shape torch.Size([3, 256]) from checkpoint, the shape in current model is torch.Size([3, 128]).
+	size mismatch for fc_out.weight_v: copying a param with shape torch.Size([256]) from checkpoint, the shape in current model is torch.Size([128]).
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+[Pipeline]     2 references set:
+[Pipeline]     Minimum Snap Trajectory         | 15:07:58.678 --> 5.83s --> 15:08:03.683 |
+[Pipeline]     Hover Reference                 | 15:08:03.683 --> infs --> inf |
+[Pipeline]     Removing old reference: Minimum Snap Trajectory
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+[ROS Bridge]   Deactivated!
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+
+[LAUNCH_EVALUATION] Sending start navigation command
+
+publishing and latching message for 3.0 seconds
+[31m[kingfisher/dodgeros_pilot-2] escalating to SIGTERM[0m
+... logging to /root/.ros/log/c991e21c-4207-11f1-b665-c403a85371c7/roslaunch-1917Redbanner-31473.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/root/catkin_ws/src/vitfly/envsim/launch/visionenv_sim.launch
+[1mstarted roslaunch server http://192.168.195.250:44791/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /kingfisher/dodgeros_pilot/agi_param_dir: /root/catkin_ws/s...
+ * /kingfisher/dodgeros_pilot/camera_config: /root/catkin_ws/s...
+ * /kingfisher/dodgeros_pilot/low_level_controller: Simple
+ * /kingfisher/dodgeros_pilot/pilot_config: simple_sim_pilot....
+ * /kingfisher/dodgeros_pilot/real_time_factor: 1.0
+ * /kingfisher/dodgeros_pilot/render: True
+ * /kingfisher/dodgeros_pilot/ros_param_dir: /root/catkin_ws/s...
+ * /kingfisher/dodgeros_pilot/use_bem_propeller_model: False
+ * /rosdistro: noetic
+ * /rosversion: 1.17.4
+ * /use_sim_time: True
+
+NODES
+  /
+    flight_render (flightrender/vitfly-unity.x86_64)
+  /kingfisher/
+    dodgeros_pilot (envsim/visionsim_node)
+    viz_face (rviz/rviz)
+
+auto-starting new master
+[1mprocess[master]: started with pid [31501][0m
+[1mROS_MASTER_URI=http://192.168.195.250:11311[0m
+]2;/root/catkin_ws/src/vitfly/envsim/launch/visionenv_sim.launch http://192.168.195.250:11311
+[1msetting /run_id to c991e21c-4207-11f1-b665-c403a85371c7[0m
+[1mprocess[rosout-1]: started with pid [31530][0m
+started core service [/rosout]
+[1mprocess[kingfisher/dodgeros_pilot-2]: started with pid [31534][0m
+[1mprocess[kingfisher/viz_face-3]: started with pid [31535][0m
+[1mprocess[flight_render-4]: started with pid [31536][0m
+[1m[kingfisher/viz_face-3] process has finished cleanly
+log file: /root/.ros/log/c991e21c-4207-11f1-b665-c403a85371c7/kingfisher-viz_face-3*.log[0m
+[1m[flight_render-4] process has finished cleanly
+log file: /root/.ros/log/c991e21c-4207-11f1-b665-c403a85371c7/flight_render-4*.log[0m
+[kingfisher/dodgeros_pilot-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m
