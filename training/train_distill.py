@@ -481,8 +481,7 @@ def train_distill_epoch(
             # ── Teacher forward (frozen, no grad) ──
             with torch.no_grad():
                 hook.clear()
-                teacher([depth_f, vel_f, quat_f])
-                teacher_out = teacher([depth_f, vel_f, quat_f])[0]
+                teacher_out_tmp = teacher([depth_f, vel_f, quat_f])[0]
                 teacher_feat = hook.get_teacher_feat()
             
             # ── Student forward ──
@@ -490,15 +489,18 @@ def train_distill_epoch(
             student_out, _ = student([depth_f, vel_f, quat_f])
             student_feat = hook.get_student_feat()
             
-            # Reshape output back to (B, S, 3) for seq mode
+            # Reshape for seq mode
             if seq_len > 1:
                 student_out = student_out.reshape(B, S, -1)
+                teacher_out = teacher_out_tmp.reshape(B, S, -1)
+            else:
+                teacher_out = teacher_out_tmp
             
             # ── Compute distillation loss ──
             if seq_len > 1:
-                # seq mode: use last timestep for feature alignment
+                # seq mode: use last timestep for loss computation
                 student_out_last = student_out[:, -1, :]
-                teacher_out_last = teacher_out  # teacher is single-step
+                teacher_out_last = teacher_out[:, -1, :]
                 
                 # For seq mode, compute losses only on last timestep output
                 loss_dict = compute_distillation_loss(
@@ -604,6 +606,7 @@ def validate_distill(teacher, student, projector, loader, device, hook, seq_len=
             if seq_len > 1:
                 student_out, _ = student([depth_f, vel_f, quat_f])
                 student_out = student_out.reshape(B, S, -1)
+                teacher_out = teacher_out.reshape(B, S, -1)
                 target_f = target.reshape(B, S, -1)
                 # Use last timestep for single-frame metrics
                 student_last = student_out[:, -1, :]
@@ -618,7 +621,8 @@ def validate_distill(teacher, student, projector, loader, device, hook, seq_len=
             loss_gt = nn.functional.mse_loss(student_last, target_last)
             
             # ── Metric 2: Teacher agreement (distill gap) ──
-            loss_distill = nn.functional.mse_loss(student_last, teacher_out)
+            teacher_last = teacher_out[:, -1, :] if seq_len > 1 else teacher_out
+            loss_distill = nn.functional.mse_loss(student_last, teacher_last)
             
             # ── Metric 3: Feature alignment ──
             if student_feat is not None and teacher_feat is not None:
