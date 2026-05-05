@@ -1,0 +1,17 @@
+{
+  "branch": "E",
+  "epochs": 50,
+  "best_val_score": 0.019015577986548043,
+  "best_val_loss_gt": 0.01716221155655865,
+  "best_val_distill_gap": 0.003706732859978784,
+  "loss_weights": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "gamma": 1.0
+  },
+  "student_params": 2191603,
+  "first_epoch_loss": 0.18749670127311285,
+  "last_epoch_loss": 0.13017845875539408,
+  "teacher_checkpoint": "/root/vitfly/experiments/mamba_branches/optimized_training/branch_Bplus/distill_best_model.pth",
+  "init_from_bc": false
+}

@@ -1,7 +1,7 @@
 # Future Directions: Beyond Behavior Cloning
 
 A brainstorm based on literature review (May 2026).
-Revised with project constraints.
+Revised with 60m simulation results (May 2026).
 
 ## Hard Constraints
 
@@ -13,124 +13,149 @@ Revised with project constraints.
 
 Any proposed method must work within these constraints.
 
-## Feasibility Matrix
+## Feasibility Matrix (Updated)
 
 | # | Approach | Within Constraints? | Effort | Expected Gain | Status |
 |---|----------|-------------------|--------|---------------|--------|
-| A | Multi-step sequence prediction (`--sequence_length N`) | ✅ Yes | Low | Medium | ✅ **完成** |
-| B | Data augmentation (rotation, flip, noise, brightness) | ✅ Yes | Low | Medium | ⏳ 待做 |
-| C | Knowledge distillation (B → A/C/D/E/B+) | ✅ Yes | Low | High | ⏳ 待做 |
-| D | Utilize 62K skipped images via pseudo-labeling | ✅ Yes | Medium | High | ⏳ 待做 |
-| E | Hard example mining / sample reweighting | ✅ Yes | Low | Medium | ⏳ 待做 |
-| F | Ensemble inference (weighted voting) | ✅ Yes | Low | Low | ⏳ 待做 |
-| G | DAgger (online data collection) | ❌ Needs simulator interaction | High | High | ❌ 不可行 |
-| H | RL fine-tuning | ❌ Needs RL env + reward | Very High | Very High | ❌ 不可行 |
-| I | Curriculum terrain generation | ❌ Needs environment modification | Very High | High | ❌ 不可行 |
-| J | APC data augmentation | ❌ Needs online expert queries | Medium | High | ❌ 不可行 |
+| A | Multi-step sequence prediction | ✅ Yes | Low | Medium | 🟡 已在跑（MPS并行seq=4,8,16） |
+| B | Data augmentation | ✅ Yes | Low | Medium | ⏳ 待做 |
+| C | Knowledge distillation (ViT+LSTM → Mamba) | ✅ Yes | Low | High | ✅ **完成：B+/E (1 crash) > 教师 (2 crash)** |
+| C2 | Born-again distillation (Mamba → Mamba) | ✅ Yes | Low | High | ⏳ 待做 |
+| C3 | Distillation loss weight tuning | ✅ Yes | Low | Medium | ⏳ 待做 |
+| D | Pseudo-label 62K skipped images | ✅ Yes | Medium | High | ⏳ 待做 |
+| E | Hard example mining | ✅ Yes | Low | Medium | ⏳ 待做 |
+| F | Ensemble inference | ✅ Yes | Low | Low | ⏳ 待做 |
+| G | DAgger / online data | ❌ | High | High | ❌ 不可行 |
+| H | RL fine-tuning | ❌ | Very High | Very High | ❌ 不可行 |
+| I | New SSM architecture design | ✅ Yes | Medium | Potentially 0 crash | ⏳ 构思中 |
 
-## Feasible Directions (A-F)
+## Feasible Directions
 
 ### A. Multi-Step Sequence Prediction
-**Status**: ✅ **完成**。`--sequence_length N` 已实现并集成到训练管道。
-消融实验表明 seq_len=16×100epoch（每帧损失0.0112）优于单帧基线（0.0194）。
-在Branch D（Mamba-2 SSM）上验证，长序列收益更显著。
-详见 `results/EXPERIMENT_REPORT.md §5.4`。
+**Status**: 🟡 **MPS并行训练中（Branch E, seq_len=4/8/16, 100ep）**。
+已完成单帧蒸馏实验，当前正在用NVIDIA MPS并行训练多步BC模型。
+预计完成时间：~2小时。完成后需进行蒸馏+序列训练的联合实验。
 
-### B. Data Augmentation (No Expert Needed)
-**Status**: ⏳ 待实现。
-Augment the 42K image dataset with:
-- Horizontal/vertical flip (left-right obstacle mirroring)
-- Random rotation (±5°)
-- Gaussian noise (simulate sensor noise)
-- Brightness/contrast jitter (simulate lighting variation)
-- Random crop + resize
-
-All operations are **geometric/image transforms only** — they don't change the expert command.
-A depth image flipped horizontally should still map to the same velocity target if the scene is symmetric.
-For asymmetric scenes, this creates useful adversarial examples.
+### B. Data Augmentation
+**Status**: ⏳ 待实现。保持不变。
 
 ### C. Cross-Architecture Knowledge Distillation (ViT+LSTM → Mamba)
+**Status**: ✅ **全部完成**。
+
+**60m全量测试关键结果**：
+- B+ (MambaVision+Mamba-3): BC 3 crash → **蒸馏 1 crash** 🏆（超越教师）
+- E (DecisionMamba, 纯SSM): BC 3 crash → **蒸馏 1 crash** 🏆（超越教师）
+- B (MambaVision+SSM): BC Failed → **蒸馏 2 crash** ✅（被蒸馏救活）
+- A/C/D: 蒸馏持平BC
+- 教师ViT+LSTM (3.56M) 基准: **2 crash**
+- **所有6分支：蒸馏从未损害性能**
+
+**SSM纯度与蒸馏效果的关系（关键发现）**：
+
+| 分支 | 视觉编码器 | 时序头 | SSM纯度 | 蒸馏结果 |
+|------|-----------|--------|---------|---------|
+| E | SSM (Coarse+Fine) | SSM | **纯SSM** | 1 crash 🏆 |
+| B+ | 混合(Attention+SSM) | SSM (Mamba-3) | **两端有SSM** | 1 crash 🏆 |
+| B | 混合(Attention+SSM) | SSM | 两端有SSM | 2 crash |
+| D | CNN-like | SSM (Mamba-2) | 仅时序SSM | 2 crash |
+| A | SSM (SS2D) | **LSTM** | 仅视觉SSM | 3 crash |
+| C | **CNN** | SSM (Mamba-3) | 仅时序SSM | 3 crash |
+
+**核心规律**：SSM必须在视觉和时序两端同时存在，跨架构蒸馏才能最有效。
+
+### C2. Born-Again Iterative Distillation (Mamba → Mamba)
 **Status**: ⏳ 待实现。
 
-**文献依据**：
-- MOHAWK (NeurIPS 2024): 三阶段蒸馏 Transformer → Mamba-2，3B token即有效
-- CAB (2025): 跨架构注意力桥 Transformer Q,K ↔ Mamba B,C
-- X-Distill (ICLR 2026): DINOv2 ViT → ResNet 用于机器人控制
-- TransMamba (2025): 视觉Mamba的多方向扫描蒸馏
-
-**关键结论**：naive蒸馏（只匹配输出）在跨架构时失败（MOHAWK证明），需要多阶段对齐。
-
-**设计**：用上游ViT+LSTM（best model, 7m/s实飞）作为教师，蒸馏到所有Mamba分支：
+用蒸馏冠军（B+ 或 E）作为新教师，再次蒸馏其他Mamba分支。
+假设：同架构蒸馏比跨架构更高效，Mamba→Mamba的知识传递损失更小。
 
 ```python
-teacher = load_ViTLSTM().eval()  # 上游最佳模型
-student = create_mamba_model(branch)  # B/C/D/E/B+/A
-
-# 阶段1: 特征对齐（参考MOHAWK的stage 1-2）
-loss_feat = MSE(student_encoder_features, teacher_encoder_features)
-
-# 阶段2: 端到端蒸馏（参考MOHAWK的stage 3）
-loss_distill = MSE(student_out, teacher_out)
-loss_gt = MSE(student_out, ground_truth)
-loss = alpha * loss_distill + beta * loss_feat + gamma * loss_gt
+teacher = load_distilled_best()  # B+ 或 E (1 crash)
+student = create_mamba_model(branch)
+loss = alpha * feat_align + beta * distill + gamma * gt
 ```
 
-**科学问题**：
-1. 跨架构（ViT→Mamba）知识能否有效转移？
-2. 6种不同Mamba架构的蒸馏效率对比——什么架构吸收最好？
-3. 蒸馏后的Mamba vs 纯BC的Mamba，仿真性能对比
-4. 首次：跨架构蒸馏在机器人控制领域的系统性研究
+`train_distill.py` 已支持 `--teacher-branch` 参数，仅需指定教师检查点路径。
 
-**预期价值**：高。这是NLP/视觉之外跨架构蒸馏的首次机器人应用。
+### C3. Distillation Loss Weight Optimization
+**Status**: ⏳ 待做。
+
+当前α=β=γ=1.0是随手选的。需要进行网格搜索确定最优权重。
+
+搜索空间：
+- α (feature alignment): {0.0, 0.5, 1.0, 2.0}
+- β (output distill): {0.0, 0.5, 1.0, 2.0}
+- γ (GT loss): {0.5, 1.0, 2.0}
+- 推荐先在 Branch E 上跑网格搜索（~9组），确定合理范围
 
 ### D. Pseudo-Label 62K Skipped Images
-**Status**: ⏳ 待实现。
-The 327 skipped trajectories (62,920 images) have valid PNGs but CSV row count mismatches.
-The best current model can generate pseudo-labels for these images:
-```python
-for img in skipped_images:
-    pred = best_model.predict(img)
-    # Add to training set with confidence weighting
-    dataset.append((img, pred))
-```
-This nearly triples the dataset size (42K → 105K) at zero additional simulation cost.
+**Status**: ⏳ 待实现。保持不变。
 
 ### E. Hard Example Mining
-**Status**: ⏳ 待实现。
-Not all 42K samples are equally valuable. Identify hard examples by:
-- High prediction error (model uncertainty)
-- Collision-adjacent frames (near-miss events)
-- Obstacle-dense scenarios
-
-These samples can be upweighted in the loss function or oversampled.
+**Status**: ⏳ 待实现。保持不变。
 
 ### F. Ensemble Inference
-**Status**: ⏳ 待测试，但需注意部署限制。
+**Status**: ⏳ 待测试。保持不变。
 
-Average predictions across multiple branches:
-```python
-v_final = (v_B + v_Bplus + v_C + v_D + v_E) / 5
+## G. New Architecture: MambaFusion (SOTA目标: 0 crash)
+
+**Status**: ⏳ **构思中，基于SSM纯度实验证据**。
+
+### 动机
+
+现有最佳蒸馏模型(B+, E)各1 crash。根据SSM纯度分析，这1 crash可能来自：
+
+1. **架构层面**：当前无模型是 "纯SSM视觉 + 最先进SSM时序" 的组合
+2. **训练层面**：蒸馏权重未优化，序列训练未启用
+3. **测试层面**：不确定1 crash的位置——是否是所有模型共通的难点
+
+### 设计方案
+
 ```
-Simple, zero-cost improvement in inference stability.
+MambaFusion — 双路径SSM架构
 
-**⚠️ 部署限制**：上游部署环境为CPU-only（Intel NUC 10, i7, 16GB RAM），单模型推理即需25ms。5模型集成推理需125ms（8Hz），**不满足30Hz控制频率要求**。
+路径1: 全局SSM (MambaVision混合编码器)
+  输入: 60×90 depth → Stem + Stage1-3
+  产出: 512-dim 全局特征 (障碍物布局)
 
-**替代方案**：将集成转化为**知识蒸馏（方向C）**——用5个teacher模型生成软标签，训练一个单一学生模型，推理延迟25ms不变，但吸收了多分支的集体智慧。
+路径2: 局部SSM (DecisionMamba FineSSM)  
+  输入: 60×90 depth → CNNEmbed → FineSSM
+  产出: 256-dim 局部特征 (近距障碍细节)
 
-## Recommended Order
+融合: 可学习的门控加权
+  feat = gate * global + (1-gate) * local
+  gate = σ(W_1 * global + W_2 * local)
 
-1. **B (data augmentation)** → Immediate, no code changes needed
-2. **A (multi-step)** → ✅ **已完成**
-3. **D (pseudo-label)** → Data multiplier
-4. **C (distillation)** → Leverage Branch B's success
-5. **E (hard example mining)** → Fine-tune on critical cases
+时序: Mamba-3 Head
+  输入: feat + velocity + quat
+  处理: 2层Mamba-3 SSM
+  输出: (vx, vy, vz)
+```
 
-## Training Status
+### 验证路径
 
-✅ **所有6分支100-epoch全量训练完成。仿真验证5/6分支通过（A重训中）。**
-- B: 仿真通过 (0 crash, 4.26s)
-- B+: 仿真通过 (0 crash, 4.21s)
-- C: 仿真通过 (0 crash, 4.20s)
-- D: 仿真通过 (0 crash, 4.21s)
-- E: 仿真通过 (0 crash, 4.21s)
-- A: 重训中（后台agent验收中，待结果）
+0 crash不一定要靠新架构。推荐顺序：
+
+```
+Step 1: 等MPS seq_len=16训练完成 → 测试E在序列模式下是否0 crash
+Step 2: 如否，在E上调优α,β,γ（网格搜索）
+Step 3: 如仍否，设计MambaFusion
+Step 4: 蒸馏训练MambaFusion
+Step 5: 60m仿真验证
+```
+
+## Recommended Order (Revised)
+
+1. ✅ **C (distillation)** → 已完成，B+/E (1 crash) > 教师 (2 crash)
+2. 🟡 **A (multi-step)** → MPS并行训练中
+3. ⏳ **C3 (loss weight tuning)** → 先在E上扫α,β,γ
+4. ⏳ **C2 (born-again distill)** → B+/E为教师
+5. ⏳ **B (data augmentation)** → 数据增强
+6. ⏳ **G (MambaFusion architecture)** → 如上述步骤未达0 crash
+
+## Training & Simulation Status
+
+✅ **蒸馏训练完成**：6分支全部50epoch蒸馏，收敛正常。
+✅ **仿真验证完成**：60m全量测试，含教师基线。
+🟡 **序列训练中**：Branch E, seq_len=4/8/16, MPS并行, ~2h完成。
+

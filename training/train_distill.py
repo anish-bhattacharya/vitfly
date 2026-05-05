@@ -151,9 +151,20 @@ class FeatureHook:
             self.features[name] = output.detach()
         return hook
     
-    def register_teacher(self, teacher_model):
-        """Register hook on teacher's decoder to capture 512-dim visual features."""
-        handle = teacher_model.decoder.register_forward_hook(
+    def register_teacher(self, teacher_model, teacher_branch=None):
+        """Register hook on teacher's visual encoder.
+        
+        For ViT+LSTM teacher: hooks decoder (512-dim).
+        For Mamba teacher: hooks the branch's visual encoder module.
+        """
+        if teacher_branch is not None and teacher_branch.lower() != 'teacher':
+            attr = VISUAL_ENCODER_ATTR.get(teacher_branch)
+            if attr is None:
+                raise ValueError(f"No visual encoder attr for branch {teacher_branch}")
+            encoder_module = getattr(teacher_model, attr)
+        else:
+            encoder_module = teacher_model.decoder
+        handle = encoder_module.register_forward_hook(
             self._hook_fn('teacher_visual')
         )
         return handle
@@ -286,8 +297,47 @@ def get_gpu_memory_info():
     return None
 
 
-def load_teacher(device, teacher_checkpoint='/root/vitfly/models/ViTLSTM_model.pth'):
-    """Load frozen ViT+LSTM teacher model."""
+def load_teacher_for_branch(teacher_branch, device, teacher_checkpoint):
+    """Load a Mamba branch model as teacher (for born-again distillation)."""
+    from mambavision_ssm_model import MambaVisionSSMNet, create_mambavision_ssm_model
+    from bplus_model import BPlusModel, create_bplus_model
+    from cnn_mamba3_model import CNNMamba3Net, create_cnn_mamba3_model
+    from sth_mamba_model import STHMambaNet, create_sth_mamba_model
+    from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
+    from vmamba_lstm_model import VMambaLSTMNet, create_vmamba_lstm_model
+
+    config = DEFAULT_CONFIG.copy()
+    creator = BRANCH_CREATORS.get(teacher_branch)
+    if creator is None:
+        raise ValueError(f"Unknown teacher branch: {teacher_branch}")
+    teacher = creator(config).to(device).eval()
+    print(f"  Teacher branch: {teacher_branch}")
+
+    if os.path.exists(teacher_checkpoint):
+        ckpt = torch.load(teacher_checkpoint, map_location=device, weights_only=True)
+        sd = ckpt.get('model_state_dict', ckpt)
+        if any(k.startswith('_orig_mod.') for k in sd.keys()):
+            sd = {k.replace('_orig_mod.', ''): v for k, v in sd.items()}
+        teacher.load_state_dict(sd, strict=False)
+        print(f"  Loaded teacher from: {teacher_checkpoint}")
+    else:
+        print(f"  WARNING: Teacher checkpoint not found at {teacher_checkpoint}")
+
+    for param in teacher.parameters():
+        param.requires_grad = False
+    return teacher
+
+
+def load_teacher(device, teacher_checkpoint='/root/vitfly/models/ViTLSTM_model.pth',
+                 teacher_branch=None):
+    """Load frozen teacher model.
+    
+    Args:
+        teacher_branch: None for ViT+LSTM, or branch name for born-again (B+, E, etc.)
+    """
+    if teacher_branch is not None and teacher_branch.lower() != 'teacher':
+        return load_teacher_for_branch(teacher_branch, device, teacher_checkpoint)
+    
     print(f"\n{'='*60}")
     print("Loading Teacher: ViT+LSTM (TeacherVITLSTM, ckpt-compatible)")
     print(f"{'='*60}")
@@ -295,10 +345,8 @@ def load_teacher(device, teacher_checkpoint='/root/vitfly/models/ViTLSTM_model.p
     teacher = TeacherVITLSTM().to(device)
     teacher.eval()
     
-    # Load checkpoint
     if os.path.exists(teacher_checkpoint):
         ckpt = torch.load(teacher_checkpoint, map_location=device, weights_only=True)
-        # The checkpoint contains state_dict directly (102 keys matching LSTMNetVIT)
         if any(k.startswith('encoder_blocks.') for k in ckpt.keys()):
             teacher.load_state_dict(ckpt, strict=False)
         elif 'model_state_dict' in ckpt:
@@ -308,9 +356,7 @@ def load_teacher(device, teacher_checkpoint='/root/vitfly/models/ViTLSTM_model.p
         print(f"  Loaded teacher from: {teacher_checkpoint}")
     else:
         print(f"  WARNING: Teacher checkpoint not found at {teacher_checkpoint}")
-        print(f"  Using randomly initialized teacher (distillation will be less effective)")
     
-    # Freeze all teacher parameters
     for param in teacher.parameters():
         param.requires_grad = False
     
@@ -609,7 +655,7 @@ def train_distillation(branch, args, train_loader, val_loader, device):
     print(f"{'='*60}")
     
     # Create teacher
-    teacher = load_teacher(device, args.teacher_ckpt)
+    teacher = load_teacher(device, args.teacher_ckpt, teacher_branch=args.teacher_branch)
     
     # Create student
     student = create_student(branch, device, args)
@@ -621,7 +667,7 @@ def train_distillation(branch, args, train_loader, val_loader, device):
     
     # Feature hooks
     hook = FeatureHook()
-    hook.register_teacher(teacher)
+    hook.register_teacher(teacher, teacher_branch=args.teacher_branch)
     
     # Register student hook — handle compiled model
     try:
@@ -780,6 +826,9 @@ def main():
     parser.add_argument('--teacher-ckpt', type=str,
                         default='/root/vitfly/models/ViTLSTM_model.pth',
                         help='Path to teacher model checkpoint')
+    parser.add_argument('--teacher-branch', type=str, default=None,
+                        choices=[None, 'A', 'B', 'Bplus', 'C', 'D', 'E', 'teacher'],
+                        help='Branch name for born-again teacher (None=ViT+LSTM)')
     parser.add_argument('--temperature', type=float, default=1.0,
                         help='Temperature for softening teacher logits')
     
