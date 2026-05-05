@@ -1,15 +1,15 @@
 #!/bin/bash
-# Usage: bash run_full_test.bash <BRANCH> <MODEL_TYPE> [VARIANT]
-#   VARIANT: empty or "bc"       → branch_X/best_model.pth (default, BC baseline)
-#            "distill"           → branch_X/distill_best_model.pth
-#            "distill_from_bc"   → branch_X/distill_frombc_best_model.pth
-#            <any>               → branch_X/<variant>_best_model.pth
+# Usage: bash run_full_test.bash <BRANCH> <MODEL_TYPE> [VARIANT] [DES_VEL]
+#   VARIANT: empty/"bc" → best_model.pth, "distill" → distill_best_model.pth
+#   DES_VEL: desired velocity (default: 5.0)
 # Example:
-#   bash run_full_test.bash B MambaVisionSSM           # test BC model
-#   bash run_full_test.bash B MambaVisionSSM distill   # test distilled model
+#   bash run_full_test.bash B MambaVisionSSM               # BC @ 5m/s
+#   bash run_full_test.bash B MambaVisionSSM distill       # distill @ 5m/s
+#   bash run_full_test.bash B MambaVisionSSM distill 7.0   # distill @ 7m/s
 BRANCH=$1
 MODEL_TYPE=$2
 VARIANT=${3:-""}
+DES_VEL=${4:-5.0}
 
 BASE_DIR="/root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_${BRANCH}"
 if [ -n "$VARIANT" ] && [ "$VARIANT" != "bc" ]; then
@@ -44,7 +44,7 @@ cd /root/catkin_ws/src/vitfly-mambatest/envtest/ros
 python3 evaluation_node.py branch_${BRANCH}_${SUMMARY_TAG} > /tmp/eval_${BRANCH}.log 2>&1 &
 EVAL_PID=$!
 
-python3 -u run_competition.py --vision_based --des_vel 5.0 \
+python3 -u run_competition.py --vision_based --des_vel ${DES_VEL} \
   --model_type ${MODEL_TYPE} \
   --model_path ${MODEL_PATH} \
   > /tmp/comp_${BRANCH}.log 2>&1 &
