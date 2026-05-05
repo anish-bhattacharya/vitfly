@@ -122,7 +122,9 @@ class AgilePilotNode:
             elif model_type == 'ViT':
                 self.model = ViT().to(self.device).float()
             elif model_type == 'ViTLSTM':
-                self.model = LSTMNetVIT().to(self.device).float()
+                # Use TeacherVITLSTM (input_size=517) — LSTMNetVIT (519) can't load the upstream checkpoint
+                from model import TeacherVITLSTM
+                self.model = TeacherVITLSTM().to(self.device).float()
             elif model_type == 'DroneMamba':
                 self.model = DroneMamba(use_temporal_ssm=True, d_state=8).to(self.device).float()
                 print(f"[RUN_COMPETITION] DroneMamba (SSM) loaded")

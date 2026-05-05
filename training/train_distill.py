@@ -63,64 +63,10 @@ for path in BRANCH_PATHS.values():
     sys.path.insert(0, path)
 
 # ─── Imports ──────────────────────────────────────────────────────────────────
-# Teacher: we load LSTMNetVIT but the upstream checkpoint has lstm input_size=517
-# (scalar desired_vel: 512+1+4=517 vs current code 512+3+4=519).
-# We define a checkpoint-compatible teacher here rather than modifying model.py.
-from model import refine_inputs
-
-
-class TeacherVITLSTM(nn.Module):
-    """ViT+LSTM teacher — checkpoint-compatible (lstm input_size=517).
-    
-    The upstream best model (7m/s real flight) was trained with scalar desired_vel
-    as metadata, not the 3D velocity vector. Input layout:
-      512 (visual feat) + 1 (desired_vel/10) + 4 (quaternion) = 517
-    """
-    def __init__(self):
-        super().__init__()
-        from model import MixTransformerEncoderLayer
-        import torch.nn.utils.spectral_norm as spectral_norm
-        
-        self.encoder_blocks = nn.ModuleList([
-            MixTransformerEncoderLayer(1, 32, patch_size=7, stride=4, padding=3, 
-                                       n_layers=2, reduction_ratio=8, num_heads=1, expansion_factor=8),
-            MixTransformerEncoderLayer(32, 64, patch_size=3, stride=2, padding=1, 
-                                       n_layers=2, reduction_ratio=4, num_heads=2, expansion_factor=8)
-        ])
-        self.decoder = spectral_norm(nn.Linear(4608, 512))
-        # input_size=517: 512 (visual) + 1 (desired_vel/10) + 4 (quaternion)
-        self.lstm = nn.LSTM(input_size=517, hidden_size=128, num_layers=3, dropout=0.1)
-        self.nn_fc2 = spectral_norm(nn.Linear(128, 3))
-        
-        self.up_sample = nn.Upsample(size=(16, 24), mode='bilinear', align_corners=True)
-        self.pxShuffle = nn.PixelShuffle(upscale_factor=2)
-        self.down_sample = nn.Conv2d(48, 12, 3, padding=1)
-    
-    def forward(self, X):
-        X = refine_inputs(X)
-        x = X[0]
-        embeds = [x]
-        for block in self.encoder_blocks:
-            embeds.append(block(embeds[-1]))
-        out = embeds[1:]
-        out = torch.cat([self.pxShuffle(out[1]), self.up_sample(out[0])], dim=1)
-        out = self.down_sample(out)
-        out = self.decoder(out.flatten(1))
-        # Use scalar desired_vel (X[1][:, :1]) not full 3D velocity — matches upstream
-        out = torch.cat([out, X[1][:, :1] / 10.0, X[2]], dim=1).float()
-        if len(X) > 3:
-            out, h = self.lstm(out, X[3])
-        else:
-            out, h = self.lstm(out)
-        out = self.nn_fc2(out)
-        return out, h
-    
-    def get_parameter_count(self):
-        return sum(p.numel() for p in self.parameters())
-
-
-# Import the original model to preserve access (not used as teacher)
-from model import LSTMNetVIT as OriginalLSTMNetVIT
+# Teacher: Use TeacherVITLSTM from shared models/model.py (checkpoint-compatible).
+# The upstream ViTLSTM_model.pth has lstm input_size=517 (scalar desired_vel),
+# while the original LSTMNetVIT uses 519 (3D velocity) — can't load the checkpoint.
+from model import TeacherVITLSTM
 
 from vmamba_lstm_model import VMambaLSTMNet, create_vmamba_lstm_model
 from mambavision_ssm_model import MambaVisionSSMNet, create_mambavision_ssm_model
@@ -575,6 +521,9 @@ def validate_distill(teacher, student, projector, loader, device, hook, seq_len=
     total_feat_align = 0.0
     total_action_mag = 0.0
     total_action_var = 0.0
+    total_action_max_vx = 0.0
+    total_action_max_vy = 0.0
+    total_action_max_vz = 0.0
     n_batches = 0
     
     for depth, velocity, quat, target in loader:
