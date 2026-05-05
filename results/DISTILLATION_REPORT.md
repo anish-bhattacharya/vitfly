@@ -2,10 +2,10 @@
 
 **Cross-Architecture Knowledge Distillation: ViT+LSTM → Mamba**
 Date: 2026-05-04
-Last updated: 2026-05-04 (Phase 1 results)
+Last updated: 2026-05-05 (Phase 1 + Phase 2 simulation results)
 Based on literature survey in `literature/survey.md`
 
-> **Experiment Status**: Phase 1 complete ✅ — All 6 branches distilled (50 epochs each) and ready for simulation verification.
+> **Experiment Status**: Phase 1 complete ✅ — All 6 branches distilled (50 epochs each). Phase 2 simulation verification complete ✅ — All 6 branches tested in Flightmare (BC vs Distill comparison).
 
 ---
 
@@ -201,7 +201,7 @@ Across all branches:
    d. Backprop through student only                               ✅
 4. Validate: gt_loss + distill_gap + feat_align + mag + var      ✅
 5. Save best checkpoint (combined score)                          ✅
-6. Test in Flightmare simulation                                   ⏳ PENDING
+6. Test in Flightmare simulation                                   ✅ All 6 branches tested (see §5)
 ```
 
 ### Success Criteria & Phase 1 Results
@@ -210,30 +210,148 @@ Across all branches:
 Teacher = 0.027 (val_loss) vs BC = 0.016-0.023 (val_loss), but teacher flies 7m/s.
 **val_loss is NOT the ground truth for flight quality. Simulation is.**
 
-| Priority | Metric | Target | Phase 1 Status |
-|----------|--------|--------|----------------|
-| P0 | Collision rate | Lower than BC baseline | ⏳ Needs Flightmare verification |
-| P0 | Flight quality | Smooth trajectory | ⏳ Needs Unity visual inspection |
-| P1 | Completion time | Not significantly slower | ⏳ Needs simulation test |
-| P2 | Val loss stability | No divergence from BC | ✅ Confirmed (all 6 branches stable) |
-| P2 | Teacher alignment | distill_gap decreases | ✅ Confirmed (↓24% on average) |
-| P2 | Architecture ranking | Identify best absorber | ✅ D > A > E > C > Bplus > B |
+| Priority | Metric | Target | Phase 1 Status | Phase 2 (Simulation) |
+|----------|--------|--------|----------------|----------------------|
+| P0 | Collision rate | Lower than BC baseline | ⏳ Needs Flightmare verification | ❌ Distill degrades B/B+/C/D (+1 crash), E matches BC (0 crash) |
+| P0 | Flight quality | Smooth trajectory | ⏳ Needs Unity visual inspection | ✅ All branches fly full 20m trajectory |
+| P1 | Completion time | Not significantly slower | ⏳ Needs simulation test | ✅ Times identical (~4.2s for both BC and distill) |
+| P2 | Val loss stability | No divergence from BC | ✅ Confirmed | ✅ Simulation confirms: no mode collapse |
+| P2 | Teacher alignment | distill_gap decreases | ✅ Confirmed (↓24% on average) | ⚠️ Weak correlation with flight quality |
+| P2 | Architecture ranking | Identify best absorber | ✅ D > A > E > C > Bplus > B | ⚠️ Differs in sim: E > D > A ≈ C ≈ Bplus ≈ B |
 
 ---
 
-## 5. Risk Assessment
+## 5. Phase 2 Results — Simulation Verification
 
-| Risk | Mitigation |
-|------|-----------|
-| Feature dimensions mismatch | Use projection head (linear) to align dims |
-| Teacher too different from student | Start with Branch A (has LSTM = most similar) |
-| Distillation collapses to teacher mean | Always include GT loss (γ > 0) |
-| No simulation improvement | Check proxy metric correlations first |
-| Training too slow | Use mixed precision (FP16), gradient accumulation |
+### 5.1 Flightmare Simulation Setup
+
+All 6 branches were tested in Flightmare (ROS Noetic + Unity renderer) using `run_full_test.bash` with the `VARIANT` parameter. Each branch was tested with both BC baseline and distilled weights under identical conditions:
+- **Desired velocity**: 5.0 m/s
+- **Trajectory length**: 20m
+- **Environment**: Spheres medium (static + dynamic obstacles)
+- **Evaluation metrics**: Success, collision count, segment times, velocity output count
+
+### 5.2 Branch-by-Branch Results
+
+#### Branch A — VMamba + LSTM
+
+| Metric | BC Baseline | Distill | Delta |
+|--------|-------------|---------|-------|
+| Success | ❌ false | ❌ false | = |
+| Crashes | 1 | 1 | 0 |
+| 10m time | 2.20s | 2.18s | -0.02s |
+| 20m time | 4.22s | 4.23s | +0.01s |
+| Vel outputs | 236 | 237 | ≈ |
+
+BC baseline already has 1 crash (d_state=16 issue). Distill matches it.
+
+#### Branch B — MambaVision + SSM
+
+| Metric | BC Baseline | Distill | Delta |
+|--------|-------------|---------|-------|
+| Success | ✅ true | ❌ false | ↓ |
+| Crashes | 0 | 1 | +1 |
+| 10m time | 2.18s | 2.18s | 0.00s |
+| 20m time | 4.25s | 4.22s | -0.03s |
+| Vel outputs | 235 | 270 | ≈ |
+
+BC baseline flies perfectly. Distill introduces 1 crash despite identical flight time.
+
+#### Branch B+ — MambaVision + Mamba-3
+
+| Metric | BC Baseline | Distill | Delta |
+|--------|-------------|---------|-------|
+| Success | ✅ true | ❌ false | ↓ |
+| Crashes | 0 | 1 | +1 |
+| 10m time | 2.19s | 2.18s | -0.01s |
+| 20m time | 4.23s | 4.24s | +0.01s |
+| Vel outputs | 231 | 234 | ≈ |
+
+Same pattern as Branch B: BC flawless, distill has 1 crash.
+
+#### Branch C — CNN + Mamba-3
+
+| Metric | BC Baseline | Distill | Delta |
+|--------|-------------|---------|-------|
+| Success | ✅ true | ❌ false | ↓ |
+| Crashes | 0 | 1 | +1 |
+| 10m time | 2.19s | 2.19s | 0.00s |
+| 20m time | 4.22s | 4.20s | -0.02s |
+| Vel outputs | 233 | 230 | ≈ |
+
+Distillation introduces 1 crash. Flight time unaffected.
+
+#### Branch D — STH-Mamba
+
+| Metric | BC Baseline | Distill | Delta |
+|--------|-------------|---------|-------|
+| Success | ✅ true | ❌ false | ↓ |
+| Crashes | 0 | 1 | +1 |
+| 10m time | 2.18s | 2.16s | -0.02s |
+| 20m time | 4.22s | 4.22s | 0.00s |
+| Vel outputs | 228 | 236 | ≈ |
+
+Best val_score branch, but distill still adds 1 crash in simulation.
+
+#### Branch E — DecisionMamba ⭐
+
+| Metric | BC Baseline | Distill | Delta |
+|--------|-------------|---------|-------|
+| Success | ✅ true | ✅ true | = ✅ |
+| Crashes | 0 | 0 | 0 ✅ |
+| 10m time | 2.17s | 2.17s | 0.00s |
+| 20m time | 4.19s | 4.22s | +0.03s |
+| Vel outputs | 215 | 227 | ≈ |
+
+**Only branch where distillation preserves perfect flight (0 crashes).** Smallest model (2.19M params) with best distillation results.
+
+### 5.3 Summary Comparison
+
+| Branch | BC Crashes | Distill Crashes | Δ | BC 20m | Distill 20m | Δ | Verdict |
+|--------|-----------|-----------------|---|--------|-------------|---|---------|
+| A (VMamba+LSTM) | 1 | 1 | 0 | 4.22s | 4.23s | +0.01s | ⚠️ BC already degraded |
+| B (MambaVision+SSM) | 0 | 1 | +1 | 4.25s | 4.22s | -0.03s | ❌ Degraded |
+| B+ (BPlusModel) | 0 | 1 | +1 | 4.23s | 4.24s | +0.01s | ❌ Degraded |
+| C (CNN+Mamba-3) | 0 | 1 | +1 | 4.22s | 4.20s | -0.02s | ❌ Degraded |
+| D (STH-Mamba) | 0 | 1 | +1 | 4.22s | 4.22s | 0.00s | ❌ Degraded |
+| **E (DecisionMamba)** | **0** | **0** | **0** | **4.19s** | **4.22s** | **+0.03s** | ✅ **Preserved** |
+
+### 5.4 Key Findings
+
+1. **Val_loss does NOT predict flight quality.** Despite similar or better val_loss in 4/6 branches, simulation shows distill introduces 1 crash in most branches. The correlation between validation metrics and real flight is weak.
+
+2. **Branch E is the clear distillation winner.** As the smallest model (2.19M params, no dedicated temporal module), DecisionMamba absorbs teacher knowledge without degrading its own flight policy. This may be because its simpler architecture is less disrupted by feature alignment constraints.
+
+3. **Flight speed is completely unaffected.** All branches maintain ~4.2s for 20m regardless of distillation — velocity magnitude control is robust.
+
+4. **All models produce healthy inference.** Velocity output counts (215-270 per run) confirm all distilled models are computing commands at expected frequency (~60Hz).
+
+5. **Loss weight tuning may improve results.** The default α=β=γ=1.0 weights were used for all branches. The consistent +1 crash pattern suggests the GT loss weight (γ) may need to be higher to prevent distillation from overriding the student's own learned policy.
+
+### 5.5 Updated Architecture Ranking
+
+| Rank | Branch | Simulation Verdict | Notes |
+|------|--------|-------------------|-------|
+| 🥇 | **E** (DecisionMamba) | ✅ Perfect flight | Smallest model, best distillation |
+| 🥈 | **D** (STH-Mamba) | ⚠️ 1 crash | Best val_loss, but degraded in sim |
+| 🥉 | **A** (VMamba+LSTM) | ⚠️ 1 crash | BC already had 1 crash (d_state=16) |
+| — | **C** (CNN+Mamba-3) | ❌ 1 crash | Degraded from BC |
+| — | **B+** (BPlusModel) | ❌ 1 crash | Degraded from BC |
+| — | **B** (MambaVision+SSM) | ❌ 1 crash | Degraded from BC |
 
 ---
 
-## 6. References
+## 6. Risk Assessment
+
+| Risk | Actual Result | Mitigation |
+|------|---------------|-----------|
+| Feature dimensions mismatch | D (256-dim) and E (256-dim) used projector → worked | ✅ Handled |
+| Teacher too different from student | A (has LSTM) ranked 3rd, not 1st | ⚠️ Less important than expected |
+| Distillation collapses to teacher mean | No collapse observed — all models produce diverse outputs | ✅ GT loss prevented this |
+| **No simulation improvement** | **Confirmed risk: distill degrades most branches** | **Increasing γ may help** |
+| Training too slow | 50 epochs completed in reasonable time | ✅ Handled |
+
+## 7. References
 
 1. MOHAWK — Bick et al., NeurIPS 2024. Transformers to SSMs: Distilling Quadratic Knowledge.
 2. CAB — Wang et al., 2025. Data Efficient Any Transformer-to-Mamba Distillation via Attention Bridge.
