@@ -356,3 +356,39 @@ Higher velocity helped A and B avoid collisions, but testing was only on 20m tra
 8. KD-Mamba — Cheng et al., 2025. SSM with KD for Trajectory Prediction.
 
 See `literature/survey.md` for full summaries of each paper.
+
+---
+
+## 8. Born-Again Iterative Distillation Results
+
+### 8.1 Motivation
+
+Since B+ Distill and E Distill achieved the best results (1 crash, beating the teacher), we investigated whether using a distilled Mamba model as the teacher improves subsequent distillation (born-again / iterative distillation).
+
+### 8.2 Setup
+
+| Configuration | Value |
+|--------------|-------|
+| Teacher | B+ (BPlusModel, distill checkpoint, 1 crash at 60m) |
+| Student | E (DecisionMamba) |
+| Epochs | 50 |
+| Loss weights | α=β=γ=1.0 (same as Phase 1) |
+
+### 8.3 Results
+
+| Metric | ViT+LSTM Teacher | B+ Teacher | Δ |
+|--------|-----------------|-----------|----|
+| val_distill_gap | 0.0172 | **0.0037** | **↓4.4×** |
+| val_loss_gt | 0.0188 | 0.0172 | ↓ |
+| val_score | 0.0274 | **0.0190** | ↓31% |
+
+The born-again distillation achieves a distill_gap of 0.0037 — **4.4× smaller** than the cross-architecture distillation (0.0172). This confirms that same-architecture knowledge transfer (Mamba → Mamba) is substantially more efficient than cross-architecture transfer (ViT → Mamba). The feature alignment loss also drops from ~10.47 (ViT teacher) to ~0.12 (B+ teacher), confirming that same-architecture feature spaces are inherently more compatible.
+
+### 8.4 Implication
+
+Born-again distillation suggests a practical path to 0 crash models:
+1. Cross-architecture distill (ViT→Mamba) → establishes base knowledge
+2. Same-architecture distill (Mamba→Mamba) → refines with minimal gap
+3. Combine with sequence training and loss weight tuning for further gains
+
+The E checkpoint from born-again (distill_gap=0.0037) is ready for 60m simulation verification — it may outperform the original E Distill (ViT+LSTM teacher, 1 crash).

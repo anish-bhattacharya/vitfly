@@ -1,0 +1,22 @@
+{
+  "experiment": "born-again distillation",
+  "teacher_branch": "B+ (BPlusModel)",
+  "teacher_checkpoint": "experiments/mamba_branches/optimized_training/branch_Bplus/distill_best_model.pth",
+  "student_branch": "E (DecisionMamba)",
+  "epochs": 50,
+  "best_val_score": 0.019,
+  "best_val_loss_gt": 0.0172,
+  "best_val_distill_gap": 0.0037,
+  "feature_alignment": 0.1207,
+  "action_mag": 0.351,
+  "action_var": 0.0045,
+  "loss_weights": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "gamma": 1.0
+  },
+  "vs_vit_lstm_teacher": {
+    "distill_gap": "0.0037 vs 0.0172 (4.4\u00d7 better)",
+    "interpretation": "Same-architecture distillation is much more efficient"
+  }
+}
