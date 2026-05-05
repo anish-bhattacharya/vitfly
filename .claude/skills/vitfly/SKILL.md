@@ -53,10 +53,16 @@ export MESA_GLSL_VERSION_OVERRIDE=450
 
 ```bash
 source /opt/ros/noetic/setup.bash
-source /root/catkin_ws/devel/setup.bash
+source /root/catkin_ws/devel/setup.bash --extend   # ← --extend preserves existing ROS_PACKAGE_PATH
 source ~/miniconda3/etc/profile.d/conda.sh && conda activate ros_py38
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7
 export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
+```
+
+Remove stale roscore PID file (if roscore won't start after a crash):
+
+```bash
+rm -f /root/.ros/roscore-11311.pid
 ```
 
 Launch simulator (roscore + Unity renderer + RViz in one command):
@@ -64,6 +70,15 @@ Launch simulator (roscore + Unity renderer + RViz in one command):
 ```bash
 roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True &
 sleep 15  # wait for Unity ZMQ connection
+```
+
+**Verify topics are publishing** (after Unity connects):
+
+```bash
+rostopic list | grep -E "depth|state" | head -10
+# Expected:
+#   /kingfisher/dodgeros_pilot/unity/depth
+#   /kingfisher/dodgeros_pilot/state
 ```
 
 Reset and arm drone:
@@ -107,19 +122,45 @@ If raw `depth` topic exists but `depth_viz` doesn't, the simulator is fine — t
 
 ## Model Testing Workflow
 
+### Variant Testing (BC vs Distill)
+
+Both `run_full_test.bash` and `test_mamba_branch.bash` support two optional arguments:
+
+| Arg | Purpose | Default |
+|-----|---------|---------|
+| 3rd: `[VARIANT]` | Weight variant: empty/bc/distill/... | `bc` (best_model.pth) |
+| 4th: `[DES_VEL]` | Desired velocity (m/s) | `5.0` |
+
+```bash
+# BC baseline @ 5m/s (default) — uses branch_X/best_model.pth
+bash run_full_test.bash D STHMamba
+bash run_full_test.bash D STHMamba bc       # explicit
+
+# Distilled model @ 5m/s — uses branch_X/distill_best_model.pth
+bash run_full_test.bash D STHMamba distill
+
+# Distilled model @ 7m/s (teacher speed) — matches teacher's flight velocity
+bash run_full_test.bash D STHMamba distill 7.0
+
+# Custom variant @ any speed
+bash run_full_test.bash D STHMamba distill_from_bc 6.0
+```
+
+Results are saved to `results/branch_<X>_<VARIANT>_summary.yaml`.
+
 ### Option A: Single Test (Fast, Reusable Simulator)
 
 Use `run_full_test.bash` when the simulator is already running — fastest for sequential branch tests:
 
 ```bash
-bash run_full_test.bash <BRANCH> <MODEL_TYPE>
+bash run_full_test.bash <BRANCH> <MODEL_TYPE> [VARIANT] [DES_VEL]
 ```
 
 This script:
 - Resets/arms the drone in the existing simulator
 - Spawns evaluation_node + run_competition.py
 - Polls `start_navigation` until evaluation finishes
-- Saves `summary.yaml` to `results/branch_<X>_full_summary.yaml`
+- Saves `summary.yaml` to `results/branch_<X>_<variant>_summary.yaml`
 
 ### Option B: Full Test (Restarts Simulator Each Run)
 
@@ -134,7 +175,7 @@ Generates `evaluation.yaml` and `envtest/ros/summary.yaml`.
 ### Option C: Single-Branch Quick Test
 
 ```bash
-bash test_mamba_branch.bash <BRANCH> <MODEL_TYPE>
+bash test_mamba_branch.bash <BRANCH> <MODEL_TYPE> [VARIANT] [DES_VEL]
 ```
 
 Self-contained: launches simulator, runs test, kills everything. Slowest but fully isolated.
@@ -150,7 +191,10 @@ Self-contained: launches simulator, runs test, kills everything. Slowest but ful
 | D | `STHMamba` | STH-Mamba | No |
 | E | `DecisionMamba` | DecisionMamba | No |
 
-Weights at `experiments/mamba_branches/optimized_training/branch_<X>/best_model.pth`.
+Weights at `experiments/mamba_branches/optimized_training/branch_<X>/`:
+- `best_model.pth` — BC baseline (trained via `train_mamba_optimized.py`)
+- `distill_best_model.pth` — Distilled model (trained via `train_distill.py`)
+- Config files are in each branch directory under `experiments/mamba_branches/`
 
 For the original ViTLSTM baseline: `bash launch_evaluation.bash 1 vision`.
 
@@ -235,8 +279,14 @@ Fix: Either revert architecture to match weights, OR retrain weights with new ar
 Ports 10253/10254 held by previous `visionsim_node`:
 
 ```bash
-killall -9 roscore rosmaster rosout visionsim_node rviz flight_render
-pkill -9 -f "roslaunch|evaluation_node|run_competition"
+# Use safe PID-based kill (not killall/pkill which can hang in WSL2)
+for p in roscore rosmaster visionsim_node rviz flight_render; do
+    pid=$(ps aux | grep -E "\b$p\b" | grep -v grep | awk '{print $2}' 2>/dev/null)
+    [ -n "$pid" ] && kill -9 $pid 2>/dev/null || true
+done
+for pid in $(ps aux | grep -E "roslaunch|evaluation_node|run_competition" | grep -v grep | awk '{print $2}' 2>/dev/null); do
+    kill -9 $pid 2>/dev/null || true
+done
 sleep 5
 ss -tlnp | grep -E '10253|10254' || echo "ports free"
 ```
@@ -249,18 +299,43 @@ Most common cause: `ROS_MASTER_URI` defaulted to `http://localhost:11311` instea
 
 ```bash
 echo $ROS_MASTER_URI                  # verify it's pointing to 192.168.233.250:11311
-pgrep -a rosmaster                    # check master is running
-ss -tlnp | grep 11311                 # check which IP master listens on
+ss -tlnp | grep 11311                 # check if roscore is listening
 ```
 
 If env vars wrong → re-export. If master dead → kill everything and restart simulator.
 
-### `visionsim_node` already running — skips relaunch
+### roscore won't start (stale PID file)
 
-The launch scripts skip launching if `pgrep visionsim_node` finds a process. If the existing instance lacks RViz/render, kill it first:
+If roscore claims port 11311 is free but still won't start, a stale PID file is blocking it:
 
 ```bash
-killall -9 visionsim_node rviz flight_render
+rm -f /root/.ros/roscore-11311.pid
+# Then retry: roscore -p 11311 &
+```
+
+### `pgrep` / `killall` hangs in WSL2
+
+Some WSL2 environments hang on `pgrep` or `killall` commands (procfs issue). Use `ps aux | grep` instead:
+
+```bash
+# ❌ DON'T: pgrep -f roscore     # may hang forever
+# ❌ DON'T: killall -9 roscore   # may hang forever
+
+# ✅ DO:
+pid=$(ps aux | grep "\<roscore\>" | grep -v grep | awk '{print $2}' 2>/dev/null)
+[ -n "$pid" ] && kill -9 $pid 2>/dev/null || true
+```
+
+### `visionsim_node` already running — skips relaunch
+
+The launch scripts skip launching if a `visionsim_node` process already exists. If the existing instance lacks RViz/render, kill it first:
+
+```bash
+# Use safe PID-based kill (not killall which hangs in WSL2)
+for p in visionsim_node rviz flight_render; do
+    pid=$(ps aux | grep -E "\b$p\b" | grep -v grep | awk '{print $2}' 2>/dev/null)
+    [ -n "$pid" ] && kill -9 $pid 2>/dev/null || true
+done
 ```
 
 ### `run_competition.py` produces no output
@@ -297,13 +372,16 @@ roslaunch envsim visionenv_sim.launch render:=True gui:=False rviz:=True &
 sleep 15
 
 # Step 2: Loop through branches with run_full_test.bash
+#   - Add "bc" as 3rd arg for BC baseline, "distill" for distilled model
 for BRANCH_INFO in "B:MambaVisionSSM" "Bplus:BPlusModel" "C:CNNMamba3" "D:STHMamba" "E:DecisionMamba"; do
   BRANCH="${BRANCH_INFO%%:*}"
   MODEL="${BRANCH_INFO##*:}"
   echo "=== Testing Branch $BRANCH ($MODEL) ==="
-  bash run_full_test.bash $BRANCH $MODEL
+  bash run_full_test.bash $BRANCH $MODEL distill   # test distilled weights
 done
 ```
+
+For BC vs Distill comparison, run the loop twice (once with `bc`, once with `distill`).
 
 Saves ~20 seconds per branch (no simulator relaunch).
 
@@ -312,10 +390,19 @@ Saves ~20 seconds per branch (no simulator relaunch).
 ## Quick Reference
 
 ```bash
-# Full clean restart
-killall -9 roscore rosmaster rosout visionsim_node rviz flight_render 2>/dev/null
-pkill -9 -f "roslaunch|evaluation_node|run_competition" 2>/dev/null
-sleep 5
+# ⚠ WARNING: killall/pkill can HANG in WSL2. Use targeted PID kills instead:
+for p in roscore rosmaster visionsim_node rviz; do
+    pid=$(ps aux | grep -E "\b$p\b" | grep -v grep | awk '{print $2}' 2>/dev/null)
+    [ -n "$pid" ] && kill -9 $pid 2>/dev/null || true
+done
+# Also kill background python processes:
+for pid in $(ps aux | grep -E "roslaunch|evaluation_node|run_competition" | grep -v grep | awk '{print $2}' 2>/dev/null); do
+    kill -9 $pid 2>/dev/null || true
+done
+sleep 3
+
+# Remove stale roscore PID file (prevents restart after crash)
+rm -f /root/.ros/roscore-11311.pid
 
 # Network setup
 ip addr add 192.168.233.250/32 dev lo 2>/dev/null
@@ -323,8 +410,8 @@ export ROS_MASTER_URI=http://192.168.233.250:11311
 export ROS_IP=192.168.233.250
 unset ROS_HOSTNAME
 
-# Source ROS + conda
-source /opt/ros/noetic/setup.bash && source /root/catkin_ws/devel/setup.bash
+# Source ROS + conda (note --extend on workspace)
+source /opt/ros/noetic/setup.bash && source /root/catkin_ws/devel/setup.bash --extend
 source ~/miniconda3/etc/profile.d/conda.sh && conda activate ros_py38
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7
 export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
@@ -336,17 +423,32 @@ rostopic list | head -5
 rostopic echo /kingfisher/dodgeros_pilot/unity/depth --noarr -n 1
 
 # Verify model loads standalone (catches architecture mismatch BEFORE running simulator)
-python3 -c "import torch; ckpt=torch.load('<path>'); print(ckpt.get('epoch'), ckpt.get('val_loss'))"
+python3 -c "import torch; ckpt=torch.load('<path>', map_location='cpu'); print('epoch:', ckpt.get('epoch','?'), 'val_loss:', ckpt.get('val_loss_gt', ckpt.get('val_loss','?')))"
 
-# Run single branch test (with persistent simulator)
+# Run single branch test (with persistent simulator) — BC baseline @ 5m/s
 bash run_full_test.bash D STHMamba
 
-# Run single branch test (self-contained)
-bash test_mamba_branch.bash D STHMamba
+# Run single branch test (with persistent simulator) — distilled model @ 7m/s
+bash run_full_test.bash D STHMamba distill 7.0
+
+# Run single branch test (self-contained) @ 5m/s
+bash test_mamba_branch.bash D STHMamba distill
+
+# Run single branch test (self-contained) @ 7m/s
+bash test_mamba_branch.bash D STHMamba distill 7.0
 
 # Verify model actually ran (not just inertia)
 grep "RUN_COMPETITION.*velocity" /tmp/comp_D.log | wc -l   # ~240 for 4s flight
 
 # Check results
-cat results/branch_D_full_summary.yaml
+cat results/branch_D_distill_summary.yaml
+
+# Compare BC vs Distill side by side (all speeds)
+for f in results/branch_*_bc_summary.yaml results/branch_*_distill_summary.yaml; do
+    echo "--- $(basename $f) ---"
+    grep -E "Success|crash" $f
+done
+
+# Eval log (detailed flight info)
+cat /tmp/eval_D.log
 ```
