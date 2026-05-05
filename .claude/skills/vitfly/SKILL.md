@@ -54,6 +54,33 @@ Always check this matrix before running a new test. If you're filling a gap, not
 
 ---
 
+## Results Management
+
+Every simulation run produces a `summary.yaml` with collision count and segment times. **Always save results with unique, descriptive filenames.** Never overwrite:
+
+```bash
+# ❌ DON'T — overwrites previous results
+cp summary.yaml results/branch_D_distill_summary.yaml
+
+# ✅ DO — include run identifier
+cp summary.yaml results/branch_D_distill_60m_5ms_$(date +%m%d_%H%M).yaml
+# Or use a descriptive tag + counter
+cp summary.yaml results/branch_D_distill_60m_5ms_run2.yaml
+```
+
+The `run_full_test.bash` script saves to `results/branch_X_{variant}_summary.yaml` by default — this is fine for quick comparisons but will be overwritten on re-runs. For repeat experiments, use custom filenames.
+
+Keep a results log in `results/RUN_LOG.md`:
+
+```markdown
+| Date | Branch | Variant | Speed | Track | Crashes | Time | Notes |
+|------|--------|---------|-------|-------|---------|------|-------|
+| 0505 | E | distill | 5m/s | 60m | 1 | 12.23s | ViT+LSTM teacher |
+| 0505 | Teacher | — | 7m/s | 60m | 5 | 8.94s | native speed, worse |
+```
+
+---
+
 ## Environment Setup (WSL2 Network)
 
 Run once per WSL2 session before any ROS commands:
