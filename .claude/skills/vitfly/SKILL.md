@@ -6,6 +6,10 @@ origin: local
 
 # Vitfly Simulation Runbook
 
+> **Related skill**: See `mamba-training-pipeline` for training, distillation, and checkpoint generation.
+> The training pipeline produces checkpoints that this simulation pipeline tests.
+> Keep result tables in both skills in sync when new simulation data arrives.
+
 ## When to Use
 
 - Starting a simulation test session after WSL2 restart
