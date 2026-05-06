@@ -36,11 +36,11 @@ Before running ANY simulation, identify where your test fits in the overall expe
 |-------|-----------|-----------|-----------|------------|
 | Teacher | ✅ 2/5 crashes | ⏳ | ⏳ | ⏳ |
 | E BC | ✅ 3 crashes | ⏳ | ⏳ | ✅ 4 crashes (overfit) |
-| E Distill | ✅ 1 crash 🏆 | ⏳ | ⏳ | ⏳ |
-| B+ Distill | ✅ 1 crash 🏆 | ⏳ | ⏳ | ⏳ |
+| E Distill | ✅ **1 crash** 🏆 | ⏳ | ⏳ | ✅ 3 crashes (seq16 distill) |
+| B+ Distill | ✅ **1 crash** 🏆 | ⏳ | ⏳ | ⏳ |
 | Others | ✅ tested | ⏳ | ⏳ | ⏳ |
 
-seq_len > 1 means the model receives N consecutive depth frames per inference. Stateful models (A, Teacher) maintain LSTM state across frames; stateless models (B/B+/C/D/E) use temporal attention/SSM across the sequence. **Seq_len=16 failed for BC because the checkpoint was overfit (epoch 100, val_loss 0.23), not because seq16 is inherently bad.** Proper seq16 distillation (`run_seq16_distill.sh`) may yield different results.
+seq_len > 1 means the model receives N consecutive depth frames per inference. Stateful models (A, Teacher) maintain LSTM state across frames; stateless models (B/B+/C/D/E) use temporal attention/SSM across the sequence. Multi-step inference is supported via `--seq-len N` in `run_competition.py`. seq16 distill reduced crashes vs seq16 BC (3 vs 4) but didn't beat single-step (1). seq_len=4 or 8 may be the sweet spot — needs training pipeline.
 
 ### Current Coverage (60m track, seq_len=1)
 
@@ -54,16 +54,14 @@ seq_len > 1 means the model receives N consecutive depth frames per inference. S
 | D | ✅ 2 crashes | ✅ 2 crashes | — |
 | E | ✅ 3 crashes | ✅ **1 crash** 🏆 | — |
 
-### What Has NOT Been Tested (Needs Training Pipeline)
+### Current Gaps (Requires Training Pipeline)
 
-- **seq_len=4 or 8 BC models** for any branch — need training pipeline to produce checkpoints
-- **seq_len=4 or 8 distill models** — need training pipeline to produce checkpoints
-- **Any distill model at seq_len > 1 in simulation** — inference pipeline now supports `--seq-len N`, but no multi-step checkpoints exist
-- **seq16 distill** — `run_seq16_distill.sh` exists but hasn't produced a checkpoint yet
-- **Loss weight ablation** (different α, β, γ) — all distill tests used α=β=γ=1.0
-- **Teacher @ 7m/s on 60m track** — only tested at 5m/s (teacher native speed is 7m/s)
-- **B+/E Distill @ 7m/s @ 60m** — only E tested at 7m/s @ 60m; B+ untested
-- **init_from_bc distillation** — current distill is random init only
+These gaps cannot be filled by simulation alone — they need the training pipeline to produce new checkpoints:
+
+- **seq_len=4 or 8 BC models** for any branch — seq16 exists but overfit; 4/8 may be sweet spot
+- **seq_len=4 or 8 distill models** — only seq16 distill tested (3 crashes); 4/8 untested
+- **init_from_bc distillation** — all current distill is random init only
+- **More loss weight ablation** — γ=2.0 tested (worse); α/β ablation and α=0/β=0 variants untested
 
 Always check this matrix before running a new test. If you're filling a gap, note it. If you're duplicating an existing result, skip it.
 
