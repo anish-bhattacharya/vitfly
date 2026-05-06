@@ -59,6 +59,7 @@ BRANCH_PATHS = {
     'D': '/root/vitfly/experiments/mamba_branches/branch_D_sth_mamba/models',
     'E': '/root/vitfly/experiments/mamba_branches/branch_E_decisionmamba/models',
     'Fusion': '/root/vitfly/experiments/mamba_branches/mambafusion/models',
+    'Essm': '/root/vitfly/experiments/mamba_branches/essm/models',
 }
 for path in BRANCH_PATHS.values():
     sys.path.insert(0, path)
@@ -76,6 +77,7 @@ from sth_mamba_model import STHMambaNet, create_sth_mamba_model
 from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
 from bplus_model import BPlusModel, create_bplus_model
 from mambafusion_model import create_mambafusion_model
+from essm_model import create_essm_model
 
 from lazy_dataloading import create_lazy_dataloader, create_sequence_dataloader
 
@@ -91,12 +93,14 @@ VISUAL_ENCODER_ATTR = {
     'D': 'spatial_encoder', # STHMambaNet.spatial_encoder → 256-dim
     'E': 'cnn_encoder',     # DecisionMambaNet.cnn_encoder → 256-dim
     'Fusion': 'vision_encoder', # MambaFusion.vision_encoder → 512-dim
+    'Essm': 'stem',            # EssmNet.stem → 128-dim pooled
 }
 
 # Visual feature dimension for each branch
 VISUAL_FEATURE_DIM = {
     'A': 512, 'B': 512, 'Bplus': 512,
     'C': 512, 'D': 256, 'E': 256, 'Fusion': 512,
+    'Essm': 256,
 }
 
 TEACHER_FEATURE_DIM = 512  # LSTMNetVIT.decoder output
@@ -110,6 +114,7 @@ BRANCH_CREATORS = {
     'D': lambda cfg: create_sth_mamba_model(cfg),
     'E': lambda cfg: create_decision_mamba_model(cfg),
     'Fusion': lambda cfg: create_mambafusion_model(cfg),
+    'Essm': lambda cfg: create_essm_model(cfg),
 }
 
 # Default hyperparameters per branch (from BC training in train_mamba_optimized.py)
@@ -852,7 +857,7 @@ def main():
     
     # Branch
     parser.add_argument('--branch', type=str, default='B',
-                         choices=['A', 'B', 'Bplus', 'C', 'D', 'E', 'Fusion'],
+                         choices=['A', 'B', 'Bplus', 'C', 'D', 'E', 'Fusion', 'Essm'],
                         help='Student branch to train')
     parser.add_argument('--all-branches', action='store_true',
                         help='Train all 6 branches sequentially')

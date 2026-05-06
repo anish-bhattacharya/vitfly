@@ -41,6 +41,7 @@ sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_D_sth_mamba/m
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_E_decisionmamba/models')
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_Bplus_mambavision_mamba3/models')
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/mambafusion/models')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/essm/models')
 
 # Import models
 try:
@@ -51,6 +52,7 @@ try:
     from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
     from bplus_model import create_bplus_model
     from mambafusion_model import create_mambafusion_model
+    from essm_model import create_essm_model
     MODELS_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: Could not import some models: {e}")
@@ -170,6 +172,8 @@ def create_model(branch_name, config, device, args=None):
         model = create_bplus_model(config)
     elif branch_name == 'Fusion':
         model = create_mambafusion_model(config)
+    elif branch_name == 'Essm':
+        model = create_essm_model(config)
     else:
         raise ValueError(f"Unknown branch: {branch_name}")
     
@@ -528,7 +532,7 @@ def main():
     # Train each branch
     results = {}
     for branch in args.branches:
-        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus', 'Fusion']:
+        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus', 'Fusion', 'Essm']:
             print(f"Warning: Unknown branch '{branch}', skipping...")
             continue
         

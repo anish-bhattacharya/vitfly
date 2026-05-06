@@ -59,8 +59,20 @@
 
 ### Open Questions (Updated)
 - ~~Which branch architecture benefits most from distillation?~~ → ✅ **E (DecisionMamba)** in simulation
-- Can distillation improve simulation collision rate? → ✅ **Partially**: A/B improve at 7m/s; E preserves; B+/C/D degraded
-- ~~Does val_loss predict flight quality?~~ → ❌ **No correlation found**
-- Does feature alignment (L_feat) outperform output-only KD? → Needs C1/C2 ablation
-- Are different α,β,γ optimal per branch? → Needs Phase 2 investigation
-- What are BC baseline crash rates at 7m/s? → ⏳ Pending 60m full evaluation
+### MambaFusion Negative Result (2026-05-06)
+
+**Architecture**: MambaVision encoder (1.93M) + CoarseSSM (1.12M) + fusion = 3.19M
+**Simulation** (3 seeds, 60m):
+- Distill s44 @ 5m/s: **1 crash** 🏆 (matches E Distill)
+- Distill other seeds: 4, 4 crashes (high variance)
+- @ 7m/s: mixed (s42=4, s43=2, s44=2)
+- BC: very high variance (2, 4, 7 crashes)
+
+**Root cause** (from literature):
+1. **Mamba training instability** (B2S6, 2025): S6 models provably unstable when scaled. Larger models (3.19M vs 2.19M) amplify this.
+2. **Initialization sensitivity** (Mimetic Init, ICLR 2025): SSM init causes up to 16× variance. Our 1-4 crash range matches.
+3. **Data-limited regime**: 42K trajectories insufficient for 3.19M model. E (2.19M) at sweet spot.
+
+**Corrected SSM design principle**: Lightweight pure-SSM beats heavy hybrid-SSM in data-limited robot learning.
+
+**Next direction**: E-SSM — replace E's CNN encoder with lightweight SSM encoder (256-dim), keep E's proven temporal. Expected ~2.2M, stable.
