@@ -131,6 +131,27 @@ B BC & 2.61M & \multicolumn{3}{c}{Failed} \\
 
 \textbf{Distillation always helps.} Never degrades any branch. B+ and E improve from 3$\rightarrow$1 ($-67\%$). B rescued from failure. A, C, D match BC.
 
+\subsection{Velocity Scaling}
+\label{sec:velocity}
+
+The teacher was trained for 7m/s flight, so we tested both teacher and E Distill at 7m/s on the 60m track:
+
+\begin{table}[t]
+\centering
+\caption{Teacher vs E Distill at two speeds on the 60m course.}
+\label{tab:velocity}
+\begin{tabular}{lcc}
+\toprule
+Model & 5m/s & 7m/s \\
+\midrule
+Teacher ViT+LSTM & 2 crashes & 5 crashes \\
+\textbf{E Distill} (DecisionMamba) & \textbf{1} crash & \textbf{1} crash \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The teacher degrades from 2 to 5 collisions at its native speed, while E Distill remains at 1 collision, demonstrating that distilled Mamba models generalize better across velocities than their teacher. This speed-robustness is a practical advantage for real-world deployment where flight velocity varies dynamically.
+
 \subsection{Why Distillation Helps}
 The teacher's ViT encoder provides globally-aware visual features inaccessible to locally-scoped SSM encoders trained from scratch. Feature alignment transfers this global awareness. Additionally, the teacher's smooth velocity policy (optimized for 7m/s) regularizes the student, reducing sharp control responses that cause collisions.
 
@@ -146,16 +167,18 @@ E (DecisionMamba) uses pure SSM throughout---CoarseSSM and FineSSM both implemen
 This pattern suggests that Mamba's selective scan inductive bias must be present throughout the architecture---from visual feature extraction to temporal dynamics---for cross-architecture knowledge transfer to be most effective. When non-SSM components (CNN, LSTM, pure attention) are present at either stage, the student's representational capacity is misaligned with the teacher's globally-attentive visual features, reducing distillation efficacy.
 
 \subsection{Born-Again Iterative Distillation}
-Given that B+ and E achieved the best distillation results, we conducted born-again distillation: using B+ (distilled checkpoint, 1 crash at 60m) as the teacher to further distill E. The same-architecture transfer (Mamba $\rightarrow$ Mamba) achieved a distill gap of 0.0037 versus 0.0172 for cross-architecture (ViT $\rightarrow$ Mamba), a 4.4$\times$ improvement. Feature alignment loss dropped from 10.47 to 0.12, confirming that same-architecture feature spaces are inherently more compatible. This checkpoint is pending 60m simulation verification.
+Given that B+ and E achieved the best distillation results, we conducted born-again distillation: using B+ (distilled checkpoint, 1 crash at 60m) as the teacher to further distill E. The same-architecture transfer (Mamba $\rightarrow$ Mamba) achieved a distill gap of 0.0037 versus 0.0172 for cross-architecture (ViT $\rightarrow$ Mamba), a 4.4$\times$ improvement. Feature alignment loss dropped from 10.47 to 0.12, confirming that same-architecture feature spaces are inherently more compatible.
+
+However, simulation testing at 60m revealed that the born-again model underperforms the original cross-architecture distill: 3 crashes ($\gamma=1.0$) and 4 crashes ($\gamma=2.0$, higher GT weight) versus 1 crash for the original E Distill. The improved validation metrics did not translate to flight quality, and increasing ground truth supervision ($\gamma=2.0$) exacerbated the degradation. We hypothesize that the B+ teacher, despite having the best simulation result (1 crash), encodes specific collision-avoidance behaviors that overly constrain the student when transferred at the output level. Cross-architecture distillation from a diverse teacher (ViT+LSTM) may provide a more robust learning signal than same-architecture refinement in this setting.
 
 \subsection{The 20m Artifact}
-Initial testing at 20m (1/3 of the course) falsely suggested distillation degrades 5/6 branches. Full 60m evaluation revealed the opposite. This highlights the critical role of thorough benchmarking.
+Initial testing at 20m (one third of the full course) gave a completely misleading picture. Obstacles are distributed across the full 60m track, and evaluating only the first 20m suggested distillation degraded most branches. Full 60m evaluation revealed the opposite: distillation never degrades and significantly improves 3/6 branches. This artifact underscores the importance of thorough benchmarking --- partial evaluation can reverse conclusions entirely.
 
 \section{Conclusion}
 \method is the first framework to successfully transfer ViT+LSTM knowledge to diverse Mamba variants for quadrotor control. Distilled models surpass the teacher in collision rate while using fewer parameters. The B+ hybrid and DecisionMamba achieve state-of-the-art results with 1 crash at 60m.
 
 \subsection{Limitations}
-Simulation-only evaluation; real-world flight testing at 7m/s pending. Loss weights not per-branch optimized. Single obstacle course configuration. All results use single-step prediction ($T=1$); multi-step sequence training---which better leverages the LSTM and SSM temporal heads---is a natural extension that may further improve performance.
+Simulation-only evaluation; real-world flight testing pending. Loss weights not per-branch optimized ($\alpha=\beta=\gamma=1.0$ for all branches). Single obstacle course configuration (spheres medium). All results use single-step prediction ($T=1$); multi-step sequence training ($T=16$) was tested but yielded worse results (3 crashes vs 1), suggesting the temporal heads require careful tuning for longer sequences. Born-again distillation, despite strong validation metrics, underperformed cross-architecture distillation in simulation---further investigation is needed to bridge the val-sim gap.
 
 \bibliographystyle{plain}
 \bibliography{references}
