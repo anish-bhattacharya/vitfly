@@ -93,7 +93,7 @@ VISUAL_ENCODER_ATTR = {
     'D': 'spatial_encoder', # STHMambaNet.spatial_encoder → 256-dim
     'E': 'cnn_encoder',     # DecisionMambaNet.cnn_encoder → 256-dim
     'Fusion': 'vision_encoder', # MambaFusion.vision_encoder → 512-dim
-    'Essm': 'stem',            # EssmNet.stem → 128-dim pooled
+    'Essm': 'encoder',            # EssmNet.encoder → 256-dim
 }
 
 # Visual feature dimension for each branch
