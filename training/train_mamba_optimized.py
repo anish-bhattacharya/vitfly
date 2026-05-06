@@ -528,7 +528,7 @@ def main():
     # Train each branch
     results = {}
     for branch in args.branches:
-        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus']:
+        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus', 'Fusion']:
             print(f"Warning: Unknown branch '{branch}', skipping...")
             continue
         
