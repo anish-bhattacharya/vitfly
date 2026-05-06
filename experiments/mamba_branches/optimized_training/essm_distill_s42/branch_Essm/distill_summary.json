@@ -1,0 +1,17 @@
+{
+  "branch": "Essm",
+  "epochs": 50,
+  "best_val_score": 1.2164786167691504,
+  "best_val_loss_gt": 0.8503590027852844,
+  "best_val_distill_gap": 0.7322392279677319,
+  "loss_weights": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "gamma": 1.0
+  },
+  "student_params": 1672915,
+  "first_epoch_loss": 12.295638990130778,
+  "last_epoch_loss": 12.057229301734939,
+  "teacher_checkpoint": "/root/vitfly/models/ViTLSTM_model.pth",
+  "init_from_bc": false
+}

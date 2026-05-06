@@ -59,20 +59,14 @@
 
 ### Open Questions (Updated)
 - ~~Which branch architecture benefits most from distillation?~~ → ✅ **E (DecisionMamba)** in simulation
-### MambaFusion Negative Result (2026-05-06)
+### MambaFusion Failure Root Cause (2026-05-06)
 
-**Architecture**: MambaVision encoder (1.93M) + CoarseSSM (1.12M) + fusion = 3.19M
-**Simulation** (3 seeds, 60m):
-- Distill s44 @ 5m/s: **1 crash** 🏆 (matches E Distill)
-- Distill other seeds: 4, 4 crashes (high variance)
-- @ 7m/s: mixed (s42=4, s43=2, s44=2)
-- BC: very high variance (2, 4, 7 crashes)
+**What we learned**: MambaVision's encoder is NOT a true SSM. Its "SSM path" is `Linear → GELU → Linear` (a mini MLP), not a selective scan. The actual visual processing comes from its depthwise CNN path. Features remain spatially structured (B, H, W, C) — compatible with ViT feature alignment.
 
-**Root cause** (from literature):
-1. **Mamba training instability** (B2S6, 2025): S6 models provably unstable when scaled. Larger models (3.19M vs 2.19M) amplify this.
-2. **Initialization sensitivity** (Mimetic Init, ICLR 2025): SSM init causes up to 16× variance. Our 1-4 crash range matches.
-3. **Data-limited regime**: 42K trajectories insufficient for 3.19M model. E (2.19M) at sweet spot.
+In contrast, true selective-scan SSM encoders (CoarseSSM) flatten spatial dimensions to sequence, producing features in a fundamentally different space. MSE alignment between ViT (spatial) and SSM (sequential) features fails.
 
-**Corrected SSM design principle**: Lightweight pure-SSM beats heavy hybrid-SSM in data-limited robot learning.
+**Corrected SSM design principle**: Cross-architecture distillation via feature alignment requires the student encoder to preserve spatial structure. MambaVision succeeds because its CNN path dominates; pure SSM encoders need output-only distillation (α=0).
+
+**E-SSM result**: Replacing E's CNN encoder with a lightweight SSM (CoarseSSM) at 256-dim failed to improve over E. The SSM encoder's feature space is incompatible with ViT feature alignment.
 
 **Next direction**: E-SSM — replace E's CNN encoder with lightweight SSM encoder (256-dim), keep E's proven temporal. Expected ~2.2M, stable.

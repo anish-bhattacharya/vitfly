@@ -46,9 +46,9 @@ In this paper, we make the following contributions:
 
     \item \textbf{A cross-architecture distillation framework that produces Mamba students surpassing the ViT+LSTM teacher.} Multi-stage alignment (feature + output + GT) achieves \textbf{1 crash at 60m} for B+ (2.55M) and E (2.19M), outperforming BC baselines (3 crashes) and the teacher (2 crashes at 5m/s, 5 crashes at 7m/s).
 
-    \item \textbf{An SSM design principle: selective scan must be present in both vision encoder and temporal head.} Branches with SSM at both ends achieve 1 crash; those with non-SSM components at either end underperform (2-3 crashes). This provides a design guideline for future SSM-based control architectures.
+    \item \textbf{An SSM design principle: spatial structure is required for feature-alignment distillation.} MambaVision's hybrid encoder succeeds in cross-architecture distillation not because of its SSM components, but because its CNN path preserves spatial structure. Pure selective-scan encoders (CoarseSSM) flatten spatial dimensions and produce features that cannot be aligned to ViT features via MSE loss. This explains why MambaVision-based students (B+) match DecisionMamba (E) at 1 crash, while CoarseSSM-based students fail to converge. For successful distillation, the student encoder must maintain spatial organization --- a trivial insight often overlooked in SSM vision architectures.
 
-    \item \textbf{A systematic ablation of alternative approaches revealing clear boundary conditions.} Data augmentation helps MambaVision encoders but degrades CNN-based ones; multi-step prediction underperforms single-step; born-again and loss-weight tuning fail to improve over cross-architecture transfer. These negative results prevent redundant exploration by future researchers.
+    \item \textbf{A systematic ablation of alternative approaches revealing clear boundary conditions.} Data augmentation helps CNN-based encoders but degrades pure SSM ones; multi-step prediction underperforms single-step; born-again and loss-weight tuning fail to improve over cross-architecture transfer. These negative results prevent redundant exploration by future researchers.
 \end{itemize}
 
 \section{Related Work}

@@ -1,0 +1,2697 @@
+
+Using device: cuda
+GPU: NVIDIA GeForce RTX 5090
+CUDA version: 12.8
+
+Loading data with lazy dataloader...
+[LAZY DATALOADER] Building file path index...
+[LAZY DATALOADER] Found 580 trajectory folders
+[LAZY DATALOADER] Indexing folder 170743205912, folder # 1/580, time elapsed 0.00s
+[LAZY DATALOADER] Row count mismatch in 170743205912: 372 images vs 414 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700369348: 125 images vs 124 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725978329: 289 images vs 288 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725507255: 222 images vs 228 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700246399: 99 images vs 98 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725566753: 153 images vs 152 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726878203: 231 images vs 230 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726689120: 213 images vs 212 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700236906: 129 images vs 128 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727078390: 246 images vs 252 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692344508: 73 images vs 72 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725687425: 336 images vs 362 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699897724: 37 images vs 38 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725532836: 195 images vs 194 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726473577: 211 images vs 210 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725631541: 139 images vs 138 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700346766: 151 images vs 150 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725403764: 221 images vs 220 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726131920: 317 images vs 316 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692602150: 51 images vs 50 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726723228: 257 images vs 256 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692670033: 59 images vs 58 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727028448: 225 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725674343: 346 images vs 360 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725366886: 313 images vs 312 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726164683: 307 images vs 306 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692335583: 63 images vs 62 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726361198: 269 images vs 268 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700378855: 135 images vs 134 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726264087: 243 images vs 242 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726432552: 225 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702024385: 109 images vs 108 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725430539: 183 images vs 182 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702092133: 181 images vs 180 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727033217: 241 images vs 240 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170726289054, folder # 59/580, time elapsed 0.10s
+[LAZY DATALOADER] Row count mismatch in 170692361160: 133 images vs 132 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700324166: 89 images vs 88 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725479254: 179 images vs 178 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726254574: 261 images vs 260 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700387766: 153 images vs 152 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726084299: 301 images vs 300 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726408142: 251 images vs 250 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743321068: 291 images vs 290 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726744508: 187 images vs 186 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725588169: 193 images vs 192 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726939308: 217 images vs 216 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726249215: 280 images vs 286 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726468225: 269 images vs 268 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726778115: 268 images vs 282 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726969542: 213 images vs 212 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726244458: 237 images vs 236 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726436703: 205 images vs 204 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726217679: 287 images vs 286 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692579559: 45 images vs 44 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726893003: 303 images vs 306 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692341541: 85 images vs 84 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699814715: 35 images vs 34 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726801133: 275 images vs 320 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692610493: 49 images vs 48 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726985004: 235 images vs 234 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725517367: 221 images vs 220 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692323673: 137 images vs 136 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725231234: 147 images vs 146 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692434420: 55 images vs 54 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726492010: 325 images vs 324 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699842543: 69 images vs 68 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725988431: 319 images vs 318 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727083727: 290 images vs 292 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702446827: 203 images vs 202 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170726159942, folder # 117/580, time elapsed 0.19s
+[LAZY DATALOADER] Row count mismatch in 170725355596: 199 images vs 198 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726197429: 327 images vs 326 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726351079: 271 images vs 270 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702071938: 161 images vs 162 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699798770: 69 images vs 68 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702576255: 248 images vs 254 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699919107: 45 images vs 44 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699900103: 41 images vs 40 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702020245: 119 images vs 118 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702553098: 131 images vs 130 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743158249: 542 images vs 556 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700392515: 126 images vs 128 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743105421: 569 images vs 656 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700419247: 145 images vs 144 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726178984: 273 images vs 272 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726278957: 221 images vs 220 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725337161: 283 images vs 282 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725171769: 197 images vs 198 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725863161: 145 images vs 144 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692413556: 131 images vs 130 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726795076: 225 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725409726: 155 images vs 154 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726174211: 309 images vs 308 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726694586: 309 images vs 316 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692355205: 117 images vs 116 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702010728: 103 images vs 102 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727068279: 321 images vs 364 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726999275: 248 images vs 260 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727054032: 314 images vs 324 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700356261: 146 images vs 148 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170692338554, folder # 175/580, time elapsed 0.29s
+[LAZY DATALOADER] Row count mismatch in 170692338554: 69 images vs 68 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726106923: 251 images vs 250 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726974308: 354 images vs 360 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700279060: 147 images vs 146 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726958902: 287 images vs 286 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692612875: 53 images vs 52 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700241053: 207 images vs 206 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727048088: 399 images vs 438 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725554855: 195 images vs 194 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725993189: 341 images vs 340 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692375422: 89 images vs 88 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725681475: 253 images vs 252 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726506306: 232 images vs 238 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726323620: 285 images vs 284 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726949382: 233 images vs 232 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692587275: 65 images vs 64 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700360435: 129 images vs 128 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725814468: 77 images vs 76 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726497392: 249 images vs 248 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743072172: 405 images vs 404 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743267611: 415 images vs 442 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725343691: 185 images vs 184 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699892982: 63 images vs 62 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726852651: 368 images vs 396 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726838397: 212 images vs 214 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743236749: 367 images vs 366 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725277072: 187 images vs 186 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725204479: 175 images vs 174 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726027139: 345 images vs 344 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726677554: 249 images vs 248 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726749357: 370 images vs 402 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692584317: 99 images vs 98 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726183734: 255 images vs 254 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726403391: 191 images vs 190 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726239690: 308 images vs 310 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170725636293, folder # 233/580, time elapsed 0.38s
+[LAZY DATALOADER] Row count mismatch in 170725636293: 135 images vs 134 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725560804: 226 images vs 234 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700319413: 149 images vs 148 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699929218: 55 images vs 54 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700218481: 115 images vs 114 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726913196: 285 images vs 294 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700208213: 165 images vs 164 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692551638: 83 images vs 82 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699931609: 69 images vs 68 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727004041: 231 images vs 230 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725538780: 183 images vs 182 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699853233: 41 images vs 40 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726824138: 237 images vs 246 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743242707: 442 images vs 494 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692432019: 53 images vs 52 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726511097: 246 images vs 248 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726318860: 241 images vs 240 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726755565: 286 images vs 328 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726995115: 199 images vs 198 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700227997: 159 images vs 158 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692592652: 61 images vs 60 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725183055: 149 images vs 148 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699933982: 65 images vs 64 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726314091: 263 images vs 262 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702014887: 230 images vs 238 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726862746: 294 images vs 324 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700423994: 141 images vs 140 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726979646: 259 images vs 258 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726842541: 251 images vs 268 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725647575: 123 images vs 122 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170692607521, folder # 291/580, time elapsed 0.46s
+[LAZY DATALOADER] Row count mismatch in 170725664235: 145 images vs 144 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726007494: 325 images vs 324 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743315715: 380 images vs 400 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726080166: 231 images vs 230 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692416519: 107 images vs 106 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726059362: 386 images vs 416 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702501453: 123 images vs 126 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726887690: 281 images vs 280 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727073640: 259 images vs 280 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726299189: 251 images vs 250 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692397470: 119 images vs 118 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692455831: 97 images vs 96 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743211265: 345 images vs 372 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702066582: 167 images vs 166 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726053966: 390 images vs 394 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743117887: 413 images vs 412 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692453451: 59 images vs 58 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702057070: 105 images vs 104 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699871611: 49 images vs 48 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702562000: 227 images vs 230 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725441209: 195 images vs 194 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692562331: 51 images vs 50 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726303376: 331 images vs 330 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726122376: 251 images vs 250 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743284845: 378 images vs 398 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699855611: 91 images vs 90 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725715402: 145 images vs 144 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743144003: 527 images vs 526 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743249220: 367 images vs 402 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692410562: 135 images vs 134 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726520014: 199 images vs 198 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170725841776, folder # 349/580, time elapsed 0.55s
+[LAZY DATALOADER] Row count mismatch in 170725841776: 191 images vs 190 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726868099: 283 images vs 282 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726412873: 225 images vs 230 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700328313: 155 images vs 154 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726445644: 227 images vs 226 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692535018: 77 images vs 76 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702509743: 107 images vs 106 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725266365: 175 images vs 174 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702475946: 171 images vs 170 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743123829: 475 images vs 474 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726022382: 260 images vs 274 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725856033: 165 images vs 164 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726207541: 299 images vs 298 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726454556: 201 images vs 200 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726739038: 313 images vs 360 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725668987: 163 images vs 162 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725309222: 225 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692408193: 65 images vs 64 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726071279: 267 images vs 276 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692436812: 47 images vs 46 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726812669: 233 images vs 236 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699869244: 45 images vs 44 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692391515: 139 images vs 138 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700255883: 105 images vs 104 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692326650: 115 images vs 114 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726954134: 239 images vs 238 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725501908: 153 images vs 152 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725304466: 129 images vs 128 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726934574: 249 images vs 248 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726283699: 339 images vs 338 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170699801689, folder # 407/580, time elapsed 0.64s
+[LAZY DATALOADER] Row count mismatch in 170699801689: 45 images vs 44 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725527463: 181 images vs 180 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726273618: 365 images vs 364 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700232744: 105 images vs 104 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725577457: 129 images vs 128 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692467197: 39 images vs 38 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725236576: 225 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725220546: 165 images vs 164 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726761024: 293 images vs 300 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702513896: 221 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700222636: 157 images vs 156 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692475538: 43 images vs 42 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700333084: 157 images vs 156 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725622069: 143 images vs 142 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726882938: 236 images vs 244 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699909594: 45 images vs 46 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726127157: 249 images vs 248 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725321119: 139 images vs 138 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725828715: 146 images vs 148 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726043239: 237 images vs 238 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726458724: 228 images vs 232 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725373433: 171 images vs 170 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699890625: 55 images vs 54 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727088467: 360 images vs 402 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726450394: 203 images vs 202 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702004765: 260 images vs 276 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743255138: 474 images vs 520 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725495945: 179 images vs 178 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702097491: 161 images vs 160 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726234364: 259 images vs 258 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727023088: 243 images vs 242 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725582221: 199 images vs 198 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692472528: 85 images vs 84 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726427777: 273 images vs 272 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692369465: 79 images vs 78 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726136699: 225 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725198540: 210 images vs 214 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725242543: 217 images vs 216 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692570022: 53 images vs 52 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700383606: 91 images vs 90 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702037462: 129 images vs 128 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725457863: 255 images vs 254 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170743196869, folder # 465/580, time elapsed 0.73s
+[LAZY DATALOADER] Row count mismatch in 170743196869: 401 images vs 434 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702452193: 170 images vs 172 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725463806: 141 images vs 140 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726111655: 330 images vs 364 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699885280: 41 images vs 40 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743215994: 387 images vs 434 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702524605: 217 images vs 232 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726482492: 289 images vs 288 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725215196: 185 images vs 184 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725657088: 362 images vs 380 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726828879: 189 images vs 188 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727099746: 279 images vs 296 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726700659: 282 images vs 312 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699911969: 37 images vs 36 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702042209: 169 images vs 168 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726268820: 259 images vs 258 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692347491: 65 images vs 64 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699845526: 37 images vs 36 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692388522: 107 images vs 106 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726169449: 261 images vs 260 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726377271: 299 images vs 298 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699831279: 55 images vs 54 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726944046: 347 images vs 384 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726908452: 257 images vs 256 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725332414: 158 images vs 164 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743296709: 339 images vs 350 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700337839: 139 images vs 138 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692577179: 59 images vs 58 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725315155: 207 images vs 206 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726012265: 271 images vs 270 CSV rows, skipping
+[LAZY DATALOADER] Indexing folder 170700296852, folder # 523/580, time elapsed 0.82s
+[LAZY DATALOADER] Row count mismatch in 170726065324: 358 images vs 374 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726683648: 195 images vs 196 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743130358: 499 images vs 498 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170727111037: 221 images vs 220 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743221934: 414 images vs 434 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692597401: 53 images vs 52 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692445114: 65 images vs 64 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692572394: 55 images vs 54 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700433509: 105 images vs 104 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726048009: 303 images vs 302 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725468563: 141 images vs 140 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726140918: 293 images vs 292 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725299098: 163 images vs 162 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726150418: 267 images vs 266 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743278897: 462 images vs 536 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700265390: 145 images vs 144 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743165379: 486 images vs 546 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725819229: 81 images vs 80 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743261687: 457 images vs 526 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170700283787: 145 images vs 148 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725378773: 400 images vs 428 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726366564: 362 images vs 364 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170743273549: 319 images vs 318 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702544200: 145 images vs 144 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170702471193: 179 images vs 178 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692400444: 115 images vs 114 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170726388586: 273 images vs 272 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170699924457: 31 images vs 30 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170725188423: 225 images vs 224 CSV rows, skipping
+[LAZY DATALOADER] Row count mismatch in 170692372432: 121 images vs 120 CSV rows, skipping
+[LAZY DATALOADER] Indexed 42156 samples
+[LAZY DATALOADER] Skipped 327 folders, 67920 images
+[LAZY DATALOADER] Indexing took 0.92s
+[LAZY DATALOADER] Train samples: 33725
+[LAZY DATALOADER] Val samples: 8431
+Training samples: 33725
+Validation samples: 8431
+Trajectories loaded: 253
+
+DataLoader configuration:
+  Workers: 2
+  Pin memory: True
+
+============================================================
+Training Branch Essm
+============================================================
+Model parameters: 1,672,915 (1.67M)
+
+Starting training for 100 epochs...
+Batch size: 64, Gradient accumulation: 1
+Effective batch size: 64
+  GPU 0: 823/32607 MB (2.5%) Epoch 1, Batch 0/527
+    Batch 0/527, Loss: 4.6524
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 50/527
+    Batch 50/527, Loss: 0.6405
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 100/527
+    Batch 100/527, Loss: 0.7360
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 150/527
+    Batch 150/527, Loss: 0.5138
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 200/527
+    Batch 200/527, Loss: 0.5998
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 250/527
+    Batch 250/527, Loss: 0.6735
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 300/527
+    Batch 300/527, Loss: 0.5432
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 350/527
+    Batch 350/527, Loss: 0.5895
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 400/527
+    Batch 400/527, Loss: 0.5228
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 450/527
+    Batch 450/527, Loss: 0.6268
+  GPU 0: 843/32607 MB (2.6%) Epoch 1, Batch 500/527
+    Batch 500/527, Loss: 0.7309
+Epoch   1/100 | Train Loss: 0.7023 | Val Loss: 0.4796 | LR: 0.000040 | Time: 39.7s
+  New best model! Val Loss: 0.4796
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 0/527
+    Batch 0/527, Loss: 0.4445
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 50/527
+    Batch 50/527, Loss: 0.7533
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 100/527
+    Batch 100/527, Loss: 0.6094
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 150/527
+    Batch 150/527, Loss: 0.4155
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 200/527
+    Batch 200/527, Loss: 0.6608
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 250/527
+    Batch 250/527, Loss: 0.6678
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 300/527
+    Batch 300/527, Loss: 0.5688
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 350/527
+    Batch 350/527, Loss: 0.5420
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 400/527
+    Batch 400/527, Loss: 0.5135
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 450/527
+    Batch 450/527, Loss: 0.5529
+  GPU 0: 843/32607 MB (2.6%) Epoch 2, Batch 500/527
+    Batch 500/527, Loss: 0.4910
+Epoch   2/100 | Train Loss: 0.5348 | Val Loss: 0.4728 | LR: 0.000060 | Time: 38.9s
+  New best model! Val Loss: 0.4728
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 0/527
+    Batch 0/527, Loss: 0.6524
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 50/527
+    Batch 50/527, Loss: 0.5649
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 100/527
+    Batch 100/527, Loss: 0.3504
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 150/527
+    Batch 150/527, Loss: 0.4960
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 200/527
+    Batch 200/527, Loss: 0.5440
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 250/527
+    Batch 250/527, Loss: 0.4776
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 300/527
+    Batch 300/527, Loss: 0.3658
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 350/527
+    Batch 350/527, Loss: 0.5572
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 400/527
+    Batch 400/527, Loss: 0.5101
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 450/527
+    Batch 450/527, Loss: 0.6269
+  GPU 0: 843/32607 MB (2.6%) Epoch 3, Batch 500/527
+    Batch 500/527, Loss: 0.5562
+Epoch   3/100 | Train Loss: 0.4816 | Val Loss: 0.3900 | LR: 0.000080 | Time: 39.1s
+  New best model! Val Loss: 0.3900
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 0/527
+    Batch 0/527, Loss: 0.3015
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 50/527
+    Batch 50/527, Loss: 0.3049
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 100/527
+    Batch 100/527, Loss: 0.5044
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 150/527
+    Batch 150/527, Loss: 0.3326
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 200/527
+    Batch 200/527, Loss: 0.3523
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 250/527
+    Batch 250/527, Loss: 0.3822
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 300/527
+    Batch 300/527, Loss: 0.4310
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 350/527
+    Batch 350/527, Loss: 0.2537
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 400/527
+    Batch 400/527, Loss: 0.5429
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 450/527
+    Batch 450/527, Loss: 0.2611
+  GPU 0: 843/32607 MB (2.6%) Epoch 4, Batch 500/527
+    Batch 500/527, Loss: 0.3342
+Epoch   4/100 | Train Loss: 0.3923 | Val Loss: 0.3452 | LR: 0.000100 | Time: 38.8s
+  New best model! Val Loss: 0.3452
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 0/527
+    Batch 0/527, Loss: 0.5234
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 50/527
+    Batch 50/527, Loss: 0.3334
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 100/527
+    Batch 100/527, Loss: 0.2640
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 150/527
+    Batch 150/527, Loss: 0.2288
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 200/527
+    Batch 200/527, Loss: 0.2860
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 250/527
+    Batch 250/527, Loss: 0.3657
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 300/527
+    Batch 300/527, Loss: 0.4173
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 350/527
+    Batch 350/527, Loss: 0.3164
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 400/527
+    Batch 400/527, Loss: 0.1810
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 450/527
+    Batch 450/527, Loss: 0.4156
+  GPU 0: 843/32607 MB (2.6%) Epoch 5, Batch 500/527
+    Batch 500/527, Loss: 0.3958
+Epoch   5/100 | Train Loss: 0.3367 | Val Loss: 0.3068 | LR: 0.000100 | Time: 39.0s
+  New best model! Val Loss: 0.3068
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 0/527
+    Batch 0/527, Loss: 0.3629
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 50/527
+    Batch 50/527, Loss: 0.3419
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 100/527
+    Batch 100/527, Loss: 0.1747
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 150/527
+    Batch 150/527, Loss: 0.1882
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 200/527
+    Batch 200/527, Loss: 0.2186
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 250/527
+    Batch 250/527, Loss: 0.3793
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 300/527
+    Batch 300/527, Loss: 0.5012
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 350/527
+    Batch 350/527, Loss: 0.3948
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 400/527
+    Batch 400/527, Loss: 0.2904
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 450/527
+    Batch 450/527, Loss: 0.3865
+  GPU 0: 843/32607 MB (2.6%) Epoch 6, Batch 500/527
+    Batch 500/527, Loss: 0.3379
+Epoch   6/100 | Train Loss: 0.3123 | Val Loss: 0.2977 | LR: 0.000100 | Time: 39.1s
+  New best model! Val Loss: 0.2977
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 0/527
+    Batch 0/527, Loss: 0.5270
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 50/527
+    Batch 50/527, Loss: 0.2751
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 100/527
+    Batch 100/527, Loss: 0.3238
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 150/527
+    Batch 150/527, Loss: 0.4886
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 200/527
+    Batch 200/527, Loss: 0.3666
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 250/527
+    Batch 250/527, Loss: 0.2180
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 300/527
+    Batch 300/527, Loss: 0.2565
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 350/527
+    Batch 350/527, Loss: 0.2221
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 400/527
+    Batch 400/527, Loss: 0.4187
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 450/527
+    Batch 450/527, Loss: 0.4098
+  GPU 0: 843/32607 MB (2.6%) Epoch 7, Batch 500/527
+    Batch 500/527, Loss: 0.2698
+Epoch   7/100 | Train Loss: 0.2989 | Val Loss: 0.2791 | LR: 0.000100 | Time: 38.9s
+  New best model! Val Loss: 0.2791
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 0/527
+    Batch 0/527, Loss: 0.2524
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 50/527
+    Batch 50/527, Loss: 0.2436
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 100/527
+    Batch 100/527, Loss: 0.4047
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 150/527
+    Batch 150/527, Loss: 0.4958
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 200/527
+    Batch 200/527, Loss: 0.1064
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 250/527
+    Batch 250/527, Loss: 0.4057
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 300/527
+    Batch 300/527, Loss: 0.1983
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 350/527
+    Batch 350/527, Loss: 0.2065
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 400/527
+    Batch 400/527, Loss: 0.3715
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 450/527
+    Batch 450/527, Loss: 0.4182
+  GPU 0: 843/32607 MB (2.6%) Epoch 8, Batch 500/527
+    Batch 500/527, Loss: 0.3669
+Epoch   8/100 | Train Loss: 0.2903 | Val Loss: 0.2732 | LR: 0.000100 | Time: 38.9s
+  New best model! Val Loss: 0.2732
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 0/527
+    Batch 0/527, Loss: 0.2708
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 50/527
+    Batch 50/527, Loss: 0.3256
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 100/527
+    Batch 100/527, Loss: 0.1593
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 150/527
+    Batch 150/527, Loss: 0.2907
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 200/527
+    Batch 200/527, Loss: 0.3727
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 250/527
+    Batch 250/527, Loss: 0.2466
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 300/527
+    Batch 300/527, Loss: 0.2906
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 350/527
+    Batch 350/527, Loss: 0.2681
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 400/527
+    Batch 400/527, Loss: 0.2255
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 450/527
+    Batch 450/527, Loss: 0.2199
+  GPU 0: 843/32607 MB (2.6%) Epoch 9, Batch 500/527
+    Batch 500/527, Loss: 0.3133
+Epoch   9/100 | Train Loss: 0.2828 | Val Loss: 0.2609 | LR: 0.000100 | Time: 39.2s
+  New best model! Val Loss: 0.2609
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 0/527
+    Batch 0/527, Loss: 0.3786
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 50/527
+    Batch 50/527, Loss: 0.2980
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 100/527
+    Batch 100/527, Loss: 0.2792
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 150/527
+    Batch 150/527, Loss: 0.3603
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 200/527
+    Batch 200/527, Loss: 0.2626
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 250/527
+    Batch 250/527, Loss: 0.3833
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 300/527
+    Batch 300/527, Loss: 0.3545
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 350/527
+    Batch 350/527, Loss: 0.2884
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 400/527
+    Batch 400/527, Loss: 0.2498
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 450/527
+    Batch 450/527, Loss: 0.3178
+  GPU 0: 843/32607 MB (2.6%) Epoch 10, Batch 500/527
+    Batch 500/527, Loss: 0.3091
+Epoch  10/100 | Train Loss: 0.2777 | Val Loss: 0.2666 | LR: 0.000099 | Time: 38.8s
+  GPU 0: 839/32607 MB (2.6%) Epoch 11, Batch 0/527
+    Batch 0/527, Loss: 0.1748
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 50/527
+    Batch 50/527, Loss: 0.1357
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 100/527
+    Batch 100/527, Loss: 0.3263
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 150/527
+    Batch 150/527, Loss: 0.1261
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 200/527
+    Batch 200/527, Loss: 0.1949
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 250/527
+    Batch 250/527, Loss: 0.2629
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 300/527
+    Batch 300/527, Loss: 0.3236
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 350/527
+    Batch 350/527, Loss: 0.2926
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 400/527
+    Batch 400/527, Loss: 0.2175
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 450/527
+    Batch 450/527, Loss: 0.3321
+  GPU 0: 841/32607 MB (2.6%) Epoch 11, Batch 500/527
+    Batch 500/527, Loss: 0.2148
+Epoch  11/100 | Train Loss: 0.2738 | Val Loss: 0.2596 | LR: 0.000099 | Time: 38.8s
+  New best model! Val Loss: 0.2596
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 0/527
+    Batch 0/527, Loss: 0.1445
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 50/527
+    Batch 50/527, Loss: 0.2956
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 100/527
+    Batch 100/527, Loss: 0.3484
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 150/527
+    Batch 150/527, Loss: 0.3523
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 200/527
+    Batch 200/527, Loss: 0.3399
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 250/527
+    Batch 250/527, Loss: 0.2329
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 300/527
+    Batch 300/527, Loss: 0.3536
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 350/527
+    Batch 350/527, Loss: 0.1021
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 400/527
+    Batch 400/527, Loss: 0.1700
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 450/527
+    Batch 450/527, Loss: 0.3444
+  GPU 0: 841/32607 MB (2.6%) Epoch 12, Batch 500/527
+    Batch 500/527, Loss: 0.3456
+Epoch  12/100 | Train Loss: 0.2697 | Val Loss: 0.2653 | LR: 0.000099 | Time: 39.1s
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 0/527
+    Batch 0/527, Loss: 0.2801
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 50/527
+    Batch 50/527, Loss: 0.2639
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 100/527
+    Batch 100/527, Loss: 0.3631
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 150/527
+    Batch 150/527, Loss: 0.2609
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 200/527
+    Batch 200/527, Loss: 0.1448
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 250/527
+    Batch 250/527, Loss: 0.1933
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 300/527
+    Batch 300/527, Loss: 0.2931
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 350/527
+    Batch 350/527, Loss: 0.2550
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 400/527
+    Batch 400/527, Loss: 0.1170
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 450/527
+    Batch 450/527, Loss: 0.2356
+  GPU 0: 841/32607 MB (2.6%) Epoch 13, Batch 500/527
+    Batch 500/527, Loss: 0.2752
+Epoch  13/100 | Train Loss: 0.2666 | Val Loss: 0.2576 | LR: 0.000098 | Time: 38.7s
+  New best model! Val Loss: 0.2576
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 0/527
+    Batch 0/527, Loss: 0.3217
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 50/527
+    Batch 50/527, Loss: 0.2926
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 100/527
+    Batch 100/527, Loss: 0.3505
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 150/527
+    Batch 150/527, Loss: 0.2794
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 200/527
+    Batch 200/527, Loss: 0.3587
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 250/527
+    Batch 250/527, Loss: 0.2299
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 300/527
+    Batch 300/527, Loss: 0.1811
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 350/527
+    Batch 350/527, Loss: 0.4060
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 400/527
+    Batch 400/527, Loss: 0.2437
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 450/527
+    Batch 450/527, Loss: 0.2179
+  GPU 0: 841/32607 MB (2.6%) Epoch 14, Batch 500/527
+    Batch 500/527, Loss: 0.4036
+Epoch  14/100 | Train Loss: 0.2623 | Val Loss: 0.2546 | LR: 0.000098 | Time: 38.7s
+  New best model! Val Loss: 0.2546
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 0/527
+    Batch 0/527, Loss: 0.3304
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 50/527
+    Batch 50/527, Loss: 0.1674
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 100/527
+    Batch 100/527, Loss: 0.1759
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 150/527
+    Batch 150/527, Loss: 0.3355
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 200/527
+    Batch 200/527, Loss: 0.1742
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 250/527
+    Batch 250/527, Loss: 0.4005
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 300/527
+    Batch 300/527, Loss: 0.1814
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 350/527
+    Batch 350/527, Loss: 0.2464
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 400/527
+    Batch 400/527, Loss: 0.2505
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 450/527
+    Batch 450/527, Loss: 0.2316
+  GPU 0: 841/32607 MB (2.6%) Epoch 15, Batch 500/527
+    Batch 500/527, Loss: 0.4489
+Epoch  15/100 | Train Loss: 0.2601 | Val Loss: 0.2572 | LR: 0.000097 | Time: 38.9s
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 0/527
+    Batch 0/527, Loss: 0.3671
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 50/527
+    Batch 50/527, Loss: 0.1447
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 100/527
+    Batch 100/527, Loss: 0.1903
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 150/527
+    Batch 150/527, Loss: 0.1320
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 200/527
+    Batch 200/527, Loss: 0.3217
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 250/527
+    Batch 250/527, Loss: 0.2394
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 300/527
+    Batch 300/527, Loss: 0.3085
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 350/527
+    Batch 350/527, Loss: 0.2073
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 400/527
+    Batch 400/527, Loss: 0.2831
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 450/527
+    Batch 450/527, Loss: 0.1225
+  GPU 0: 841/32607 MB (2.6%) Epoch 16, Batch 500/527
+    Batch 500/527, Loss: 0.1360
+Epoch  16/100 | Train Loss: 0.2579 | Val Loss: 0.2532 | LR: 0.000097 | Time: 38.6s
+  New best model! Val Loss: 0.2532
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 0/527
+    Batch 0/527, Loss: 0.1762
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 50/527
+    Batch 50/527, Loss: 0.3042
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 100/527
+    Batch 100/527, Loss: 0.2570
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 150/527
+    Batch 150/527, Loss: 0.2364
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 200/527
+    Batch 200/527, Loss: 0.1978
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 250/527
+    Batch 250/527, Loss: 0.2247
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 300/527
+    Batch 300/527, Loss: 0.1986
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 350/527
+    Batch 350/527, Loss: 0.3702
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 400/527
+    Batch 400/527, Loss: 0.1366
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 450/527
+    Batch 450/527, Loss: 0.2224
+  GPU 0: 841/32607 MB (2.6%) Epoch 17, Batch 500/527
+    Batch 500/527, Loss: 0.2190
+Epoch  17/100 | Train Loss: 0.2555 | Val Loss: 0.2606 | LR: 0.000096 | Time: 38.6s
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 0/527
+    Batch 0/527, Loss: 0.2766
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 50/527
+    Batch 50/527, Loss: 0.1356
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 100/527
+    Batch 100/527, Loss: 0.2091
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 150/527
+    Batch 150/527, Loss: 0.2593
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 200/527
+    Batch 200/527, Loss: 0.1573
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 250/527
+    Batch 250/527, Loss: 0.3194
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 300/527
+    Batch 300/527, Loss: 0.2308
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 350/527
+    Batch 350/527, Loss: 0.3951
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 400/527
+    Batch 400/527, Loss: 0.2722
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 450/527
+    Batch 450/527, Loss: 0.2549
+  GPU 0: 841/32607 MB (2.6%) Epoch 18, Batch 500/527
+    Batch 500/527, Loss: 0.2016
+Epoch  18/100 | Train Loss: 0.2531 | Val Loss: 0.2492 | LR: 0.000095 | Time: 38.9s
+  New best model! Val Loss: 0.2492
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 0/527
+    Batch 0/527, Loss: 0.3216
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 50/527
+    Batch 50/527, Loss: 0.3605
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 100/527
+    Batch 100/527, Loss: 0.2700
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 150/527
+    Batch 150/527, Loss: 0.2600
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 200/527
+    Batch 200/527, Loss: 0.3139
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 250/527
+    Batch 250/527, Loss: 0.1903
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 300/527
+    Batch 300/527, Loss: 0.1922
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 350/527
+    Batch 350/527, Loss: 0.1842
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 400/527
+    Batch 400/527, Loss: 0.3074
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 450/527
+    Batch 450/527, Loss: 0.2966
+  GPU 0: 841/32607 MB (2.6%) Epoch 19, Batch 500/527
+    Batch 500/527, Loss: 0.2290
+Epoch  19/100 | Train Loss: 0.2505 | Val Loss: 0.2823 | LR: 0.000095 | Time: 38.9s
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 0/527
+    Batch 0/527, Loss: 0.2166
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 50/527
+    Batch 50/527, Loss: 0.2054
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 100/527
+    Batch 100/527, Loss: 0.2756
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 150/527
+    Batch 150/527, Loss: 0.3257
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 200/527
+    Batch 200/527, Loss: 0.2821
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 250/527
+    Batch 250/527, Loss: 0.1265
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 300/527
+    Batch 300/527, Loss: 0.2629
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 350/527
+    Batch 350/527, Loss: 0.1554
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 400/527
+    Batch 400/527, Loss: 0.2572
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 450/527
+    Batch 450/527, Loss: 0.3363
+  GPU 0: 841/32607 MB (2.6%) Epoch 20, Batch 500/527
+    Batch 500/527, Loss: 0.2721
+Epoch  20/100 | Train Loss: 0.2488 | Val Loss: 0.2576 | LR: 0.000094 | Time: 38.7s
+  GPU 0: 839/32607 MB (2.6%) Epoch 21, Batch 0/527
+    Batch 0/527, Loss: 0.1777
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 50/527
+    Batch 50/527, Loss: 0.2697
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 100/527
+    Batch 100/527, Loss: 0.2653
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 150/527
+    Batch 150/527, Loss: 0.3081
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 200/527
+    Batch 200/527, Loss: 0.2782
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 250/527
+    Batch 250/527, Loss: 0.2477
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 300/527
+    Batch 300/527, Loss: 0.1133
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 350/527
+    Batch 350/527, Loss: 0.3595
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 400/527
+    Batch 400/527, Loss: 0.1727
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 450/527
+    Batch 450/527, Loss: 0.1384
+  GPU 0: 841/32607 MB (2.6%) Epoch 21, Batch 500/527
+    Batch 500/527, Loss: 0.2416
+Epoch  21/100 | Train Loss: 0.2466 | Val Loss: 0.2476 | LR: 0.000093 | Time: 39.0s
+  New best model! Val Loss: 0.2476
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 0/527
+    Batch 0/527, Loss: 0.1610
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 50/527
+    Batch 50/527, Loss: 0.1754
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 100/527
+    Batch 100/527, Loss: 0.1658
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 150/527
+    Batch 150/527, Loss: 0.2440
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 200/527
+    Batch 200/527, Loss: 0.1811
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 250/527
+    Batch 250/527, Loss: 0.1813
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 300/527
+    Batch 300/527, Loss: 0.1355
+  GPU 0: 841/32607 MB (2.6%) Epoch 22, Batch 350/527
+    Batch 350/527, Loss: 0.2571
+  GPU 0: 1482/32607 MB (4.5%) Epoch 22, Batch 400/527
+    Batch 400/527, Loss: 0.2057
+  GPU 0: 1544/32607 MB (4.7%) Epoch 22, Batch 450/527
+    Batch 450/527, Loss: 0.2356
+  GPU 0: 1544/32607 MB (4.7%) Epoch 22, Batch 500/527
+    Batch 500/527, Loss: 0.1487
+Epoch  22/100 | Train Loss: 0.2440 | Val Loss: 0.2508 | LR: 0.000092 | Time: 38.9s
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 0/527
+    Batch 0/527, Loss: 0.1581
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 50/527
+    Batch 50/527, Loss: 0.1713
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 100/527
+    Batch 100/527, Loss: 0.3625
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 150/527
+    Batch 150/527, Loss: 0.2856
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 200/527
+    Batch 200/527, Loss: 0.1972
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 250/527
+    Batch 250/527, Loss: 0.1472
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 300/527
+    Batch 300/527, Loss: 0.2607
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 350/527
+    Batch 350/527, Loss: 0.2818
+  GPU 0: 841/32607 MB (2.6%) Epoch 23, Batch 400/527
+    Batch 400/527, Loss: 0.1171
+  GPU 0: 1482/32607 MB (4.5%) Epoch 23, Batch 450/527
+    Batch 450/527, Loss: 0.3112
+  GPU 0: 1612/32607 MB (4.9%) Epoch 23, Batch 500/527
+    Batch 500/527, Loss: 0.2630
+Epoch  23/100 | Train Loss: 0.2424 | Val Loss: 0.2657 | LR: 0.000091 | Time: 38.6s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 24, Batch 0/527
+    Batch 0/527, Loss: 0.3190
+  GPU 0: 1612/32607 MB (4.9%) Epoch 24, Batch 50/527
+    Batch 50/527, Loss: 0.2558
+  GPU 0: 1612/32607 MB (4.9%) Epoch 24, Batch 100/527
+    Batch 100/527, Loss: 0.3940
+  GPU 0: 1612/32607 MB (4.9%) Epoch 24, Batch 150/527
+    Batch 150/527, Loss: 0.3575
+  GPU 0: 1612/32607 MB (4.9%) Epoch 24, Batch 200/527
+    Batch 200/527, Loss: 0.2307
+  GPU 0: 1612/32607 MB (4.9%) Epoch 24, Batch 250/527
+    Batch 250/527, Loss: 0.2938
+  GPU 0: 841/32607 MB (2.6%) Epoch 24, Batch 300/527
+    Batch 300/527, Loss: 0.1573
+  GPU 0: 841/32607 MB (2.6%) Epoch 24, Batch 350/527
+    Batch 350/527, Loss: 0.3033
+  GPU 0: 841/32607 MB (2.6%) Epoch 24, Batch 400/527
+    Batch 400/527, Loss: 0.2221
+  GPU 0: 841/32607 MB (2.6%) Epoch 24, Batch 450/527
+    Batch 450/527, Loss: 0.0863
+  GPU 0: 841/32607 MB (2.6%) Epoch 24, Batch 500/527
+    Batch 500/527, Loss: 0.1549
+Epoch  24/100 | Train Loss: 0.2408 | Val Loss: 0.2510 | LR: 0.000090 | Time: 38.8s
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 0/527
+    Batch 0/527, Loss: 0.2363
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 50/527
+    Batch 50/527, Loss: 0.3479
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 100/527
+    Batch 100/527, Loss: 0.2771
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 150/527
+    Batch 150/527, Loss: 0.2209
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 200/527
+    Batch 200/527, Loss: 0.3049
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 250/527
+    Batch 250/527, Loss: 0.1599
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 300/527
+    Batch 300/527, Loss: 0.1151
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 350/527
+    Batch 350/527, Loss: 0.3192
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 400/527
+    Batch 400/527, Loss: 0.3620
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 450/527
+    Batch 450/527, Loss: 0.1819
+  GPU 0: 841/32607 MB (2.6%) Epoch 25, Batch 500/527
+    Batch 500/527, Loss: 0.2174
+Epoch  25/100 | Train Loss: 0.2372 | Val Loss: 0.2624 | LR: 0.000089 | Time: 39.0s
+  Saved checkpoint: /root/vitfly/experiments/mamba_branches/optimized_training/essm_bc_s42/branch_Essm/checkpoint_epoch_25.pth
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 0/527
+    Batch 0/527, Loss: 0.2044
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 50/527
+    Batch 50/527, Loss: 0.2282
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 100/527
+    Batch 100/527, Loss: 0.1896
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 150/527
+    Batch 150/527, Loss: 0.3259
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 200/527
+    Batch 200/527, Loss: 0.2640
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 250/527
+    Batch 250/527, Loss: 0.3376
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 300/527
+    Batch 300/527, Loss: 0.2313
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 350/527
+    Batch 350/527, Loss: 0.1414
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 400/527
+    Batch 400/527, Loss: 0.1261
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 450/527
+    Batch 450/527, Loss: 0.2554
+  GPU 0: 841/32607 MB (2.6%) Epoch 26, Batch 500/527
+    Batch 500/527, Loss: 0.2116
+Epoch  26/100 | Train Loss: 0.2354 | Val Loss: 0.2558 | LR: 0.000088 | Time: 38.7s
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 0/527
+    Batch 0/527, Loss: 0.2955
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 50/527
+    Batch 50/527, Loss: 0.0939
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 100/527
+    Batch 100/527, Loss: 0.1099
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 150/527
+    Batch 150/527, Loss: 0.1063
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 200/527
+    Batch 200/527, Loss: 0.2363
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 250/527
+    Batch 250/527, Loss: 0.1322
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 300/527
+    Batch 300/527, Loss: 0.1909
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 350/527
+    Batch 350/527, Loss: 0.2044
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 400/527
+    Batch 400/527, Loss: 0.1302
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 450/527
+    Batch 450/527, Loss: 0.2643
+  GPU 0: 841/32607 MB (2.6%) Epoch 27, Batch 500/527
+    Batch 500/527, Loss: 0.1097
+Epoch  27/100 | Train Loss: 0.2314 | Val Loss: 0.2520 | LR: 0.000087 | Time: 38.8s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 0/527
+    Batch 0/527, Loss: 0.4013
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 50/527
+    Batch 50/527, Loss: 0.1417
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 100/527
+    Batch 100/527, Loss: 0.3156
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 150/527
+    Batch 150/527, Loss: 0.2537
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 200/527
+    Batch 200/527, Loss: 0.2771
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 250/527
+    Batch 250/527, Loss: 0.2076
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 300/527
+    Batch 300/527, Loss: 0.1802
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 350/527
+    Batch 350/527, Loss: 0.2723
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 400/527
+    Batch 400/527, Loss: 0.1937
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 450/527
+    Batch 450/527, Loss: 0.2423
+  GPU 0: 1612/32607 MB (4.9%) Epoch 28, Batch 500/527
+    Batch 500/527, Loss: 0.2397
+Epoch  28/100 | Train Loss: 0.2308 | Val Loss: 0.2544 | LR: 0.000086 | Time: 39.0s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 0/527
+    Batch 0/527, Loss: 0.3307
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 50/527
+    Batch 50/527, Loss: 0.2263
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 100/527
+    Batch 100/527, Loss: 0.1360
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 150/527
+    Batch 150/527, Loss: 0.2542
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 200/527
+    Batch 200/527, Loss: 0.2196
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 250/527
+    Batch 250/527, Loss: 0.2461
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 300/527
+    Batch 300/527, Loss: 0.1418
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 350/527
+    Batch 350/527, Loss: 0.1282
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 400/527
+    Batch 400/527, Loss: 0.1538
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 450/527
+    Batch 450/527, Loss: 0.2791
+  GPU 0: 1612/32607 MB (4.9%) Epoch 29, Batch 500/527
+    Batch 500/527, Loss: 0.2215
+Epoch  29/100 | Train Loss: 0.2291 | Val Loss: 0.2651 | LR: 0.000085 | Time: 38.7s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 0/527
+    Batch 0/527, Loss: 0.2512
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 50/527
+    Batch 50/527, Loss: 0.1861
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 100/527
+    Batch 100/527, Loss: 0.1823
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 150/527
+    Batch 150/527, Loss: 0.2002
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 200/527
+    Batch 200/527, Loss: 0.2954
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 250/527
+    Batch 250/527, Loss: 0.3366
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 300/527
+    Batch 300/527, Loss: 0.3385
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 350/527
+    Batch 350/527, Loss: 0.1432
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 400/527
+    Batch 400/527, Loss: 0.2761
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 450/527
+    Batch 450/527, Loss: 0.2737
+  GPU 0: 1612/32607 MB (4.9%) Epoch 30, Batch 500/527
+    Batch 500/527, Loss: 0.1825
+Epoch  30/100 | Train Loss: 0.2264 | Val Loss: 0.2555 | LR: 0.000084 | Time: 38.8s
+  GPU 0: 1610/32607 MB (4.9%) Epoch 31, Batch 0/527
+    Batch 0/527, Loss: 0.3259
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 50/527
+    Batch 50/527, Loss: 0.2344
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 100/527
+    Batch 100/527, Loss: 0.1728
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 150/527
+    Batch 150/527, Loss: 0.1768
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 200/527
+    Batch 200/527, Loss: 0.1905
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 250/527
+    Batch 250/527, Loss: 0.2009
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 300/527
+    Batch 300/527, Loss: 0.3055
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 350/527
+    Batch 350/527, Loss: 0.2948
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 400/527
+    Batch 400/527, Loss: 0.1580
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 450/527
+    Batch 450/527, Loss: 0.1981
+  GPU 0: 1612/32607 MB (4.9%) Epoch 31, Batch 500/527
+    Batch 500/527, Loss: 0.1402
+Epoch  31/100 | Train Loss: 0.2238 | Val Loss: 0.2472 | LR: 0.000083 | Time: 39.0s
+  New best model! Val Loss: 0.2472
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 0/527
+    Batch 0/527, Loss: 0.2205
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 50/527
+    Batch 50/527, Loss: 0.3413
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 100/527
+    Batch 100/527, Loss: 0.1083
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 150/527
+    Batch 150/527, Loss: 0.3515
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 200/527
+    Batch 200/527, Loss: 0.4205
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 250/527
+    Batch 250/527, Loss: 0.1535
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 300/527
+    Batch 300/527, Loss: 0.1811
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 350/527
+    Batch 350/527, Loss: 0.1242
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 400/527
+    Batch 400/527, Loss: 0.1860
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 450/527
+    Batch 450/527, Loss: 0.1780
+  GPU 0: 1612/32607 MB (4.9%) Epoch 32, Batch 500/527
+    Batch 500/527, Loss: 0.1611
+Epoch  32/100 | Train Loss: 0.2216 | Val Loss: 0.2587 | LR: 0.000081 | Time: 38.5s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 0/527
+    Batch 0/527, Loss: 0.2193
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 50/527
+    Batch 50/527, Loss: 0.2577
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 100/527
+    Batch 100/527, Loss: 0.1619
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 150/527
+    Batch 150/527, Loss: 0.2464
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 200/527
+    Batch 200/527, Loss: 0.1167
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 250/527
+    Batch 250/527, Loss: 0.0972
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 300/527
+    Batch 300/527, Loss: 0.2604
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 350/527
+    Batch 350/527, Loss: 0.1893
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 400/527
+    Batch 400/527, Loss: 0.2870
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 450/527
+    Batch 450/527, Loss: 0.1141
+  GPU 0: 1612/32607 MB (4.9%) Epoch 33, Batch 500/527
+    Batch 500/527, Loss: 0.2171
+Epoch  33/100 | Train Loss: 0.2190 | Val Loss: 0.2530 | LR: 0.000080 | Time: 38.6s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 0/527
+    Batch 0/527, Loss: 0.2167
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 50/527
+    Batch 50/527, Loss: 0.2398
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 100/527
+    Batch 100/527, Loss: 0.1744
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 150/527
+    Batch 150/527, Loss: 0.1153
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 200/527
+    Batch 200/527, Loss: 0.1305
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 250/527
+    Batch 250/527, Loss: 0.1826
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 300/527
+    Batch 300/527, Loss: 0.1628
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 350/527
+    Batch 350/527, Loss: 0.1217
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 400/527
+    Batch 400/527, Loss: 0.2876
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 450/527
+    Batch 450/527, Loss: 0.1932
+  GPU 0: 1612/32607 MB (4.9%) Epoch 34, Batch 500/527
+    Batch 500/527, Loss: 0.2084
+Epoch  34/100 | Train Loss: 0.2176 | Val Loss: 0.2539 | LR: 0.000079 | Time: 38.8s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 0/527
+    Batch 0/527, Loss: 0.1171
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 50/527
+    Batch 50/527, Loss: 0.2025
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 100/527
+    Batch 100/527, Loss: 0.3232
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 150/527
+    Batch 150/527, Loss: 0.4065
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 200/527
+    Batch 200/527, Loss: 0.3687
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 250/527
+    Batch 250/527, Loss: 0.1558
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 300/527
+    Batch 300/527, Loss: 0.1664
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 350/527
+    Batch 350/527, Loss: 0.1428
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 400/527
+    Batch 400/527, Loss: 0.1658
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 450/527
+    Batch 450/527, Loss: 0.1936
+  GPU 0: 1612/32607 MB (4.9%) Epoch 35, Batch 500/527
+    Batch 500/527, Loss: 0.1926
+Epoch  35/100 | Train Loss: 0.2156 | Val Loss: 0.2534 | LR: 0.000077 | Time: 38.6s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 0/527
+    Batch 0/527, Loss: 0.2036
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 50/527
+    Batch 50/527, Loss: 0.1328
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 100/527
+    Batch 100/527, Loss: 0.2134
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 150/527
+    Batch 150/527, Loss: 0.3593
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 200/527
+    Batch 200/527, Loss: 0.3433
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 250/527
+    Batch 250/527, Loss: 0.1045
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 300/527
+    Batch 300/527, Loss: 0.1285
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 350/527
+    Batch 350/527, Loss: 0.3812
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 400/527
+    Batch 400/527, Loss: 0.1918
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 450/527
+    Batch 450/527, Loss: 0.3663
+  GPU 0: 1612/32607 MB (4.9%) Epoch 36, Batch 500/527
+    Batch 500/527, Loss: 0.1410
+Epoch  36/100 | Train Loss: 0.2125 | Val Loss: 0.2557 | LR: 0.000076 | Time: 38.9s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 0/527
+    Batch 0/527, Loss: 0.1843
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 50/527
+    Batch 50/527, Loss: 0.1951
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 100/527
+    Batch 100/527, Loss: 0.1289
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 150/527
+    Batch 150/527, Loss: 0.2472
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 200/527
+    Batch 200/527, Loss: 0.1676
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 250/527
+    Batch 250/527, Loss: 0.2407
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 300/527
+    Batch 300/527, Loss: 0.1726
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 350/527
+    Batch 350/527, Loss: 0.1107
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 400/527
+    Batch 400/527, Loss: 0.1067
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 450/527
+    Batch 450/527, Loss: 0.1465
+  GPU 0: 1612/32607 MB (4.9%) Epoch 37, Batch 500/527
+    Batch 500/527, Loss: 0.2889
+Epoch  37/100 | Train Loss: 0.2104 | Val Loss: 0.2600 | LR: 0.000075 | Time: 38.9s
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 0/527
+    Batch 0/527, Loss: 0.1817
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 50/527
+    Batch 50/527, Loss: 0.3896
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 100/527
+    Batch 100/527, Loss: 0.2234
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 150/527
+    Batch 150/527, Loss: 0.2130
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 200/527
+    Batch 200/527, Loss: 0.2539
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 250/527
+    Batch 250/527, Loss: 0.3808
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 300/527
+    Batch 300/527, Loss: 0.1612
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 350/527
+    Batch 350/527, Loss: 0.2861
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 400/527
+    Batch 400/527, Loss: 0.1787
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 450/527
+    Batch 450/527, Loss: 0.2328
+  GPU 0: 1612/32607 MB (4.9%) Epoch 38, Batch 500/527
+    Batch 500/527, Loss: 0.2213
+Epoch  38/100 | Train Loss: 0.2081 | Val Loss: 0.2559 | LR: 0.000073 | Time: 39.4s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 0/527
+    Batch 0/527, Loss: 0.2271
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 50/527
+    Batch 50/527, Loss: 0.3015
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 100/527
+    Batch 100/527, Loss: 0.2919
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 150/527
+    Batch 150/527, Loss: 0.3002
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 200/527
+    Batch 200/527, Loss: 0.1529
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 250/527
+    Batch 250/527, Loss: 0.2440
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 300/527
+    Batch 300/527, Loss: 0.3907
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 350/527
+    Batch 350/527, Loss: 0.1899
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 400/527
+    Batch 400/527, Loss: 0.1331
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 450/527
+    Batch 450/527, Loss: 0.2365
+  GPU 0: 1592/32607 MB (4.9%) Epoch 39, Batch 500/527
+    Batch 500/527, Loss: 0.2652
+Epoch  39/100 | Train Loss: 0.2053 | Val Loss: 0.2564 | LR: 0.000072 | Time: 39.4s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 0/527
+    Batch 0/527, Loss: 0.1218
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 50/527
+    Batch 50/527, Loss: 0.2302
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 100/527
+    Batch 100/527, Loss: 0.2923
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 150/527
+    Batch 150/527, Loss: 0.2623
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 200/527
+    Batch 200/527, Loss: 0.1785
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 250/527
+    Batch 250/527, Loss: 0.1551
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 300/527
+    Batch 300/527, Loss: 0.2035
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 350/527
+    Batch 350/527, Loss: 0.1655
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 400/527
+    Batch 400/527, Loss: 0.1983
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 450/527
+    Batch 450/527, Loss: 0.1612
+  GPU 0: 1592/32607 MB (4.9%) Epoch 40, Batch 500/527
+    Batch 500/527, Loss: 0.1450
+Epoch  40/100 | Train Loss: 0.2026 | Val Loss: 0.2663 | LR: 0.000070 | Time: 39.8s
+  GPU 0: 1590/32607 MB (4.9%) Epoch 41, Batch 0/527
+    Batch 0/527, Loss: 0.2440
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 50/527
+    Batch 50/527, Loss: 0.1980
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 100/527
+    Batch 100/527, Loss: 0.1423
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 150/527
+    Batch 150/527, Loss: 0.1406
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 200/527
+    Batch 200/527, Loss: 0.2051
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 250/527
+    Batch 250/527, Loss: 0.2683
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 300/527
+    Batch 300/527, Loss: 0.1798
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 350/527
+    Batch 350/527, Loss: 0.1179
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 400/527
+    Batch 400/527, Loss: 0.2123
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 450/527
+    Batch 450/527, Loss: 0.2777
+  GPU 0: 1592/32607 MB (4.9%) Epoch 41, Batch 500/527
+    Batch 500/527, Loss: 0.1548
+Epoch  41/100 | Train Loss: 0.1993 | Val Loss: 0.2609 | LR: 0.000069 | Time: 39.4s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 0/527
+    Batch 0/527, Loss: 0.2151
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 50/527
+    Batch 50/527, Loss: 0.2088
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 100/527
+    Batch 100/527, Loss: 0.1419
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 150/527
+    Batch 150/527, Loss: 0.1724
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 200/527
+    Batch 200/527, Loss: 0.0935
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 250/527
+    Batch 250/527, Loss: 0.1977
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 300/527
+    Batch 300/527, Loss: 0.3191
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 350/527
+    Batch 350/527, Loss: 0.1225
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 400/527
+    Batch 400/527, Loss: 0.1789
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 450/527
+    Batch 450/527, Loss: 0.3140
+  GPU 0: 1592/32607 MB (4.9%) Epoch 42, Batch 500/527
+    Batch 500/527, Loss: 0.1690
+Epoch  42/100 | Train Loss: 0.1980 | Val Loss: 0.2589 | LR: 0.000067 | Time: 39.2s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 0/527
+    Batch 0/527, Loss: 0.1101
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 50/527
+    Batch 50/527, Loss: 0.2871
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 100/527
+    Batch 100/527, Loss: 0.2455
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 150/527
+    Batch 150/527, Loss: 0.3025
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 200/527
+    Batch 200/527, Loss: 0.3392
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 250/527
+    Batch 250/527, Loss: 0.2597
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 300/527
+    Batch 300/527, Loss: 0.2269
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 350/527
+    Batch 350/527, Loss: 0.3400
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 400/527
+    Batch 400/527, Loss: 0.1252
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 450/527
+    Batch 450/527, Loss: 0.1414
+  GPU 0: 1592/32607 MB (4.9%) Epoch 43, Batch 500/527
+    Batch 500/527, Loss: 0.2781
+Epoch  43/100 | Train Loss: 0.1952 | Val Loss: 0.2561 | LR: 0.000065 | Time: 39.4s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 0/527
+    Batch 0/527, Loss: 0.1255
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 50/527
+    Batch 50/527, Loss: 0.1964
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 100/527
+    Batch 100/527, Loss: 0.2061
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 150/527
+    Batch 150/527, Loss: 0.2829
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 200/527
+    Batch 200/527, Loss: 0.0744
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 250/527
+    Batch 250/527, Loss: 0.2624
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 300/527
+    Batch 300/527, Loss: 0.1680
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 350/527
+    Batch 350/527, Loss: 0.1461
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 400/527
+    Batch 400/527, Loss: 0.1342
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 450/527
+    Batch 450/527, Loss: 0.1090
+  GPU 0: 1592/32607 MB (4.9%) Epoch 44, Batch 500/527
+    Batch 500/527, Loss: 0.0963
+Epoch  44/100 | Train Loss: 0.1919 | Val Loss: 0.2633 | LR: 0.000064 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 0/527
+    Batch 0/527, Loss: 0.1649
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 50/527
+    Batch 50/527, Loss: 0.2293
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 100/527
+    Batch 100/527, Loss: 0.2259
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 150/527
+    Batch 150/527, Loss: 0.3232
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 200/527
+    Batch 200/527, Loss: 0.3356
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 250/527
+    Batch 250/527, Loss: 0.3777
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 300/527
+    Batch 300/527, Loss: 0.1503
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 350/527
+    Batch 350/527, Loss: 0.1553
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 400/527
+    Batch 400/527, Loss: 0.1121
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 450/527
+    Batch 450/527, Loss: 0.1083
+  GPU 0: 1592/32607 MB (4.9%) Epoch 45, Batch 500/527
+    Batch 500/527, Loss: 0.1800
+Epoch  45/100 | Train Loss: 0.1888 | Val Loss: 0.2629 | LR: 0.000062 | Time: 38.7s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 0/527
+    Batch 0/527, Loss: 0.1670
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 50/527
+    Batch 50/527, Loss: 0.2040
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 100/527
+    Batch 100/527, Loss: 0.0818
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 150/527
+    Batch 150/527, Loss: 0.1488
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 200/527
+    Batch 200/527, Loss: 0.1489
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 250/527
+    Batch 250/527, Loss: 0.2287
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 300/527
+    Batch 300/527, Loss: 0.1527
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 350/527
+    Batch 350/527, Loss: 0.1491
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 400/527
+    Batch 400/527, Loss: 0.1196
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 450/527
+    Batch 450/527, Loss: 0.1649
+  GPU 0: 1592/32607 MB (4.9%) Epoch 46, Batch 500/527
+    Batch 500/527, Loss: 0.2016
+Epoch  46/100 | Train Loss: 0.1870 | Val Loss: 0.2659 | LR: 0.000061 | Time: 39.1s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 0/527
+    Batch 0/527, Loss: 0.1127
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 50/527
+    Batch 50/527, Loss: 0.1161
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 100/527
+    Batch 100/527, Loss: 0.1743
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 150/527
+    Batch 150/527, Loss: 0.1694
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 200/527
+    Batch 200/527, Loss: 0.1114
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 250/527
+    Batch 250/527, Loss: 0.2735
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 300/527
+    Batch 300/527, Loss: 0.2312
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 350/527
+    Batch 350/527, Loss: 0.2229
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 400/527
+    Batch 400/527, Loss: 0.2577
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 450/527
+    Batch 450/527, Loss: 0.0973
+  GPU 0: 1592/32607 MB (4.9%) Epoch 47, Batch 500/527
+    Batch 500/527, Loss: 0.2347
+Epoch  47/100 | Train Loss: 0.1834 | Val Loss: 0.2695 | LR: 0.000059 | Time: 39.0s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 0/527
+    Batch 0/527, Loss: 0.1416
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 50/527
+    Batch 50/527, Loss: 0.1568
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 100/527
+    Batch 100/527, Loss: 0.2088
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 150/527
+    Batch 150/527, Loss: 0.3789
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 200/527
+    Batch 200/527, Loss: 0.1793
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 250/527
+    Batch 250/527, Loss: 0.2016
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 300/527
+    Batch 300/527, Loss: 0.2501
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 350/527
+    Batch 350/527, Loss: 0.2630
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 400/527
+    Batch 400/527, Loss: 0.0751
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 450/527
+    Batch 450/527, Loss: 0.1411
+  GPU 0: 1592/32607 MB (4.9%) Epoch 48, Batch 500/527
+    Batch 500/527, Loss: 0.1695
+Epoch  48/100 | Train Loss: 0.1811 | Val Loss: 0.2601 | LR: 0.000057 | Time: 38.7s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 0/527
+    Batch 0/527, Loss: 0.1140
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 50/527
+    Batch 50/527, Loss: 0.2096
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 100/527
+    Batch 100/527, Loss: 0.2084
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 150/527
+    Batch 150/527, Loss: 0.1903
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 200/527
+    Batch 200/527, Loss: 0.1474
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 250/527
+    Batch 250/527, Loss: 0.1689
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 300/527
+    Batch 300/527, Loss: 0.1187
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 350/527
+    Batch 350/527, Loss: 0.1605
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 400/527
+    Batch 400/527, Loss: 0.2003
+  GPU 0: 1590/32607 MB (4.9%) Epoch 49, Batch 450/527
+    Batch 450/527, Loss: 0.1467
+  GPU 0: 1592/32607 MB (4.9%) Epoch 49, Batch 500/527
+    Batch 500/527, Loss: 0.2129
+Epoch  49/100 | Train Loss: 0.1790 | Val Loss: 0.2620 | LR: 0.000056 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 0/527
+    Batch 0/527, Loss: 0.1892
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 50/527
+    Batch 50/527, Loss: 0.1912
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 100/527
+    Batch 100/527, Loss: 0.2424
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 150/527
+    Batch 150/527, Loss: 0.1343
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 200/527
+    Batch 200/527, Loss: 0.1590
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 250/527
+    Batch 250/527, Loss: 0.1089
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 300/527
+    Batch 300/527, Loss: 0.1543
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 350/527
+    Batch 350/527, Loss: 0.1777
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 400/527
+    Batch 400/527, Loss: 0.1651
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 450/527
+    Batch 450/527, Loss: 0.1959
+  GPU 0: 1592/32607 MB (4.9%) Epoch 50, Batch 500/527
+    Batch 500/527, Loss: 0.0973
+Epoch  50/100 | Train Loss: 0.1758 | Val Loss: 0.2668 | LR: 0.000054 | Time: 39.1s
+  Saved checkpoint: /root/vitfly/experiments/mamba_branches/optimized_training/essm_bc_s42/branch_Essm/checkpoint_epoch_50.pth
+  GPU 0: 1590/32607 MB (4.9%) Epoch 51, Batch 0/527
+    Batch 0/527, Loss: 0.2093
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 50/527
+    Batch 50/527, Loss: 0.1332
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 100/527
+    Batch 100/527, Loss: 0.1983
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 150/527
+    Batch 150/527, Loss: 0.1860
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 200/527
+    Batch 200/527, Loss: 0.1700
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 250/527
+    Batch 250/527, Loss: 0.1572
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 300/527
+    Batch 300/527, Loss: 0.1463
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 350/527
+    Batch 350/527, Loss: 0.1132
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 400/527
+    Batch 400/527, Loss: 0.2089
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 450/527
+    Batch 450/527, Loss: 0.1693
+  GPU 0: 1592/32607 MB (4.9%) Epoch 51, Batch 500/527
+    Batch 500/527, Loss: 0.0973
+Epoch  51/100 | Train Loss: 0.1725 | Val Loss: 0.2640 | LR: 0.000052 | Time: 38.7s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 0/527
+    Batch 0/527, Loss: 0.2455
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 50/527
+    Batch 50/527, Loss: 0.1249
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 100/527
+    Batch 100/527, Loss: 0.1487
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 150/527
+    Batch 150/527, Loss: 0.2660
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 200/527
+    Batch 200/527, Loss: 0.1107
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 250/527
+    Batch 250/527, Loss: 0.1958
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 300/527
+    Batch 300/527, Loss: 0.2857
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 350/527
+    Batch 350/527, Loss: 0.2589
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 400/527
+    Batch 400/527, Loss: 0.1431
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 450/527
+    Batch 450/527, Loss: 0.1025
+  GPU 0: 1592/32607 MB (4.9%) Epoch 52, Batch 500/527
+    Batch 500/527, Loss: 0.2192
+Epoch  52/100 | Train Loss: 0.1709 | Val Loss: 0.2604 | LR: 0.000051 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 0/527
+    Batch 0/527, Loss: 0.1033
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 50/527
+    Batch 50/527, Loss: 0.2489
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 100/527
+    Batch 100/527, Loss: 0.1144
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 150/527
+    Batch 150/527, Loss: 0.2163
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 200/527
+    Batch 200/527, Loss: 0.1458
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 250/527
+    Batch 250/527, Loss: 0.1113
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 300/527
+    Batch 300/527, Loss: 0.2454
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 350/527
+    Batch 350/527, Loss: 0.1673
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 400/527
+    Batch 400/527, Loss: 0.1388
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 450/527
+    Batch 450/527, Loss: 0.1833
+  GPU 0: 1592/32607 MB (4.9%) Epoch 53, Batch 500/527
+    Batch 500/527, Loss: 0.1461
+Epoch  53/100 | Train Loss: 0.1685 | Val Loss: 0.2623 | LR: 0.000049 | Time: 39.1s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 0/527
+    Batch 0/527, Loss: 0.1991
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 50/527
+    Batch 50/527, Loss: 0.1589
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 100/527
+    Batch 100/527, Loss: 0.1556
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 150/527
+    Batch 150/527, Loss: 0.0906
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 200/527
+    Batch 200/527, Loss: 0.3110
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 250/527
+    Batch 250/527, Loss: 0.2189
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 300/527
+    Batch 300/527, Loss: 0.1317
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 350/527
+    Batch 350/527, Loss: 0.1053
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 400/527
+    Batch 400/527, Loss: 0.0994
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 450/527
+    Batch 450/527, Loss: 0.1407
+  GPU 0: 1592/32607 MB (4.9%) Epoch 54, Batch 500/527
+    Batch 500/527, Loss: 0.1573
+Epoch  54/100 | Train Loss: 0.1655 | Val Loss: 0.2584 | LR: 0.000048 | Time: 38.7s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 0/527
+    Batch 0/527, Loss: 0.1419
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 50/527
+    Batch 50/527, Loss: 0.1309
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 100/527
+    Batch 100/527, Loss: 0.0786
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 150/527
+    Batch 150/527, Loss: 0.2093
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 200/527
+    Batch 200/527, Loss: 0.1303
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 250/527
+    Batch 250/527, Loss: 0.1105
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 300/527
+    Batch 300/527, Loss: 0.1548
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 350/527
+    Batch 350/527, Loss: 0.1313
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 400/527
+    Batch 400/527, Loss: 0.1494
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 450/527
+    Batch 450/527, Loss: 0.2376
+  GPU 0: 1592/32607 MB (4.9%) Epoch 55, Batch 500/527
+    Batch 500/527, Loss: 0.1677
+Epoch  55/100 | Train Loss: 0.1639 | Val Loss: 0.2642 | LR: 0.000046 | Time: 38.7s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 0/527
+    Batch 0/527, Loss: 0.1189
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 50/527
+    Batch 50/527, Loss: 0.1566
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 100/527
+    Batch 100/527, Loss: 0.1901
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 150/527
+    Batch 150/527, Loss: 0.1416
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 200/527
+    Batch 200/527, Loss: 0.1484
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 250/527
+    Batch 250/527, Loss: 0.3241
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 300/527
+    Batch 300/527, Loss: 0.1209
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 350/527
+    Batch 350/527, Loss: 0.1627
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 400/527
+    Batch 400/527, Loss: 0.3489
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 450/527
+    Batch 450/527, Loss: 0.1157
+  GPU 0: 1592/32607 MB (4.9%) Epoch 56, Batch 500/527
+    Batch 500/527, Loss: 0.1344
+Epoch  56/100 | Train Loss: 0.1614 | Val Loss: 0.2599 | LR: 0.000044 | Time: 39.1s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 0/527
+    Batch 0/527, Loss: 0.2087
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 50/527
+    Batch 50/527, Loss: 0.1154
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 100/527
+    Batch 100/527, Loss: 0.2308
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 150/527
+    Batch 150/527, Loss: 0.1905
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 200/527
+    Batch 200/527, Loss: 0.1180
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 250/527
+    Batch 250/527, Loss: 0.1575
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 300/527
+    Batch 300/527, Loss: 0.1451
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 350/527
+    Batch 350/527, Loss: 0.1290
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 400/527
+    Batch 400/527, Loss: 0.1678
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 450/527
+    Batch 450/527, Loss: 0.1407
+  GPU 0: 1592/32607 MB (4.9%) Epoch 57, Batch 500/527
+    Batch 500/527, Loss: 0.2435
+Epoch  57/100 | Train Loss: 0.1599 | Val Loss: 0.2626 | LR: 0.000043 | Time: 38.7s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 0/527
+    Batch 0/527, Loss: 0.0773
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 50/527
+    Batch 50/527, Loss: 0.1168
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 100/527
+    Batch 100/527, Loss: 0.1381
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 150/527
+    Batch 150/527, Loss: 0.1097
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 200/527
+    Batch 200/527, Loss: 0.2154
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 250/527
+    Batch 250/527, Loss: 0.1293
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 300/527
+    Batch 300/527, Loss: 0.1469
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 350/527
+    Batch 350/527, Loss: 0.2287
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 400/527
+    Batch 400/527, Loss: 0.2413
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 450/527
+    Batch 450/527, Loss: 0.0709
+  GPU 0: 1592/32607 MB (4.9%) Epoch 58, Batch 500/527
+    Batch 500/527, Loss: 0.1397
+Epoch  58/100 | Train Loss: 0.1559 | Val Loss: 0.2611 | LR: 0.000041 | Time: 38.6s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 0/527
+    Batch 0/527, Loss: 0.1095
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 50/527
+    Batch 50/527, Loss: 0.1362
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 100/527
+    Batch 100/527, Loss: 0.0879
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 150/527
+    Batch 150/527, Loss: 0.1470
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 200/527
+    Batch 200/527, Loss: 0.1512
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 250/527
+    Batch 250/527, Loss: 0.3438
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 300/527
+    Batch 300/527, Loss: 0.0916
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 350/527
+    Batch 350/527, Loss: 0.1413
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 400/527
+    Batch 400/527, Loss: 0.2247
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 450/527
+    Batch 450/527, Loss: 0.1265
+  GPU 0: 1592/32607 MB (4.9%) Epoch 59, Batch 500/527
+    Batch 500/527, Loss: 0.0799
+Epoch  59/100 | Train Loss: 0.1541 | Val Loss: 0.2644 | LR: 0.000039 | Time: 39.0s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 0/527
+    Batch 0/527, Loss: 0.2323
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 50/527
+    Batch 50/527, Loss: 0.2033
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 100/527
+    Batch 100/527, Loss: 0.0977
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 150/527
+    Batch 150/527, Loss: 0.2343
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 200/527
+    Batch 200/527, Loss: 0.1749
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 250/527
+    Batch 250/527, Loss: 0.1097
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 300/527
+    Batch 300/527, Loss: 0.1896
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 350/527
+    Batch 350/527, Loss: 0.1284
+  GPU 0: 1590/32607 MB (4.9%) Epoch 60, Batch 400/527
+    Batch 400/527, Loss: 0.2358
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 450/527
+    Batch 450/527, Loss: 0.0997
+  GPU 0: 1592/32607 MB (4.9%) Epoch 60, Batch 500/527
+    Batch 500/527, Loss: 0.1197
+Epoch  60/100 | Train Loss: 0.1510 | Val Loss: 0.2650 | LR: 0.000038 | Time: 38.6s
+  GPU 0: 1590/32607 MB (4.9%) Epoch 61, Batch 0/527
+    Batch 0/527, Loss: 0.2071
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 50/527
+    Batch 50/527, Loss: 0.1626
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 100/527
+    Batch 100/527, Loss: 0.0741
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 150/527
+    Batch 150/527, Loss: 0.1421
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 200/527
+    Batch 200/527, Loss: 0.1710
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 250/527
+    Batch 250/527, Loss: 0.1332
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 300/527
+    Batch 300/527, Loss: 0.1446
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 350/527
+    Batch 350/527, Loss: 0.1042
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 400/527
+    Batch 400/527, Loss: 0.0782
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 450/527
+    Batch 450/527, Loss: 0.2071
+  GPU 0: 1592/32607 MB (4.9%) Epoch 61, Batch 500/527
+    Batch 500/527, Loss: 0.0999
+Epoch  61/100 | Train Loss: 0.1508 | Val Loss: 0.2600 | LR: 0.000036 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 0/527
+    Batch 0/527, Loss: 0.1715
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 50/527
+    Batch 50/527, Loss: 0.1649
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 100/527
+    Batch 100/527, Loss: 0.1512
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 150/527
+    Batch 150/527, Loss: 0.1840
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 200/527
+    Batch 200/527, Loss: 0.2139
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 250/527
+    Batch 250/527, Loss: 0.2227
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 300/527
+    Batch 300/527, Loss: 0.1626
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 350/527
+    Batch 350/527, Loss: 0.1055
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 400/527
+    Batch 400/527, Loss: 0.0838
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 450/527
+    Batch 450/527, Loss: 0.2034
+  GPU 0: 1592/32607 MB (4.9%) Epoch 62, Batch 500/527
+    Batch 500/527, Loss: 0.1331
+Epoch  62/100 | Train Loss: 0.1480 | Val Loss: 0.2695 | LR: 0.000035 | Time: 39.0s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 0/527
+    Batch 0/527, Loss: 0.1167
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 50/527
+    Batch 50/527, Loss: 0.1629
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 100/527
+    Batch 100/527, Loss: 0.1202
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 150/527
+    Batch 150/527, Loss: 0.1186
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 200/527
+    Batch 200/527, Loss: 0.0854
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 250/527
+    Batch 250/527, Loss: 0.1078
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 300/527
+    Batch 300/527, Loss: 0.1990
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 350/527
+    Batch 350/527, Loss: 0.2093
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 400/527
+    Batch 400/527, Loss: 0.1943
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 450/527
+    Batch 450/527, Loss: 0.0992
+  GPU 0: 1592/32607 MB (4.9%) Epoch 63, Batch 500/527
+    Batch 500/527, Loss: 0.1580
+Epoch  63/100 | Train Loss: 0.1454 | Val Loss: 0.2646 | LR: 0.000033 | Time: 38.7s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 0/527
+    Batch 0/527, Loss: 0.0847
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 50/527
+    Batch 50/527, Loss: 0.1737
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 100/527
+    Batch 100/527, Loss: 0.2468
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 150/527
+    Batch 150/527, Loss: 0.1239
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 200/527
+    Batch 200/527, Loss: 0.1679
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 250/527
+    Batch 250/527, Loss: 0.1217
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 300/527
+    Batch 300/527, Loss: 0.1340
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 350/527
+    Batch 350/527, Loss: 0.1357
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 400/527
+    Batch 400/527, Loss: 0.1503
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 450/527
+    Batch 450/527, Loss: 0.0994
+  GPU 0: 1592/32607 MB (4.9%) Epoch 64, Batch 500/527
+    Batch 500/527, Loss: 0.1996
+Epoch  64/100 | Train Loss: 0.1432 | Val Loss: 0.2624 | LR: 0.000031 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 0/527
+    Batch 0/527, Loss: 0.1698
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 50/527
+    Batch 50/527, Loss: 0.1163
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 100/527
+    Batch 100/527, Loss: 0.0877
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 150/527
+    Batch 150/527, Loss: 0.2472
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 200/527
+    Batch 200/527, Loss: 0.1414
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 250/527
+    Batch 250/527, Loss: 0.0984
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 300/527
+    Batch 300/527, Loss: 0.0982
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 350/527
+    Batch 350/527, Loss: 0.1392
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 400/527
+    Batch 400/527, Loss: 0.1140
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 450/527
+    Batch 450/527, Loss: 0.1510
+  GPU 0: 1592/32607 MB (4.9%) Epoch 65, Batch 500/527
+    Batch 500/527, Loss: 0.1398
+Epoch  65/100 | Train Loss: 0.1411 | Val Loss: 0.2643 | LR: 0.000030 | Time: 39.2s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 0/527
+    Batch 0/527, Loss: 0.1261
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 50/527
+    Batch 50/527, Loss: 0.1100
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 100/527
+    Batch 100/527, Loss: 0.1188
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 150/527
+    Batch 150/527, Loss: 0.1567
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 200/527
+    Batch 200/527, Loss: 0.1689
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 250/527
+    Batch 250/527, Loss: 0.1799
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 300/527
+    Batch 300/527, Loss: 0.1554
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 350/527
+    Batch 350/527, Loss: 0.0913
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 400/527
+    Batch 400/527, Loss: 0.2267
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 450/527
+    Batch 450/527, Loss: 0.1334
+  GPU 0: 1592/32607 MB (4.9%) Epoch 66, Batch 500/527
+    Batch 500/527, Loss: 0.1182
+Epoch  66/100 | Train Loss: 0.1402 | Val Loss: 0.2744 | LR: 0.000028 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 0/527
+    Batch 0/527, Loss: 0.1505
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 50/527
+    Batch 50/527, Loss: 0.1249
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 100/527
+    Batch 100/527, Loss: 0.0997
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 150/527
+    Batch 150/527, Loss: 0.1364
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 200/527
+    Batch 200/527, Loss: 0.1549
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 250/527
+    Batch 250/527, Loss: 0.1580
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 300/527
+    Batch 300/527, Loss: 0.1774
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 350/527
+    Batch 350/527, Loss: 0.1677
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 400/527
+    Batch 400/527, Loss: 0.1906
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 450/527
+    Batch 450/527, Loss: 0.1124
+  GPU 0: 1592/32607 MB (4.9%) Epoch 67, Batch 500/527
+    Batch 500/527, Loss: 0.1054
+Epoch  67/100 | Train Loss: 0.1381 | Val Loss: 0.2611 | LR: 0.000027 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 0/527
+    Batch 0/527, Loss: 0.0753
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 50/527
+    Batch 50/527, Loss: 0.1053
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 100/527
+    Batch 100/527, Loss: 0.1404
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 150/527
+    Batch 150/527, Loss: 0.1061
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 200/527
+    Batch 200/527, Loss: 0.1092
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 250/527
+    Batch 250/527, Loss: 0.1227
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 300/527
+    Batch 300/527, Loss: 0.0670
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 350/527
+    Batch 350/527, Loss: 0.1365
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 400/527
+    Batch 400/527, Loss: 0.2221
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 450/527
+    Batch 450/527, Loss: 0.1315
+  GPU 0: 1592/32607 MB (4.9%) Epoch 68, Batch 500/527
+    Batch 500/527, Loss: 0.0638
+Epoch  68/100 | Train Loss: 0.1360 | Val Loss: 0.2613 | LR: 0.000025 | Time: 39.0s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 0/527
+    Batch 0/527, Loss: 0.2172
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 50/527
+    Batch 50/527, Loss: 0.1096
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 100/527
+    Batch 100/527, Loss: 0.1432
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 150/527
+    Batch 150/527, Loss: 0.0732
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 200/527
+    Batch 200/527, Loss: 0.1102
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 250/527
+    Batch 250/527, Loss: 0.1195
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 300/527
+    Batch 300/527, Loss: 0.1195
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 350/527
+    Batch 350/527, Loss: 0.0989
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 400/527
+    Batch 400/527, Loss: 0.1592
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 450/527
+    Batch 450/527, Loss: 0.1667
+  GPU 0: 1592/32607 MB (4.9%) Epoch 69, Batch 500/527
+    Batch 500/527, Loss: 0.0794
+Epoch  69/100 | Train Loss: 0.1343 | Val Loss: 0.2685 | LR: 0.000024 | Time: 38.9s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 0/527
+    Batch 0/527, Loss: 0.2305
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 50/527
+    Batch 50/527, Loss: 0.0694
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 100/527
+    Batch 100/527, Loss: 0.0755
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 150/527
+    Batch 150/527, Loss: 0.1194
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 200/527
+    Batch 200/527, Loss: 0.0850
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 250/527
+    Batch 250/527, Loss: 0.0792
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 300/527
+    Batch 300/527, Loss: 0.0822
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 350/527
+    Batch 350/527, Loss: 0.1360
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 400/527
+    Batch 400/527, Loss: 0.1528
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 450/527
+    Batch 450/527, Loss: 0.0881
+  GPU 0: 1592/32607 MB (4.9%) Epoch 70, Batch 500/527
+    Batch 500/527, Loss: 0.0579
+Epoch  70/100 | Train Loss: 0.1322 | Val Loss: 0.2669 | LR: 0.000023 | Time: 38.7s
+  GPU 0: 1590/32607 MB (4.9%) Epoch 71, Batch 0/527
+    Batch 0/527, Loss: 0.1631
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 50/527
+    Batch 50/527, Loss: 0.0771
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 100/527
+    Batch 100/527, Loss: 0.1185
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 150/527
+    Batch 150/527, Loss: 0.1755
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 200/527
+    Batch 200/527, Loss: 0.0988
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 250/527
+    Batch 250/527, Loss: 0.1236
+  GPU 0: 1590/32607 MB (4.9%) Epoch 71, Batch 300/527
+    Batch 300/527, Loss: 0.1577
+  GPU 0: 1590/32607 MB (4.9%) Epoch 71, Batch 350/527
+    Batch 350/527, Loss: 0.1372
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 400/527
+    Batch 400/527, Loss: 0.1076
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 450/527
+    Batch 450/527, Loss: 0.2546
+  GPU 0: 1592/32607 MB (4.9%) Epoch 71, Batch 500/527
+    Batch 500/527, Loss: 0.1031
+Epoch  71/100 | Train Loss: 0.1297 | Val Loss: 0.2697 | LR: 0.000021 | Time: 39.0s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 0/527
+    Batch 0/527, Loss: 0.0862
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 50/527
+    Batch 50/527, Loss: 0.1093
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 100/527
+    Batch 100/527, Loss: 0.1101
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 150/527
+    Batch 150/527, Loss: 0.2012
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 200/527
+    Batch 200/527, Loss: 0.1404
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 250/527
+    Batch 250/527, Loss: 0.1329
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 300/527
+    Batch 300/527, Loss: 0.1374
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 350/527
+    Batch 350/527, Loss: 0.1162
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 400/527
+    Batch 400/527, Loss: 0.1441
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 450/527
+    Batch 450/527, Loss: 0.0951
+  GPU 0: 1592/32607 MB (4.9%) Epoch 72, Batch 500/527
+    Batch 500/527, Loss: 0.1691
+Epoch  72/100 | Train Loss: 0.1291 | Val Loss: 0.2658 | LR: 0.000020 | Time: 39.1s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 0/527
+    Batch 0/527, Loss: 0.1281
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 50/527
+    Batch 50/527, Loss: 0.0930
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 100/527
+    Batch 100/527, Loss: 0.1592
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 150/527
+    Batch 150/527, Loss: 0.1081
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 200/527
+    Batch 200/527, Loss: 0.1529
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 250/527
+    Batch 250/527, Loss: 0.0802
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 300/527
+    Batch 300/527, Loss: 0.1255
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 350/527
+    Batch 350/527, Loss: 0.0899
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 400/527
+    Batch 400/527, Loss: 0.1539
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 450/527
+    Batch 450/527, Loss: 0.1761
+  GPU 0: 1592/32607 MB (4.9%) Epoch 73, Batch 500/527
+    Batch 500/527, Loss: 0.0958
+Epoch  73/100 | Train Loss: 0.1278 | Val Loss: 0.2680 | LR: 0.000019 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 0/527
+    Batch 0/527, Loss: 0.1320
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 50/527
+    Batch 50/527, Loss: 0.1031
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 100/527
+    Batch 100/527, Loss: 0.1260
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 150/527
+    Batch 150/527, Loss: 0.1558
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 200/527
+    Batch 200/527, Loss: 0.0761
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 250/527
+    Batch 250/527, Loss: 0.1215
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 300/527
+    Batch 300/527, Loss: 0.1256
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 350/527
+    Batch 350/527, Loss: 0.0771
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 400/527
+    Batch 400/527, Loss: 0.1116
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 450/527
+    Batch 450/527, Loss: 0.1117
+  GPU 0: 1592/32607 MB (4.9%) Epoch 74, Batch 500/527
+    Batch 500/527, Loss: 0.0858
+Epoch  74/100 | Train Loss: 0.1260 | Val Loss: 0.2661 | LR: 0.000017 | Time: 39.3s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 0/527
+    Batch 0/527, Loss: 0.1040
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 50/527
+    Batch 50/527, Loss: 0.0707
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 100/527
+    Batch 100/527, Loss: 0.0554
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 150/527
+    Batch 150/527, Loss: 0.1670
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 200/527
+    Batch 200/527, Loss: 0.1200
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 250/527
+    Batch 250/527, Loss: 0.0920
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 300/527
+    Batch 300/527, Loss: 0.0942
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 350/527
+    Batch 350/527, Loss: 0.1431
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 400/527
+    Batch 400/527, Loss: 0.1093
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 450/527
+    Batch 450/527, Loss: 0.1288
+  GPU 0: 1592/32607 MB (4.9%) Epoch 75, Batch 500/527
+    Batch 500/527, Loss: 0.2014
+Epoch  75/100 | Train Loss: 0.1248 | Val Loss: 0.2729 | LR: 0.000016 | Time: 39.2s
+  Saved checkpoint: /root/vitfly/experiments/mamba_branches/optimized_training/essm_bc_s42/branch_Essm/checkpoint_epoch_75.pth
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 0/527
+    Batch 0/527, Loss: 0.1364
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 50/527
+    Batch 50/527, Loss: 0.1538
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 100/527
+    Batch 100/527, Loss: 0.1367
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 150/527
+    Batch 150/527, Loss: 0.1587
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 200/527
+    Batch 200/527, Loss: 0.1065
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 250/527
+    Batch 250/527, Loss: 0.0879
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 300/527
+    Batch 300/527, Loss: 0.0682
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 350/527
+    Batch 350/527, Loss: 0.1105
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 400/527
+    Batch 400/527, Loss: 0.1340
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 450/527
+    Batch 450/527, Loss: 0.0630
+  GPU 0: 1592/32607 MB (4.9%) Epoch 76, Batch 500/527
+    Batch 500/527, Loss: 0.1263
+Epoch  76/100 | Train Loss: 0.1241 | Val Loss: 0.2704 | LR: 0.000015 | Time: 39.0s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 0/527
+    Batch 0/527, Loss: 0.0916
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 50/527
+    Batch 50/527, Loss: 0.1535
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 100/527
+    Batch 100/527, Loss: 0.1715
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 150/527
+    Batch 150/527, Loss: 0.1623
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 200/527
+    Batch 200/527, Loss: 0.1129
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 250/527
+    Batch 250/527, Loss: 0.1385
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 300/527
+    Batch 300/527, Loss: 0.2592
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 350/527
+    Batch 350/527, Loss: 0.0959
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 400/527
+    Batch 400/527, Loss: 0.0903
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 450/527
+    Batch 450/527, Loss: 0.1234
+  GPU 0: 1592/32607 MB (4.9%) Epoch 77, Batch 500/527
+    Batch 500/527, Loss: 0.1228
+Epoch  77/100 | Train Loss: 0.1228 | Val Loss: 0.2689 | LR: 0.000014 | Time: 39.1s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 0/527
+    Batch 0/527, Loss: 0.0742
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 50/527
+    Batch 50/527, Loss: 0.1133
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 100/527
+    Batch 100/527, Loss: 0.1603
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 150/527
+    Batch 150/527, Loss: 0.1178
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 200/527
+    Batch 200/527, Loss: 0.1614
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 250/527
+    Batch 250/527, Loss: 0.1332
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 300/527
+    Batch 300/527, Loss: 0.1191
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 350/527
+    Batch 350/527, Loss: 0.1301
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 400/527
+    Batch 400/527, Loss: 0.0843
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 450/527
+    Batch 450/527, Loss: 0.1630
+  GPU 0: 1592/32607 MB (4.9%) Epoch 78, Batch 500/527
+    Batch 500/527, Loss: 0.1347
+Epoch  78/100 | Train Loss: 0.1211 | Val Loss: 0.2659 | LR: 0.000013 | Time: 39.2s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 0/527
+    Batch 0/527, Loss: 0.1225
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 50/527
+    Batch 50/527, Loss: 0.1242
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 100/527
+    Batch 100/527, Loss: 0.1182
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 150/527
+    Batch 150/527, Loss: 0.0679
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 200/527
+    Batch 200/527, Loss: 0.0714
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 250/527
+    Batch 250/527, Loss: 0.1431
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 300/527
+    Batch 300/527, Loss: 0.0527
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 350/527
+    Batch 350/527, Loss: 0.0831
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 400/527
+    Batch 400/527, Loss: 0.0563
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 450/527
+    Batch 450/527, Loss: 0.1252
+  GPU 0: 1592/32607 MB (4.9%) Epoch 79, Batch 500/527
+    Batch 500/527, Loss: 0.1035
+Epoch  79/100 | Train Loss: 0.1199 | Val Loss: 0.2667 | LR: 0.000012 | Time: 38.8s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 0/527
+    Batch 0/527, Loss: 0.0704
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 50/527
+    Batch 50/527, Loss: 0.1762
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 100/527
+    Batch 100/527, Loss: 0.1264
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 150/527
+    Batch 150/527, Loss: 0.0971
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 200/527
+    Batch 200/527, Loss: 0.0658
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 250/527
+    Batch 250/527, Loss: 0.0813
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 300/527
+    Batch 300/527, Loss: 0.1080
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 350/527
+    Batch 350/527, Loss: 0.1073
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 400/527
+    Batch 400/527, Loss: 0.0960
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 450/527
+    Batch 450/527, Loss: 0.1061
+  GPU 0: 1592/32607 MB (4.9%) Epoch 80, Batch 500/527
+    Batch 500/527, Loss: 0.0891
+Epoch  80/100 | Train Loss: 0.1187 | Val Loss: 0.2684 | LR: 0.000011 | Time: 39.0s
+  GPU 0: 1590/32607 MB (4.9%) Epoch 81, Batch 0/527
+    Batch 0/527, Loss: 0.0834
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 50/527
+    Batch 50/527, Loss: 0.0923
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 100/527
+    Batch 100/527, Loss: 0.0756
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 150/527
+    Batch 150/527, Loss: 0.1055
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 200/527
+    Batch 200/527, Loss: 0.1647
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 250/527
+    Batch 250/527, Loss: 0.0600
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 300/527
+    Batch 300/527, Loss: 0.0549
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 350/527
+    Batch 350/527, Loss: 0.1069
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 400/527
+    Batch 400/527, Loss: 0.0782
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 450/527
+    Batch 450/527, Loss: 0.1140
+  GPU 0: 1592/32607 MB (4.9%) Epoch 81, Batch 500/527
+    Batch 500/527, Loss: 0.1088
+Epoch  81/100 | Train Loss: 0.1185 | Val Loss: 0.2714 | LR: 0.000010 | Time: 39.1s
+  GPU 0: 1592/32607 MB (4.9%) Epoch 82, Batch 0/527
+    Batch 0/527, Loss: 0.1182
+  GPU 0: 1592/32607 MB (4.9%) Epoch 82, Batch 50/527
+    Batch 50/527, Loss: 0.2004
+  GPU 0: 1556/32607 MB (4.8%) Epoch 82, Batch 100/527
+    Batch 100/527, Loss: 0.0632
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 150/527
+    Batch 150/527, Loss: 0.2141
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 200/527
+    Batch 200/527, Loss: 0.1226
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 250/527
+    Batch 250/527, Loss: 0.0818
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 300/527
+    Batch 300/527, Loss: 0.1137
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 350/527
+    Batch 350/527, Loss: 0.1899
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 400/527
+    Batch 400/527, Loss: 0.1309
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 450/527
+    Batch 450/527, Loss: 0.1308
+  GPU 0: 841/32607 MB (2.6%) Epoch 82, Batch 500/527
+    Batch 500/527, Loss: 0.0782
+Epoch  82/100 | Train Loss: 0.1172 | Val Loss: 0.2698 | LR: 0.000009 | Time: 38.9s
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 0/527
+    Batch 0/527, Loss: 0.0603
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 50/527
+    Batch 50/527, Loss: 0.1068
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 100/527
+    Batch 100/527, Loss: 0.0783
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 150/527
+    Batch 150/527, Loss: 0.1173
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 200/527
+    Batch 200/527, Loss: 0.0693
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 250/527
+    Batch 250/527, Loss: 0.1151
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 300/527
+    Batch 300/527, Loss: 0.1272
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 350/527
+    Batch 350/527, Loss: 0.0903
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 400/527
+    Batch 400/527, Loss: 0.1014
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 450/527
+    Batch 450/527, Loss: 0.0505
+  GPU 0: 841/32607 MB (2.6%) Epoch 83, Batch 500/527
+    Batch 500/527, Loss: 0.1044
+Epoch  83/100 | Train Loss: 0.1172 | Val Loss: 0.2723 | LR: 0.000008 | Time: 38.9s
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 0/527
+    Batch 0/527, Loss: 0.1388
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 50/527
+    Batch 50/527, Loss: 0.0802
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 100/527
+    Batch 100/527, Loss: 0.1168
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 150/527
+    Batch 150/527, Loss: 0.0718
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 200/527
+    Batch 200/527, Loss: 0.2718
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 250/527
+    Batch 250/527, Loss: 0.1054
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 300/527
+    Batch 300/527, Loss: 0.0975
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 350/527
+    Batch 350/527, Loss: 0.2190
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 400/527
+    Batch 400/527, Loss: 0.0769
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 450/527
+    Batch 450/527, Loss: 0.1053
+  GPU 0: 841/32607 MB (2.6%) Epoch 84, Batch 500/527
+    Batch 500/527, Loss: 0.1236
+Epoch  84/100 | Train Loss: 0.1158 | Val Loss: 0.2682 | LR: 0.000007 | Time: 39.1s
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 0/527
+    Batch 0/527, Loss: 0.0716
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 50/527
+    Batch 50/527, Loss: 0.1522
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 100/527
+    Batch 100/527, Loss: 0.1779
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 150/527
+    Batch 150/527, Loss: 0.0842
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 200/527
+    Batch 200/527, Loss: 0.0744
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 250/527
+    Batch 250/527, Loss: 0.2089
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 300/527
+    Batch 300/527, Loss: 0.1206
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 350/527
+    Batch 350/527, Loss: 0.1222
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 400/527
+    Batch 400/527, Loss: 0.2564
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 450/527
+    Batch 450/527, Loss: 0.1127
+  GPU 0: 841/32607 MB (2.6%) Epoch 85, Batch 500/527
+    Batch 500/527, Loss: 0.0942
+Epoch  85/100 | Train Loss: 0.1151 | Val Loss: 0.2709 | LR: 0.000006 | Time: 38.7s
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 0/527
+    Batch 0/527, Loss: 0.1343
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 50/527
+    Batch 50/527, Loss: 0.1965
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 100/527
+    Batch 100/527, Loss: 0.0967
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 150/527
+    Batch 150/527, Loss: 0.0954
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 200/527
+    Batch 200/527, Loss: 0.0507
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 250/527
+    Batch 250/527, Loss: 0.0563
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 300/527
+    Batch 300/527, Loss: 0.0759
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 350/527
+    Batch 350/527, Loss: 0.0802
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 400/527
+    Batch 400/527, Loss: 0.1183
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 450/527
+    Batch 450/527, Loss: 0.1280
+  GPU 0: 841/32607 MB (2.6%) Epoch 86, Batch 500/527
+    Batch 500/527, Loss: 0.1399
+Epoch  86/100 | Train Loss: 0.1140 | Val Loss: 0.2700 | LR: 0.000005 | Time: 38.8s
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 0/527
+    Batch 0/527, Loss: 0.0882
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 50/527
+    Batch 50/527, Loss: 0.1594
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 100/527
+    Batch 100/527, Loss: 0.2297
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 150/527
+    Batch 150/527, Loss: 0.1112
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 200/527
+    Batch 200/527, Loss: 0.0556
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 250/527
+    Batch 250/527, Loss: 0.0584
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 300/527
+    Batch 300/527, Loss: 0.1055
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 350/527
+    Batch 350/527, Loss: 0.0985
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 400/527
+    Batch 400/527, Loss: 0.0975
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 450/527
+    Batch 450/527, Loss: 0.1085
+  GPU 0: 841/32607 MB (2.6%) Epoch 87, Batch 500/527
+    Batch 500/527, Loss: 0.1149
+Epoch  87/100 | Train Loss: 0.1138 | Val Loss: 0.2708 | LR: 0.000005 | Time: 39.1s
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 0/527
+    Batch 0/527, Loss: 0.1851
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 50/527
+    Batch 50/527, Loss: 0.0969
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 100/527
+    Batch 100/527, Loss: 0.1064
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 150/527
+    Batch 150/527, Loss: 0.0939
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 200/527
+    Batch 200/527, Loss: 0.0634
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 250/527
+    Batch 250/527, Loss: 0.1052
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 300/527
+    Batch 300/527, Loss: 0.0855
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 350/527
+    Batch 350/527, Loss: 0.0956
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 400/527
+    Batch 400/527, Loss: 0.0846
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 450/527
+    Batch 450/527, Loss: 0.1069
+  GPU 0: 841/32607 MB (2.6%) Epoch 88, Batch 500/527
+    Batch 500/527, Loss: 0.0751
+Epoch  88/100 | Train Loss: 0.1127 | Val Loss: 0.2724 | LR: 0.000004 | Time: 38.8s
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 0/527
+    Batch 0/527, Loss: 0.2309
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 50/527
+    Batch 50/527, Loss: 0.2468
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 100/527
+    Batch 100/527, Loss: 0.1438
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 150/527
+    Batch 150/527, Loss: 0.1846
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 200/527
+    Batch 200/527, Loss: 0.1835
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 250/527
+    Batch 250/527, Loss: 0.1204
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 300/527
+    Batch 300/527, Loss: 0.0961
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 350/527
+    Batch 350/527, Loss: 0.0832
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 400/527
+    Batch 400/527, Loss: 0.0802
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 450/527
+    Batch 450/527, Loss: 0.1430
+  GPU 0: 841/32607 MB (2.6%) Epoch 89, Batch 500/527
+    Batch 500/527, Loss: 0.1556
+Epoch  89/100 | Train Loss: 0.1125 | Val Loss: 0.2709 | LR: 0.000003 | Time: 38.6s
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 0/527
+    Batch 0/527, Loss: 0.1797
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 50/527
+    Batch 50/527, Loss: 0.1061
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 100/527
+    Batch 100/527, Loss: 0.1167
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 150/527
+    Batch 150/527, Loss: 0.1165
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 200/527
+    Batch 200/527, Loss: 0.1356
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 250/527
+    Batch 250/527, Loss: 0.1487
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 300/527
+    Batch 300/527, Loss: 0.1972
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 350/527
+    Batch 350/527, Loss: 0.1022
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 400/527
+    Batch 400/527, Loss: 0.1346
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 450/527
+    Batch 450/527, Loss: 0.0927
+  GPU 0: 841/32607 MB (2.6%) Epoch 90, Batch 500/527
+    Batch 500/527, Loss: 0.1496
+Epoch  90/100 | Train Loss: 0.1119 | Val Loss: 0.2718 | LR: 0.000003 | Time: 39.2s
+  GPU 0: 839/32607 MB (2.6%) Epoch 91, Batch 0/527
+    Batch 0/527, Loss: 0.1026
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 50/527
+    Batch 50/527, Loss: 0.0562
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 100/527
+    Batch 100/527, Loss: 0.0896
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 150/527
+    Batch 150/527, Loss: 0.0959
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 200/527
+    Batch 200/527, Loss: 0.1265
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 250/527
+    Batch 250/527, Loss: 0.1275
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 300/527
+    Batch 300/527, Loss: 0.1217
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 350/527
+    Batch 350/527, Loss: 0.0934
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 400/527
+    Batch 400/527, Loss: 0.0853
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 450/527
+    Batch 450/527, Loss: 0.0895
+  GPU 0: 841/32607 MB (2.6%) Epoch 91, Batch 500/527
+    Batch 500/527, Loss: 0.0617
+Epoch  91/100 | Train Loss: 0.1119 | Val Loss: 0.2718 | LR: 0.000002 | Time: 38.7s
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 0/527
+    Batch 0/527, Loss: 0.2452
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 50/527
+    Batch 50/527, Loss: 0.0884
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 100/527
+    Batch 100/527, Loss: 0.0599
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 150/527
+    Batch 150/527, Loss: 0.1736
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 200/527
+    Batch 200/527, Loss: 0.0832
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 250/527
+    Batch 250/527, Loss: 0.1623
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 300/527
+    Batch 300/527, Loss: 0.1490
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 350/527
+    Batch 350/527, Loss: 0.0945
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 400/527
+    Batch 400/527, Loss: 0.1080
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 450/527
+    Batch 450/527, Loss: 0.1235
+  GPU 0: 841/32607 MB (2.6%) Epoch 92, Batch 500/527
+    Batch 500/527, Loss: 0.0622
+Epoch  92/100 | Train Loss: 0.1114 | Val Loss: 0.2708 | LR: 0.000002 | Time: 38.7s
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 0/527
+    Batch 0/527, Loss: 0.1380
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 50/527
+    Batch 50/527, Loss: 0.1549
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 100/527
+    Batch 100/527, Loss: 0.1070
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 150/527
+    Batch 150/527, Loss: 0.0934
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 200/527
+    Batch 200/527, Loss: 0.0818
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 250/527
+    Batch 250/527, Loss: 0.1718
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 300/527
+    Batch 300/527, Loss: 0.0623
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 350/527
+    Batch 350/527, Loss: 0.0922
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 400/527
+    Batch 400/527, Loss: 0.1026
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 450/527
+    Batch 450/527, Loss: 0.0870
+  GPU 0: 841/32607 MB (2.6%) Epoch 93, Batch 500/527
+    Batch 500/527, Loss: 0.1039
+Epoch  93/100 | Train Loss: 0.1107 | Val Loss: 0.2703 | LR: 0.000001 | Time: 38.8s
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 0/527
+    Batch 0/527, Loss: 0.0827
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 50/527
+    Batch 50/527, Loss: 0.0625
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 100/527
+    Batch 100/527, Loss: 0.1890
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 150/527
+    Batch 150/527, Loss: 0.1267
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 200/527
+    Batch 200/527, Loss: 0.0615
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 250/527
+    Batch 250/527, Loss: 0.0396
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 300/527
+    Batch 300/527, Loss: 0.0785
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 350/527
+    Batch 350/527, Loss: 0.0950
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 400/527
+    Batch 400/527, Loss: 0.1125
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 450/527
+    Batch 450/527, Loss: 0.0984
+  GPU 0: 841/32607 MB (2.6%) Epoch 94, Batch 500/527
+    Batch 500/527, Loss: 0.0508
+Epoch  94/100 | Train Loss: 0.1106 | Val Loss: 0.2718 | LR: 0.000001 | Time: 38.7s
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 0/527
+    Batch 0/527, Loss: 0.0972
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 50/527
+    Batch 50/527, Loss: 0.0728
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 100/527
+    Batch 100/527, Loss: 0.1095
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 150/527
+    Batch 150/527, Loss: 0.0754
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 200/527
+    Batch 200/527, Loss: 0.1071
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 250/527
+    Batch 250/527, Loss: 0.0909
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 300/527
+    Batch 300/527, Loss: 0.1107
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 350/527
+    Batch 350/527, Loss: 0.1235
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 400/527
+    Batch 400/527, Loss: 0.1194
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 450/527
+    Batch 450/527, Loss: 0.1030
+  GPU 0: 841/32607 MB (2.6%) Epoch 95, Batch 500/527
+    Batch 500/527, Loss: 0.1130
+Epoch  95/100 | Train Loss: 0.1104 | Val Loss: 0.2725 | LR: 0.000001 | Time: 38.6s
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 0/527
+    Batch 0/527, Loss: 0.0690
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 50/527
+    Batch 50/527, Loss: 0.0708
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 100/527
+    Batch 100/527, Loss: 0.0883
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 150/527
+    Batch 150/527, Loss: 0.0730
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 200/527
+    Batch 200/527, Loss: 0.1091
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 250/527
+    Batch 250/527, Loss: 0.0947
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 300/527
+    Batch 300/527, Loss: 0.1117
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 350/527
+    Batch 350/527, Loss: 0.1425
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 400/527
+    Batch 400/527, Loss: 0.0701
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 450/527
+    Batch 450/527, Loss: 0.0846
+  GPU 0: 841/32607 MB (2.6%) Epoch 96, Batch 500/527
+    Batch 500/527, Loss: 0.0967
+Epoch  96/100 | Train Loss: 0.1103 | Val Loss: 0.2708 | LR: 0.000000 | Time: 38.9s
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 0/527
+    Batch 0/527, Loss: 0.0530
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 50/527
+    Batch 50/527, Loss: 0.1746
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 100/527
+    Batch 100/527, Loss: 0.1954
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 150/527
+    Batch 150/527, Loss: 0.0891
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 200/527
+    Batch 200/527, Loss: 0.0673
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 250/527
+    Batch 250/527, Loss: 0.1167
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 300/527
+    Batch 300/527, Loss: 0.0814
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 350/527
+    Batch 350/527, Loss: 0.1359
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 400/527
+    Batch 400/527, Loss: 0.1487
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 450/527
+    Batch 450/527, Loss: 0.1782
+  GPU 0: 841/32607 MB (2.6%) Epoch 97, Batch 500/527
+    Batch 500/527, Loss: 0.0853
+Epoch  97/100 | Train Loss: 0.1102 | Val Loss: 0.2706 | LR: 0.000000 | Time: 38.7s
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 0/527
+    Batch 0/527, Loss: 0.1283
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 50/527
+    Batch 50/527, Loss: 0.1785
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 100/527
+    Batch 100/527, Loss: 0.1406
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 150/527
+    Batch 150/527, Loss: 0.1679
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 200/527
+    Batch 200/527, Loss: 0.1118
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 250/527
+    Batch 250/527, Loss: 0.1879
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 300/527
+    Batch 300/527, Loss: 0.0693
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 350/527
+    Batch 350/527, Loss: 0.1013
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 400/527
+    Batch 400/527, Loss: 0.0633
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 450/527
+    Batch 450/527, Loss: 0.1647
+  GPU 0: 841/32607 MB (2.6%) Epoch 98, Batch 500/527
+    Batch 500/527, Loss: 0.0817
+Epoch  98/100 | Train Loss: 0.1099 | Val Loss: 0.2708 | LR: 0.000000 | Time: 38.6s
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 0/527
+    Batch 0/527, Loss: 0.0726
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 50/527
+    Batch 50/527, Loss: 0.0560
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 100/527
+    Batch 100/527, Loss: 0.0976
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 150/527
+    Batch 150/527, Loss: 0.0950
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 200/527
+    Batch 200/527, Loss: 0.0836
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 250/527
+    Batch 250/527, Loss: 0.0644
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 300/527
+    Batch 300/527, Loss: 0.1081
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 350/527
+    Batch 350/527, Loss: 0.0911
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 400/527
+    Batch 400/527, Loss: 0.1210
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 450/527
+    Batch 450/527, Loss: 0.1338
+  GPU 0: 841/32607 MB (2.6%) Epoch 99, Batch 500/527
+    Batch 500/527, Loss: 0.1375
+Epoch  99/100 | Train Loss: 0.1098 | Val Loss: 0.2705 | LR: 0.000000 | Time: 38.8s
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 0/527
+    Batch 0/527, Loss: 0.1412
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 50/527
+    Batch 50/527, Loss: 0.0904
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 100/527
+    Batch 100/527, Loss: 0.1124
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 150/527
+    Batch 150/527, Loss: 0.1425
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 200/527
+    Batch 200/527, Loss: 0.0736
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 250/527
+    Batch 250/527, Loss: 0.2251
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 300/527
+    Batch 300/527, Loss: 0.1153
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 350/527
+    Batch 350/527, Loss: 0.0892
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 400/527
+    Batch 400/527, Loss: 0.1337
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 450/527
+    Batch 450/527, Loss: 0.0847
+  GPU 0: 841/32607 MB (2.6%) Epoch 100, Batch 500/527
+    Batch 500/527, Loss: 0.0541
+Epoch 100/100 | Train Loss: 0.1103 | Val Loss: 0.2719 | LR: 0.000000 | Time: 38.7s
+  Saved checkpoint: /root/vitfly/experiments/mamba_branches/optimized_training/essm_bc_s42/branch_Essm/checkpoint_epoch_100.pth
+
+Branch Essm training completed!
+Best validation loss: 0.2472
+
+============================================================
+Training Summary
+============================================================
+Branch Essm: Best validation loss = 0.2472
+
+All branches trained successfully!
+Checkpoints saved to: /root/vitfly/experiments/mamba_branches/optimized_training/essm_bc_s42
