@@ -46,6 +46,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     seq_len: >1 for multi-step inference (orig_img is (S, H, W) stack of S frames).
     Output: command, (debug_img1, debug_img2), hidden_state
     """
+    """
     # Example of SRT command
     command_mode = 0
     command = AgileCommand(command_mode)
@@ -81,8 +82,8 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
 
     # Multi-step: orig_img is (S, H, W) stack of S frames
     if seq_len > 1 and isinstance(orig_img, np.ndarray) and orig_img.ndim == 3:
-        imgs_resized = np.stack([cv2.resize(f, (w, h)) for f in orig_img])  # (S, h, w)
-        imgs_tensor = torch.from_numpy(imgs_resized).float().unsqueeze(1)    # (S, 1, h, w)
+        imgs_resized = np.stack([cv2.resize(f, (w, h)) for f in orig_img])
+        imgs_tensor = torch.from_numpy(imgs_resized).float().unsqueeze(1)
         B, S = 1, seq_len
     else:
         imgs_tensor = None
@@ -92,7 +93,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     if isinstance(orig_img, np.ndarray) and orig_img.ndim == 2:
         img_single = orig_img
     elif isinstance(orig_img, np.ndarray) and orig_img.ndim == 3:
-        img_single = orig_img[-1]  # last frame for display
+        img_single = orig_img[-1]
     else:
         img_single = orig_img
     img_single_resized = cv2.resize(img_single, (w, h))
@@ -104,8 +105,8 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     _class = trained_model.__class__.__name__
     _is_vmamba_lstm = (_class == 'VMambaLSTMNet')
     _is_legacy_lstm = 'LSTMNet' in _class or _class == 'UNetConvLSTMNet'
-    # Branch B/B+/C/D/E are stateless (no LSTM hidden state)
-    _is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet', 'BPlusModel')
+    # Branch B/C/D/E are stateless (no LSTM hidden state)
+    _is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet')
 
     if _is_legacy_lstm or _is_vmamba_lstm:
         if _class == 'LSTMNet':
@@ -117,6 +118,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
         elif _class == 'UNetConvLSTMNet':
             trained_model.lstm.num_layers = 2
             trained_model.lstm.hidden_size = 200
+        # else: VMambaLSTMNet uses its own lstm config from __init__
 
         if state.pos[0] < 0.5 or hidden_state is None:
             hidden_state = (torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float().to(device),
@@ -125,57 +127,31 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
             hidden_state = (hidden_state[0].to(device), hidden_state[1].to(device))
 
         if _is_vmamba_lstm:
+            # VMambaLSTMNet trained with 3D velocity: lstm_input = 512 + 3 + 4 = 519
             vel_tensor = torch.tensor([[desiredVel, 0.0, 0.0]]).float().to(device)
         else:
             vel_tensor = torch.tensor(desiredVel).view(1, 1).float().to(device)
 
-        if S > 1 and imgs_tensor is not None:
-            # Multi-step: reshape to (B*S, ...), forward all, reshape back
-            depth_flat = imgs_tensor.to(device)  # (S, 1, h, w)
-            vel_flat = vel_tensor.repeat(S, 1)
-            q_flat = torch.tensor(q).view(1, -1).float().repeat(S, 1).to(device)
-            with torch.no_grad():
-                if _is_legacy_lstm:
-                    x_all, hidden_state = trained_model([depth_flat, vel_flat, q_flat, hidden_state])
-                else:
-                    x_all, hidden_state = trained_model([depth_flat, vel_flat, q_flat, hidden_state])
-            x = x_all[-1:, :]  # take last timestep
-        else:
-            with torch.no_grad():
-                x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
-                                                 vel_tensor,
-                                                 torch.tensor(q).view(1, -1).float().to(device),
-                                                 hidden_state])
+        with torch.no_grad():
+            x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
+                                             vel_tensor,
+                                             torch.tensor(q).view(1, -1).float().to(device),
+                                             hidden_state])
 
     elif _is_branch_bce:
+        # Branches B/C/D/E: stateless models, 3D velocity input, return (output, None)
         vel_tensor = torch.tensor([[desiredVel, 0.0, 0.0]]).float().to(device)
-        if S > 1 and imgs_tensor is not None:
-            depth_flat = imgs_tensor.to(device)  # (S, 1, h, w)
-            vel_flat = vel_tensor.repeat(S, 1)
-            q_flat = torch.tensor(q).view(1, -1).float().repeat(S, 1).to(device)
-            with torch.no_grad():
-                x_all, hidden_state = trained_model([depth_flat, vel_flat, q_flat])
-            x = x_all[-1:, :]  # take last timestep
-        else:
-            with torch.no_grad():
-                x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
-                                                 vel_tensor,
-                                                 torch.tensor(q).view(1, -1).float().to(device)])
+        with torch.no_grad():
+            x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
+                                             vel_tensor,
+                                             torch.tensor(q).view(1, -1).float().to(device)])
 
     else:
         # DroneMamba and other stateless models: scalar velocity (1D)
-        if S > 1 and imgs_tensor is not None:
-            depth_flat = imgs_tensor.to(device)
-            vel_flat = torch.tensor(desiredVel).view(1, 1).float().repeat(S, 1).to(device)
-            q_flat = torch.tensor(q).view(1, -1).float().repeat(S, 1).to(device)
-            with torch.no_grad():
-                x_all, hidden_state = trained_model([depth_flat, vel_flat, q_flat])
-            x = x_all[-1:, :]
-        else:
-            with torch.no_grad():
-                x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
-                                                 torch.tensor(desiredVel).view(1, 1).float().to(device),
-                                                 torch.tensor(q).view(1, -1).float().to(device)])
+        with torch.no_grad():
+            x, hidden_state = trained_model([img.view(1, 1, h, w).to(device),
+                                             torch.tensor(desiredVel).view(1, 1).float().to(device),
+                                             torch.tensor(q).view(1, -1).float().to(device)])
 
     # Move the output tensor back to CPU before converting to numpy
     x = x.squeeze().cpu().detach().numpy()
