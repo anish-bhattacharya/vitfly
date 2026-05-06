@@ -42,9 +42,13 @@ Knowledge distillation \cite{hinton2015distilling} offers a path forward. Recent
 In this paper, we make the following contributions:
 
 \begin{itemize}
-    \item \textbf{Mamba architectures demonstrate inherent advantages for imitation learning in quadrotor control.} Across six diverse SSM variants, we find that SSM purity correlates with BC performance. The pure-SSM DecisionMamba (2.19M params) achieves 7.1ms inference (21\% faster than ViT+LSTM) and is the only model with speed-robust performance (1 crash at both 5m/s and 7m/s).
-    \item \textbf{Cross-architecture knowledge distillation (ViT+LSTM $\rightarrow$ Mamba) further improves performance, surpassing the teacher.} Our multi-stage distillation framework transfers visual features from a frozen ViT+LSTM to Mamba students, achieving \textbf{1 crash at 60m} for B+ (2.55M) and E (2.19M) --- outperforming both their BC baselines (3 crashes) and the teacher (2 crashes, 3.56M).
-    \item \textbf{Systematic ablation of alternative approaches reveals clear boundaries.} Data augmentation (horizontal flip + noise) helps attention-based encoders (B/B+) but degrades CNN-based ones (C/D/E). Multi-step prediction (seq\_len $>$ 1) universally underperforms single-step. Loss weight tuning has negligible impact. Born-again and iterative distillation fail to improve over cross-architecture transfer. These negative results establish important boundary conditions for future work.
+    \item \textbf{First systematic comparison of six SSM-based architectures for vision-based quadrotor control.} We evaluate VMamba+LSTM, MambaVision+SSM, CNN+Mamba-3, STH-Mamba, DecisionMamba, and a MambaVision+Mamba-3 hybrid across 60m obstacle courses at multiple speeds, establishing DecisionMamba (pure SSM) as the best architecture with 2.19M params, 7.1ms inference (21\% faster than ViT+LSTM), and unique speed-robustness (1 crash at both 5m/s and 7m/s).
+
+    \item \textbf{A cross-architecture distillation framework that produces Mamba students surpassing the ViT+LSTM teacher.} Multi-stage alignment (feature + output + GT) achieves \textbf{1 crash at 60m} for B+ (2.55M) and E (2.19M), outperforming BC baselines (3 crashes) and the teacher (2 crashes at 5m/s, 5 crashes at 7m/s).
+
+    \item \textbf{An SSM design principle: selective scan must be present in both vision encoder and temporal head.} Branches with SSM at both ends achieve 1 crash; those with non-SSM components at either end underperform (2-3 crashes). This provides a design guideline for future SSM-based control architectures.
+
+    \item \textbf{A systematic ablation of alternative approaches revealing clear boundary conditions.} Data augmentation helps MambaVision encoders but degrades CNN-based ones; multi-step prediction underperforms single-step; born-again and loss-weight tuning fail to improve over cross-architecture transfer. These negative results prevent redundant exploration by future researchers.
 \end{itemize}
 
 \section{Related Work}
