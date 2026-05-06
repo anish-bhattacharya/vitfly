@@ -303,8 +303,8 @@ def get_gpu_memory_info():
 def load_teacher_for_branch(teacher_branch, device, teacher_checkpoint):
     """Load a Mamba branch model as teacher (for born-again distillation)."""
     from mambavision_ssm_model import MambaVisionSSMNet, create_mambavision_ssm_model
-from bplus_model import BPlusModel, create_bplus_model
-from mambafusion_model import create_mambafusion_model
+    from bplus_model import BPlusModel, create_bplus_model
+    from mambafusion_model import create_mambafusion_model
     from cnn_mamba3_model import CNNMamba3Net, create_cnn_mamba3_model
     from sth_mamba_model import STHMambaNet, create_sth_mamba_model
     from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
