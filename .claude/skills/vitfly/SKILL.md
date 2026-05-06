@@ -431,6 +431,44 @@ python3 -u run_competition.py --vision_based --des_vel 5.0 \
 
 **Important**: `cd` chained with `&&` may not propagate correctly for background-launched python — use absolute paths or wrap in a separate script.
 
+### Model Dispatch Bug — BPlusModel Falling to Wrong Branch
+
+If B+ (BPlusModel) loads but produces zero velocity output, check `user_code.py`:
+
+**Symptom**: `RuntimeError: mat1 and mat2 shapes cannot be multiplied (1x517 and 519x256)`
+**Cause**: `_is_branch_bce` set missing `'BPlusModel'` — model falls to `else` branch which passes scalar velocity (1D), but BPlusModel expects 3D velocity (512+3+4=519 vs 512+1+4=517).
+
+```python
+# ❌ BUG: BPlusModel not in set, falls to else branch
+_is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet')
+
+# ✅ FIX: include BPlusModel
+_is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet', 'BPlusModel')
+```
+
+**Diagnosis**: When adding a new branch model type, ALWAYS check both:
+1. `run_competition.py` — model import and `elif model_type == '...'` branch
+2. `user_code.py` — `compute_command_vision_based` dispatch logic (`_is_branch_bce` set)
+
+### Triple-Quote Syntax Error
+
+If `run_competition.py` crashes with `SyntaxError: EOF while scanning triple-quoted string literal`:
+
+**Cause**: The upstream `user_code.py` uses `"""..."""` blocks as multi-line comments (dead code examples). When editing the function signature, ensure the `"""` pairs remain balanced.
+
+```python
+def compute_command_vision_based(..., seq_len=1):
+    """
+    Formal docstring here        ← pair 1 opens
+    """                          ← pair 1 closes
+    """
+    # Example of SRT command     ← pair 2 opens (must exist!)
+    ...
+    """                          ← pair 2 closes
+```
+
+The upstream has two `"""` pairs in `compute_command_vision_based` and one in `compute_command_state_based`. When refactoring the docstring, don't remove the example block's opening `"""`.
+
 ### `torch.compile()` weight prefix
 
 Weights saved with `torch.compile()` have `_orig_mod.` key prefix. `run_competition.py` strips this automatically. If loading manually:

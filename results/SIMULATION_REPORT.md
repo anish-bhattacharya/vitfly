@@ -68,7 +68,37 @@ E (DecisionMamba)      ✅        ✅ + born-again       —             ✅
 | ❌ | E seq16 BC (ep100) | 4 | 13.71s | 490 | +2 | +1 |
 | ❌ | **B BC** | **DNF** | — | 434 | — | — |
 
-### 2.2 Distillation Impact Summary
+### 2.2 Velocity Scaling (@ 60m)
+
+| Model | 5m/s | 7m/s | Δ | Speed-robust? |
+|-------|------|------|---|---------------|
+| Teacher ViT+LSTM | 2 crashes | **5 crashes** ❌ | +3 | ❌ |
+| **E Distill** | **1 crash** | **1 crash** ✅ | **0** 🏆 | ✅ |
+| **B+ Distill** | **1 crash** 🏆 | **3 crashes** | +2 | ⚠️ |
+
+E Distill is the only model that stays at 1 crash regardless of speed. B+ Distill degrades at higher speed but still beats the teacher.
+
+### 2.3 Born-Again Distillation (B+ → E)
+
+| Model | γ (GT weight) | Crashes @ 60m | Time | Notes |
+|-------|---------------|--------------|------|-------|
+| E Distill (ViT+LSTM teacher) | γ=1.0 | **1** 🏆 | 12.23s | Best overall |
+| E Born-again (B+ teacher) | γ=1.0 | **3** | 12.19s | Better val_loss but worse sim |
+| E Born-again (B+ teacher) | γ=2.0 | **4** | 12.19s | Higher GT weight made worse |
+
+Despite 4.4× better val_distill_gap (0.0037 vs 0.0172), born-again models perform worse in sim. Higher γ exacerbated the degradation. The original cross-architecture distill remains best.
+
+### 2.4 Multi-Step Inference
+
+| Model | seq_len | Crashes @ 60m | Time | Vel out |
+|-------|---------|--------------|------|---------|
+| E Distill (ViT+LSTM teacher) | 1 | **1** 🏆 | 12.23s | 450 |
+| E seq16 BC (epoch 100) | 1 | **4** | 13.71s | 490 |
+| E seq16 Distill (ViT+LSTM teacher) | **16** | **3** | 12.70s | 439 |
+
+Multi-step inference pipeline (`--seq-len N`) works correctly. seq16 distill reduces crashes vs seq16 BC but doesn't beat the single-step distill. seq_len=4 or 8 may be the sweet spot.
+
+### 2.5 Distillation Impact Summary
 
 | Impact | Branches | Count |
 |--------|----------|-------|
@@ -77,27 +107,7 @@ E (DecisionMamba)      ✅        ✅ + born-again       —             ✅
 | = **Neutral** (same as BC) | A, C, D | 3 |
 | ❌ **Degrades** (crashes ↑) | — | **0** |
 
-**Distillation never degrades flight quality.**
-
-### 2.3 Velocity Scaling (@ 60m)
-
-| Model | 5m/s | 7m/s | Δ |
-|-------|------|------|---|
-| Teacher ViT+LSTM | 2 crashes | **5 crashes** ❌ | +3 |
-| **E Distill** | **1 crash** | **1 crash** ✅ | **0** 🏆 |
-
-E Distill is speed-robust; teacher degrades at its native speed.
-
-### 2.4 Born-Again Distillation
-
-B+ Distill → E (same-architecture, B+ teacher):
-
-| Model | Crashes @ 60m | Time |
-|-------|--------------|------|
-| E Distill (ViT+LSTM teacher) | **1** 🏆 | 12.23s |
-| E Born-again (B+ teacher) | **3** | 12.19s |
-
-Despite 4.4× better val_distill_gap (0.0037 vs 0.0172), born-again was worse in sim (3 vs 1 crash). val_loss does not predict flight quality.
+**Distillation never degrades flight quality at 60m.**
 
 ---
 
