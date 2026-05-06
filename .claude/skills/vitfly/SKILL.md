@@ -28,7 +28,19 @@ Before running ANY simulation, identify where your test fits in the overall expe
 | **Training** | BC baseline, Distill (α=β=γ=1.0) | BC + Distill ✅ | No ablation variants tested yet |
 | **Track length** | 60m (upstream), 20m (early tests) | 60m is correct ✅ | 20m data was misleading — obstacles only fully sampled at 60m |
 | **Desired velocity** | 5m/s (standard), 7m/s (teacher speed) | 5m/s @ 60m ✅; 7m/s @ 20m only ⚠️ | Teacher flies 7m/s but was only tested at 5m/s on 60m |
-| **Prediction mode** | Single-step (seq_len=1) | All tests seq_len=1 | Multi-step (seq_len > 1) not evaluated yet |
+| **Prediction mode** | seq_len=1 (single-step) | All tests seq_len=1 ✅ | seq_len=4/8/16 not evaluated yet. seq16 BC checkpoint exists but failed sim (4 crashes, overfit) |
+
+### Sequence Length Coverage
+
+| Model | seq_len=1 | seq_len=4 | seq_len=8 | seq_len=16 |
+|-------|-----------|-----------|-----------|------------|
+| Teacher | ✅ 2/5 crashes | ⏳ | ⏳ | ⏳ |
+| E BC | ✅ 3 crashes | ⏳ | ⏳ | ✅ 4 crashes (overfit) |
+| E Distill | ✅ 1 crash 🏆 | ⏳ | ⏳ | ⏳ |
+| B+ Distill | ✅ 1 crash 🏆 | ⏳ | ⏳ | ⏳ |
+| Others | ✅ tested | ⏳ | ⏳ | ⏳ |
+
+seq_len > 1 means the model receives N consecutive depth frames per inference. Stateful models (A, Teacher) maintain LSTM state across frames; stateless models (B/B+/C/D/E) use temporal attention/SSM across the sequence. **Seq_len=16 failed for BC because the checkpoint was overfit (epoch 100, val_loss 0.23), not because seq16 is inherently bad.** Proper seq16 distillation (`run_seq16_distill.sh`) may yield different results.
 
 ### Current Coverage (60m track, seq_len=1)
 
@@ -44,10 +56,11 @@ Before running ANY simulation, identify where your test fits in the overall expe
 
 ### What Has NOT Been Tested
 
-- **Multi-step prediction** (seq_len=4, 8) for any model — the teacher was trained with seq_len=1 and upstream evaluation is single-step, but multi-step could improve temporal awareness
+- **Multi-step at seq_len=4 or 8** for any model — only seq_len=1 and seq_len=16 tested (16 failed due to overfit). The sweet spot (4 or 8) is completely unexplored.
+- **Any distill model at seq_len > 1** — the seq16_distill pipeline (`run_seq16_distill.sh`) was pushed but hasn't produced a checkpoint yet
 - **Loss weight ablation** (different α, β, γ) — all distill tests used α=β=γ=1.0
-- **Teacher @ 7m/s on 60m track** — only tested at 5m/s
-- **Any model at 60m + 7m/s** — all 60m tests at 5m/s
+- **Teacher @ 7m/s on 60m track** — only tested at 5m/s (teacher native speed is 7m/s)
+- **B+/E Distill @ 7m/s @ 60m** — only E tested at 7m/s @ 60m; B+ untested
 - **init_from_bc distillation** — current distill is random init only
 
 Always check this matrix before running a new test. If you're filling a gap, note it. If you're duplicating an existing result, skip it.
