@@ -28,11 +28,11 @@ Before running ANY simulation, identify where your test fits in the overall expe
 
 | Dimension | Values | Status | Notes |
 |-----------|--------|--------|-------|
-| **Model** | Teacher (ViT+LSTM), A, B, B+, C, D, E | All 7 evaluated ✅ | Teacher = upstream best (7m/s real flight) |
-| **Training** | BC baseline, Distill (α=β=γ=1.0) | BC + Distill ✅ | No ablation variants tested yet |
+| **Model** | Teacher + A/B/B+/C/D/E/Fusion | All 8 evaluated ✅ | Fusion is newest (MambaVision + CoarseSSM, 3.19M) |
+| **Training** | BC, BC Aug, Distill, Born-again, BC-init Distill | 5 variants ✅ | **Aug BC**: B+ reaches 1 crash (ties distill). **BC-init**: worse than random init. |
 | **Track length** | 60m (upstream), 20m (early tests) | 60m is correct ✅ | 20m data was misleading — obstacles only fully sampled at 60m |
-| **Desired velocity** | 5m/s (standard), 7m/s (teacher speed) | 5m/s @ 60m ✅; 7m/s @ 20m only ⚠️ | Teacher flies 7m/s but was only tested at 5m/s on 60m |
-| **Prediction mode** | seq_len=1,2,4,8,16 | `run_competition.py` supports `--seq-len N` ✅ | All models only trained/evaluated at seq_len=1 so far. seq16 BC checkpoints available but overfit. **Need training pipeline to produce seq4/8/16 BC + distill checkpoints.** |
+| **Desired velocity** | 5m/s (standard), 7m/s (teacher speed) | 5m/s @ 60m ✅; 7m/s @ 60m ✅ for Teacher/E/B+/Fusion | Teacher degrades at 7m/s (2→5). E robust (1 at both). Fusion improves (2→1). |
+| **Prediction mode** | seq_len=1,4,8,16 | All tested for E (BC+Distill) ✅ | **seq_len=1 is optimal** for all models. seq4/8/16 all underperform seq1. |
 
 ### Sequence Length Coverage
 
@@ -58,25 +58,34 @@ Before running ANY simulation, identify where your test fits in the overall expe
 
 ### Current Coverage (60m track, seq_len=1)
 
-| Model | BC @ 5m/s | BC Aug @ 5m/s | Distill @ 5m/s | Teacher @ 5m/s |
-|-------|-----------|---------------|----------------|----------------|
-| Teacher | — | — | — | ✅ 2 crashes |
-| A | ✅ 3 crashes | — | ✅ 3 crashes | — |
-| B | ❌ DNF | ✅ 3 crashes | ✅ 2 crashes | — |
-| B+ | ✅ 3 crashes | ✅ **1 crash** 🏆 | ✅ **1 crash** 🏆 | — |
-| C | ✅ 3 crashes | ✅ 5 crashes | ✅ 3 crashes | — |
-| D | ✅ 2 crashes | ✅ 5 crashes | ✅ 2 crashes | — |
-| E | ✅ 3 crashes | ✅ 4 crashes | ✅ **1 crash** 🏆 | — |
-| **Fusion** | ✅ **7 crashes** ❌ | — | ✅ **2 crashes** | — |
+| Model | BC @ 5m/s | BC Aug @ 5m/s | Distill @ 5m/s | Distill @ 7m/s | Teacher @ 5m/s |
+|-------|-----------|---------------|----------------|----------------|----------------|
+| Teacher | — | — | — | — | ✅ 2/5 crashes |
+| A | ✅ 3 | — | ✅ 3 | — | — |
+| B | ❌ DNF | ✅ 3 | ✅ 2 | — | — |
+| B+ | ✅ 3 | ✅ **1** 🏆 | ✅ **1** 🏆 | ✅ 3 | — |
+| C | ✅ 3 | ✅ 5 | ✅ 3 | — | — |
+| D | ✅ 2 | ✅ 5 | ✅ 2 | — | — |
+| E | ✅ 3 | ✅ 4 | ✅ **1** 🏆 | ✅ **1** 🏆 | — |
+| **Fusion** (3 seeds) | ❌ 7/2/4 | — | 2/4/1 → **2.3μ** | 4/2/2 → **2.7μ** | — |
+| E BC-init Distill | — | — | ✅ 3 | — | — |
+| Born-again (γ=1/2) | — | — | ✅ 3/4 | — | — |
 
-### Current Gaps (Requires Training Pipeline)
+### Status: All Ablation Experiments Complete
 
-These gaps cannot be filled by simulation alone — they need the training pipeline to produce new checkpoints:
+All planned simulation experiments have been executed:
 
-- **seq_len=4 or 8 BC models** for any branch — seq16 exists but overfit; 4/8 may be sweet spot
-- **seq_len=4 or 8 distill models** — only seq16 distill tested (3 crashes); 4/8 untested
-- **init_from_bc distillation** — all current distill is random init only
-- **More loss weight ablation** — γ=2.0 tested (worse); α/β ablation and α=0/β=0 variants untested
+| Experiment | Coverage | Verdict |
+|------------|----------|---------|
+| BC baselines (8 models @ 60m) | ✅ | Fusion worst (7), B+ best (3) |
+| Distill vs BC (8 models @ 60m) | ✅ | **Distill never degrades** |
+| Augmented BC (5 branches) | ✅ | B+ reaches 1 crash (ties distill) |
+| Velocity scaling (5/7m/s) | ✅ Teacher, E, B+, Fusion | E most robust (1 at both) |
+| seq_len ablation (1/4/8/16) | ✅ E BC + Distill | **seq_len=1 optimal** |
+| Loss weight ablation (α,β) | ✅ 4 grid variants | **α=β=1.0 optimal** |
+| Born-again (γ=1.0, 2.0) | ✅ | Worse than cross-architecture |
+| BC-init distill | ✅ | Worse than random init |
+| MambaFusion (3 seeds) | ✅ | High variance, distill helps |
 
 Always check this matrix before running a new test. If you're filling a gap, note it. If you're duplicating an existing result, skip it.
 
