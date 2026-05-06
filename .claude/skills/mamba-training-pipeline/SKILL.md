@@ -401,6 +401,35 @@ setsid python3 train_distill.py --branch E --alpha 0.5 --beta 0.5 \
 
 **Best practice**: Align `--save-dir` with the experiment name, e.g., `{experiment_type}_{description}/`. This prevents ambiguity and enables clean checkpoint management.
 
+### 6.3b Checkpoint Distribution: Copy, Don't Symlink
+
+When training and evaluation run on different machines (e.g., GPU training server vs ROS simulation workstation), the filesystems are not shared.
+
+#### What Goes Wrong
+
+```
+# ❌ WRONG: Symlink in git
+git add branch_E/distill_best_model.pth  # symlink to /root/vitfly/experiments/...
+# Remote clone has no /root/vitfly/ directory → BROKEN LINK
+
+# ❌ WRONG: Relative symlink
+ln -s ../seq4_distill_E/branch_E/distill_best_model.pth branch_E/seq4_best.pth
+# Works locally but breaks on any machine with different directory structure
+```
+
+#### Correct Approach
+
+```bash
+# ✅ CORRECT: Copy the actual file, not a symlink
+cp experiments/seq4_distill_E/branch_E/distill_best_model.pth \
+  experiments/branch_E/seq4_distill_best_model.pth
+git add experiments/branch_E/seq4_distill_best_model.pth
+```
+
+This adds ~8MB per checkpoint, which is acceptable for git. The alternative (symlinks) causes silent failures when the evaluation pipeline can't find the actual file.
+
+**Rule of thumb**: If the file will be used on a different machine than where it was created, copy it. Symlinks are only safe within a single machine's filesystem.
+
 ### 6.4 NaN Detection
 
 SSM layers are numerically sensitive. Monitor aggressively:
