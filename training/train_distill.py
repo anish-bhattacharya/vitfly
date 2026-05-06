@@ -75,6 +75,7 @@ from cnn_mamba3_model import CNNMamba3Net, create_cnn_mamba3_model
 from sth_mamba_model import STHMambaNet, create_sth_mamba_model
 from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
 from bplus_model import BPlusModel, create_bplus_model
+from mambafusion_model import create_mambafusion_model
 
 from lazy_dataloading import create_lazy_dataloader, create_sequence_dataloader
 
