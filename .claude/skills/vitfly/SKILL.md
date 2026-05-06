@@ -58,15 +58,16 @@ Before running ANY simulation, identify where your test fits in the overall expe
 
 ### Current Coverage (60m track, seq_len=1)
 
-| Model | BC @ 5m/s | Distill @ 5m/s | Teacher @ 5m/s |
-|-------|-----------|----------------|----------------|
-| Teacher | — | — | ✅ 2 crashes |
-| A | ✅ 3 crashes | ✅ 3 crashes | — |
-| B | ❌ DNF | ✅ 2 crashes | — |
-| B+ | ✅ 3 crashes | ✅ **1 crash** 🏆 | — |
-| C | ✅ 3 crashes | ✅ 3 crashes | — |
-| D | ✅ 2 crashes | ✅ 2 crashes | — |
-| E | ✅ 3 crashes | ✅ **1 crash** 🏆 | — |
+| Model | BC @ 5m/s | BC Aug @ 5m/s | Distill @ 5m/s | Teacher @ 5m/s |
+|-------|-----------|---------------|----------------|----------------|
+| Teacher | — | — | — | ✅ 2 crashes |
+| A | ✅ 3 crashes | — | ✅ 3 crashes | — |
+| B | ❌ DNF | ✅ 3 crashes | ✅ 2 crashes | — |
+| B+ | ✅ 3 crashes | ✅ **1 crash** 🏆 | ✅ **1 crash** 🏆 | — |
+| C | ✅ 3 crashes | ✅ 5 crashes | ✅ 3 crashes | — |
+| D | ✅ 2 crashes | ✅ 5 crashes | ✅ 2 crashes | — |
+| E | ✅ 3 crashes | ✅ 4 crashes | ✅ **1 crash** 🏆 | — |
+| **Fusion** | ✅ **7 crashes** ❌ | — | ✅ **2 crashes** | — |
 
 ### Current Gaps (Requires Training Pipeline)
 
