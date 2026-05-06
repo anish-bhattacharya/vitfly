@@ -131,6 +131,9 @@ B BC & 2.61M & \multicolumn{3}{c}{Failed} \\
 
 \textbf{Distillation always helps.} Never degrades any branch. B+ and E improve from 3$\rightarrow$1 ($-67\%$). B rescued from failure. A, C, D match BC.
 
+\paragraph{Inference latency.}
+Though all models run comfortably above the camera frame rate (60\,Hz), architectural differences affect throughput. E (DecisionMamba, 2.19M) is the fastest at 7.1\,ms per inference (140\,FPS), 21\% faster than the teacher (9.0\,ms, 111\,FPS). B+ (BPlusModel, 2.55M) is the slowest at 18.7\,ms due to its Mamba-3 temporal head, while A (VMamba+LSTM, 0.97M) is surprisingly slow at 24.3\,ms---the LSTM recurrence cannot be parallelized across frames at $T=1$, making its forward pass memory-bandwidth-bound despite having the fewest parameters.
+
 \subsection{Velocity Scaling}
 \label{sec:velocity}
 
