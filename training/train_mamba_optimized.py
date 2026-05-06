@@ -441,7 +441,9 @@ def main():
     parser.add_argument('--num_workers', type=int, default=4,
                        help='Number of data loader workers')
     parser.add_argument('--prefetch_factor', type=int, default=2,
-                       help='Data loader prefetch factor')
+                        help='Data loader prefetch factor')
+    parser.add_argument('--augment', action='store_true', default=False,
+                        help='Enable data augmentation (horizontal flip + noise)')
     parser.add_argument('--seed', type=int, default=42,
                        help='Random seed')
     parser.add_argument('--device', default='cuda',
@@ -482,7 +484,8 @@ def main():
             data_dir=args.data_dir, seq_len=args.sequence_length,
             val_split=args.val_split, batch_size=args.batch_size,
             num_workers=args.num_workers, short=args.short, seed=args.seed,
-            pin_memory=True
+            pin_memory=True,
+            augment=args.augment
         )
         print(f"Training sequences: {stats['num_train']}")
         print(f"Validation sequences: {stats['num_val']}")
@@ -495,7 +498,8 @@ def main():
             num_workers=args.num_workers,
             short=args.short,
             seed=args.seed,
-            pin_memory=True
+            pin_memory=True,
+            augment=args.augment
         )
         print(f"Training samples: {stats['num_train_samples']}")
         print(f"Validation samples: {stats['num_val_samples']}")

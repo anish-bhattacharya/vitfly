@@ -33,18 +33,11 @@ class LazyFlightmareDataset(Dataset):
     - target: Expert velocity command from metadata columns 13:16 (normalized)
     """
     
-    def __init__(self, sample_paths, cropHeight=60, cropWidth=90):
-        """
-        Args:
-            sample_paths: List of (image_path, csv_path, row_idx) tuples
-            cropHeight: Target height for depth images
-            cropWidth: Target width for depth images
-        """
+    def __init__(self, sample_paths, cropHeight=60, cropWidth=90, augment=False):
         self.sample_paths = sample_paths
         self.cropHeight = cropHeight
         self.cropWidth = cropWidth
-        
-        # Cache for CSV files to avoid repeated disk reads
+        self.augment = augment
         self._csv_cache = {}
         
     def __len__(self):
@@ -80,9 +73,16 @@ class LazyFlightmareDataset(Dataset):
             target = torch.from_numpy(row[13:16]).float()
             
             if torch.isnan(velocity).any() or torch.isnan(quat).any() or torch.isnan(target).any():
-                raise ValueError(f"NaN in extracted data at row {row_idx}")
+                raise ValueError(f"NaN in items at {img_path}")
             
-            target = target / (torch.norm(target) + 1e-6)
+            if self.augment:
+                if random.random() < 0.5:
+                    depth = depth.flip(-1)
+                    target[1] = -target[1]
+                    velocity[1] = -velocity[1]
+                if random.random() < 0.3:
+                    noise = torch.randn_like(depth) * 0.02
+                    depth = (depth + noise).clamp(0, 1)
             
             return depth, velocity, quat, target
             
@@ -92,8 +92,8 @@ class LazyFlightmareDataset(Dataset):
             return self.__getitem__(fallback_idx)
 
 
-def create_lazy_dataloader(data_dir, val_split=0.2, batch_size=32, num_workers=4,
-                           short=0, seed=42, pin_memory=True):
+ def create_lazy_dataloader(data_dir, val_split=0.2, batch_size=32, num_workers=4,
+                            short=0, seed=42, pin_memory=True, augment=False):
     """
     Create lazy-loading DataLoaders for training and validation.
     
@@ -192,8 +192,8 @@ def create_lazy_dataloader(data_dir, val_split=0.2, batch_size=32, num_workers=4
     print(f"[LAZY DATALOADER] Train samples: {len(train_sample_paths)}")
     print(f"[LAZY DATALOADER] Val samples: {len(val_sample_paths)}")
     
-    train_dataset = LazyFlightmareDataset(train_sample_paths)
-    val_dataset = LazyFlightmareDataset(val_sample_paths) if num_val_samples > 0 else None
+    train_dataset = LazyFlightmareDataset(train_sample_paths, augment=augment)
+    val_dataset = LazyFlightmareDataset(val_sample_paths, augment=augment) if num_val_samples > 0 else None
     
     train_loader = DataLoader(
         train_dataset,
@@ -231,10 +231,12 @@ class SequenceFlightmareDataset(Dataset):
     """Multi-step sequence dataset for temporal training.
     Groups consecutive frames from same trajectory into sequences.
     """
-    def __init__(self, sample_paths, seq_len=8, cropH=60, cropW=90):
+    def __init__(self, sample_paths, seq_len=8, cropH=60, cropW=90, augment=False):
+        self.sample_paths = sample_paths
         self.seq_len = seq_len
         self.cropH = cropH
         self.cropW = cropW
+        self.augment = augment
         self._csv_cache = {}
         self.sequences = self._build_sequences(sample_paths)
 
@@ -261,11 +263,19 @@ class SequenceFlightmareDataset(Dataset):
     def __getitem__(self, idx):
         frames = self.sequences[idx]
         depths, vels, quats, targets = [], [], [], []
+        # Deterministic augmentation across all frames in the sequence
+        do_flip = self.augment and random.random() < 0.5
+        do_noise = self.augment and random.random() < 0.3
         for img_path, csv_path, row_idx in frames:
             img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
             img = img.astype(np.float32) / 255.0
             img = cv2.resize(img, (self.cropW, self.cropH))
-            depths.append(torch.from_numpy(img).unsqueeze(0).float())
+            depth = torch.from_numpy(img).unsqueeze(0).float()
+            if do_flip:
+                depth = depth.flip(-1)
+            if do_noise:
+                depth = (depth + torch.randn_like(depth) * 0.02).clamp(0, 1)
+            depths.append(depth)
             if csv_path not in self._csv_cache:
                 meta = np.genfromtxt(csv_path, delimiter=',', dtype=np.float64)[1:]
                 self._csv_cache[csv_path] = meta
@@ -273,12 +283,17 @@ class SequenceFlightmareDataset(Dataset):
             vels.append(row[10:13].tolist())
             quats.append(row[3:7].tolist())
             targets.append(row[13:16].tolist())
-        return (torch.stack(depths), torch.tensor(vels).float(),
-                torch.tensor(quats).float(), torch.tensor(targets).float())
+        vel_t = torch.tensor(vels).float()
+        target_t = torch.tensor(targets).float()
+        if do_flip:
+            vel_t[:, 1] = -vel_t[:, 1]
+            target_t[:, 1] = -target_t[:, 1]
+        return (torch.stack(depths), vel_t,
+                torch.tensor(quats).float(), target_t)
 
 
-def create_sequence_dataloader(data_dir, seq_len=8, val_split=0.2, batch_size=32,
-                                num_workers=0, short=0, seed=42, pin_memory=True):
+ def create_sequence_dataloader(data_dir, seq_len=8, val_split=0.2, batch_size=32,
+                                 num_workers=0, short=0, seed=42, pin_memory=True, augment=False):
     np.random.seed(seed)
     random.seed(seed)
     traj_folders = sorted(glob.glob(opj(data_dir, '*')))
@@ -306,8 +321,8 @@ def create_sequence_dataloader(data_dir, seq_len=8, val_split=0.2, batch_size=32
     split = int(len(all_samples) * (1 - val_split))
     train_seqs = all_samples[:split]
     val_seqs = all_samples[split:]
-    train_ds = SequenceFlightmareDataset(train_seqs, seq_len=seq_len)
-    val_ds = SequenceFlightmareDataset(val_seqs, seq_len=seq_len)
+    train_ds = SequenceFlightmareDataset(train_seqs, seq_len=seq_len, augment=augment)
+    val_ds = SequenceFlightmareDataset(val_seqs, seq_len=seq_len, augment=augment)
     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True,
                               num_workers=num_workers, pin_memory=pin_memory)
     val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False,

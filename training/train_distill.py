@@ -877,6 +877,8 @@ def main():
     # System
     parser.add_argument('--num-workers', type=int, default=2,
                         help='DataLoader workers (2 for stability)')
+    parser.add_argument('--augment', action='store_true', default=False,
+                        help='Enable data augmentation (horizontal flip + noise)')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--device', default='cuda')
     parser.add_argument('--save-dir', type=str,
@@ -916,7 +918,7 @@ def main():
             data_dir=args.data_dir, seq_len=args.sequence_length,
             val_split=args.val_split, batch_size=args.batch_size,
             num_workers=args.num_workers, short=args.short, seed=args.seed,
-            pin_memory=True
+            pin_memory=True, augment=args.augment
         )
         print(f"  Training sequences: {stats['num_train']}")
         print(f"  Validation sequences: {stats['num_val']}")
@@ -924,7 +926,8 @@ def main():
         train_loader, val_loader, stats = create_lazy_dataloader(
             data_dir=args.data_dir, val_split=args.val_split,
             batch_size=args.batch_size, num_workers=args.num_workers,
-            short=args.short, seed=args.seed, pin_memory=True
+            short=args.short, seed=args.seed, pin_memory=True,
+            augment=args.augment
         )
         print(f"  Training samples: {stats['num_train_samples']}")
         print(f"  Validation samples: {stats['num_val_samples']}")
