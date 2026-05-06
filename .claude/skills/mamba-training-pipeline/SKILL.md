@@ -495,6 +495,7 @@ if load_time > 0.5:
 | torch.compile model can't load | `_orig_mod.` key prefix | Strip prefix: `{k.replace('_orig_mod.', ''): v}` |
 | Simulator model loading fails | Architecture/checkpoint mismatch | Verify `run_competition.py` config matches training config |
 | GPU utilization <5% | Tiny model, CPU data bottleneck | Use `num_workers=2`, enable TF32, try MPS for multi-experiment |
+| SS2D CUDA OOM under concurrent load | SS2D (2D selective scan) requires large contiguous GPU memory. Under multi-process concurrency, PyTorch's allocator fragments VRAM. Even with 1.9GB free, no single 2GB contiguous block available. | **Not a memory leak — fragmentation issue.** Run SS2D-based models (VMamba, Branch A) alone, not alongside other training processes. Add `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` or set `batch_size=32` to reduce allocation size. |
 | Checkpoint dimension mismatch | Model code updated, weights old | Retrain or revert architecture change |
 
 ---
