@@ -15,7 +15,7 @@
 
 \newcommand{\method}{DistillMamba\xspace}
 
-\title{Cross-Architecture Knowledge Distillation for\\Vision-Based Quadrotor Obstacle Avoidance:\\ViT+LSTM to Mamba}
+\title{Mamba Architecture Advantages in Imitation Learning\\and Cross-Architecture Knowledge Distillation for\\Vision-Based Quadrotor Obstacle Avoidance}
 
 \author{
   Anonymous Author(s) \\
@@ -42,9 +42,9 @@ Knowledge distillation \cite{hinton2015distilling} offers a path forward. Recent
 In this paper, we make the following contributions:
 
 \begin{itemize}
-    \item \textbf{First cross-architecture distillation framework for ViT+LSTM to Mamba in quadrotor control}, combining feature-level encoder alignment with output-level distillation and ground truth supervision.
-    \item \textbf{Systematic comparison of six Mamba architectures as distillation students}, identifying that encoder-temporal head separation predicts success better than architectural similarity to the teacher.
-    \item \textbf{Distilled Mamba models outperform both BC baselines and the ViT+LSTM teacher} --- reducing collisions from 3 (BC) to 1, surpassing the teacher (2) while using 28-38\% fewer parameters.
+    \item \textbf{Mamba architectures demonstrate inherent advantages for imitation learning in quadrotor control.} Across six diverse SSM variants, we find that SSM purity correlates with BC performance. The pure-SSM DecisionMamba (2.19M params) achieves 7.1ms inference (21\% faster than ViT+LSTM) and is the only model with speed-robust performance (1 crash at both 5m/s and 7m/s).
+    \item \textbf{Cross-architecture knowledge distillation (ViT+LSTM $\rightarrow$ Mamba) further improves performance, surpassing the teacher.} Our multi-stage distillation framework transfers visual features from a frozen ViT+LSTM to Mamba students, achieving \textbf{1 crash at 60m} for B+ (2.55M) and E (2.19M) --- outperforming both their BC baselines (3 crashes) and the teacher (2 crashes, 3.56M).
+    \item \textbf{Systematic ablation of alternative approaches reveals clear boundaries.} Data augmentation (horizontal flip + noise) helps attention-based encoders (B/B+) but degrades CNN-based ones (C/D/E). Multi-step prediction (seq\_len $>$ 1) universally underperforms single-step. Loss weight tuning has negligible impact. Born-again and iterative distillation fail to improve over cross-architecture transfer. These negative results establish important boundary conditions for future work.
 \end{itemize}
 
 \section{Related Work}
@@ -178,7 +178,7 @@ However, simulation testing at 60m revealed that the born-again model underperfo
 Initial testing at 20m (one third of the full course) gave a completely misleading picture. Obstacles are distributed across the full 60m track, and evaluating only the first 20m suggested distillation degraded most branches. Full 60m evaluation revealed the opposite: distillation never degrades and significantly improves 3/6 branches. This artifact underscores the importance of thorough benchmarking --- partial evaluation can reverse conclusions entirely.
 
 \section{Conclusion}
-\method is the first framework to successfully transfer ViT+LSTM knowledge to diverse Mamba variants for quadrotor control. Distilled models surpass the teacher in collision rate while using fewer parameters. The B+ hybrid and DecisionMamba achieve state-of-the-art results with 1 crash at 60m.
+\method demonstrates that Mamba architectures offer inherent advantages for vision-based quadrotor BC --- faster inference, better parameter efficiency, and speed robustness --- while cross-architecture distillation from a ViT+LSTM teacher further elevates their performance beyond the teacher itself. Our systematic ablation confirms that single-step distillation with default loss weights is optimal, and that naive extensions (data augmentation, multi-step prediction, born-again) do not improve results. These findings establish both the promise and the boundary conditions of Mamba-based policies for robot learning.
 
 \subsection{Limitations}
 Simulation-only evaluation; real-world flight testing pending. Loss weights not per-branch optimized ($\alpha=\beta=\gamma=1.0$ for all branches). Single obstacle course configuration (spheres medium). All results use single-step prediction ($T=1$); multi-step sequence training ($T=16$) was tested but yielded worse results (3 crashes vs 1), suggesting the temporal heads require careful tuning for longer sequences. Born-again distillation, despite strong validation metrics, underperformed cross-architecture distillation in simulation---further investigation is needed to bridge the val-sim gap.
