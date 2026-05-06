@@ -1,15 +1,18 @@
 #!/bin/bash
-# Usage: bash run_full_test.bash <BRANCH> <MODEL_TYPE> [VARIANT] [DES_VEL]
+# Usage: bash run_full_test.bash <BRANCH> <MODEL_TYPE> [VARIANT] [DES_VEL] [SEQ_LEN]
 #   VARIANT: empty/"bc" → best_model.pth, "distill" → distill_best_model.pth
 #   DES_VEL: desired velocity (default: 5.0)
+#   SEQ_LEN: frames per inference (default: 1 = single-step)
 # Example:
-#   bash run_full_test.bash B MambaVisionSSM               # BC @ 5m/s
-#   bash run_full_test.bash B MambaVisionSSM distill       # distill @ 5m/s
-#   bash run_full_test.bash B MambaVisionSSM distill 7.0   # distill @ 7m/s
+#   bash run_full_test.bash B MambaVisionSSM                  # BC @ 5m/s, seq_len=1
+#   bash run_full_test.bash B MambaVisionSSM distill          # distill @ 5m/s
+#   bash run_full_test.bash B MambaVisionSSM distill 7.0      # distill @ 7m/s
+#   bash run_full_test.bash B MambaVisionSSM distill 7.0 8    # distill @ 7m/s, seq_len=8
 BRANCH=$1
 MODEL_TYPE=$2
 VARIANT=${3:-""}
 DES_VEL=${4:-5.0}
+SEQ_LEN=${5:-1}
 
 BASE_DIR="/root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_${BRANCH}"
 if [ -n "$VARIANT" ] && [ "$VARIANT" != "bc" ]; then
@@ -47,6 +50,7 @@ EVAL_PID=$!
 python3 -u run_competition.py --vision_based --des_vel ${DES_VEL} \
   --model_type ${MODEL_TYPE} \
   --model_path ${MODEL_PATH} \
+  --seq-len ${SEQ_LEN} \
   > /tmp/comp_${BRANCH}.log 2>&1 &
 COMP_PID=$!
 

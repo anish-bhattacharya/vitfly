@@ -28,7 +28,7 @@ Before running ANY simulation, identify where your test fits in the overall expe
 | **Training** | BC baseline, Distill (α=β=γ=1.0) | BC + Distill ✅ | No ablation variants tested yet |
 | **Track length** | 60m (upstream), 20m (early tests) | 60m is correct ✅ | 20m data was misleading — obstacles only fully sampled at 60m |
 | **Desired velocity** | 5m/s (standard), 7m/s (teacher speed) | 5m/s @ 60m ✅; 7m/s @ 20m only ⚠️ | Teacher flies 7m/s but was only tested at 5m/s on 60m |
-| **Prediction mode** | seq_len=1 (single-step) | All tests seq_len=1 ✅ | seq_len=4/8/16 not evaluated yet. seq16 BC checkpoint exists but failed sim (4 crashes, overfit) |
+| **Prediction mode** | seq_len=1,2,4,8,16 | `run_competition.py` supports `--seq-len N` ✅ | All models only trained/evaluated at seq_len=1 so far. seq16 BC checkpoints available but overfit. **Need training pipeline to produce seq4/8/16 BC + distill checkpoints.** |
 
 ### Sequence Length Coverage
 
@@ -54,10 +54,12 @@ seq_len > 1 means the model receives N consecutive depth frames per inference. S
 | D | ✅ 2 crashes | ✅ 2 crashes | — |
 | E | ✅ 3 crashes | ✅ **1 crash** 🏆 | — |
 
-### What Has NOT Been Tested
+### What Has NOT Been Tested (Needs Training Pipeline)
 
-- **Multi-step at seq_len=4 or 8** for any model — only seq_len=1 and seq_len=16 tested (16 failed due to overfit). The sweet spot (4 or 8) is completely unexplored.
-- **Any distill model at seq_len > 1** — the seq16_distill pipeline (`run_seq16_distill.sh`) was pushed but hasn't produced a checkpoint yet
+- **seq_len=4 or 8 BC models** for any branch — need training pipeline to produce checkpoints
+- **seq_len=4 or 8 distill models** — need training pipeline to produce checkpoints
+- **Any distill model at seq_len > 1 in simulation** — inference pipeline now supports `--seq-len N`, but no multi-step checkpoints exist
+- **seq16 distill** — `run_seq16_distill.sh` exists but hasn't produced a checkpoint yet
 - **Loss weight ablation** (different α, β, γ) — all distill tests used α=β=γ=1.0
 - **Teacher @ 7m/s on 60m track** — only tested at 5m/s (teacher native speed is 7m/s)
 - **B+/E Distill @ 7m/s @ 60m** — only E tested at 7m/s @ 60m; B+ untested

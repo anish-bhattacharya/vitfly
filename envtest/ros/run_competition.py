@@ -53,7 +53,7 @@ except ImportError as _e:
     print(f"[RUN_COMPETITION] Warning: branch model import failed: {_e}")
 
 class AgilePilotNode:
-    def __init__(self, vision_based=False, model_type=None, model_path=None, desVel=None, keyboard=False):
+    def __init__(self, vision_based=False, model_type=None, model_path=None, desVel=None, keyboard=False, seq_len=1):
         print("[RUN_COMPETITION] Initializing agile_pilot_node...")
         rospy.init_node("agile_pilot_node", anonymous=False)
 
@@ -63,6 +63,8 @@ class AgilePilotNode:
         self.cv_bridge = CvBridge()
         self.state = None
         self.keyboard = keyboard
+        self.seq_len = seq_len
+        self.frame_buffer = []
 
         quad_name = "kingfisher"
 
@@ -337,10 +339,23 @@ class AgilePilotNode:
         if self.state is None:
             return
         
-        # print('[RUN_COMPETITION] calling compute_command_vision_based')
+        # Buffer frames for multi-step inference
+        if self.seq_len > 1:
+            self.frame_buffer.append(img)
+            if len(self.frame_buffer) < self.seq_len:
+                return  # wait for buffer to fill
+            # Slide window: keep most recent seq_len frames
+            if len(self.frame_buffer) > self.seq_len:
+                self.frame_buffer.pop(0)
+            infer_img = np.stack(self.frame_buffer, axis=0)  # (S, H, W)
+        else:
+            infer_img = img
+        
         start_compute_time = time.time()
 
-        command, (debug_img1, debug_img2), self.model_hidden_state = compute_command_vision_based(self.state, img, self.prevImg,self.desiredVel, self.model, self.model_hidden_state)
+        command, (debug_img1, debug_img2), self.model_hidden_state = compute_command_vision_based(
+            self.state, infer_img, self.prevImg, self.desiredVel,
+            self.model, self.model_hidden_state, seq_len=self.seq_len)
 
         # publish debug images
         self.debug_img1_pub.publish(self.cv_bridge.cv2_to_imgmsg(debug_img1, encoding="passthrough"))
@@ -626,7 +641,8 @@ if __name__ == "__main__":
     parser.add_argument('--model_path', type=str, default=None, help='absolute path to model checkpoint')
     parser.add_argument('--des_vel', type=float, default=None, help='desired velocity for quadrotor')
     parser.add_argument("--keyboard", help="Fly state-based mode but take velocity commands from keyboard WASD", required=False, dest="keyboard", action="store_true")
+    parser.add_argument('--seq-len', type=int, default=1, help='Number of frames to buffer for multi-step inference (default: 1 = single-step)')
 
     args = parser.parse_args()
-    agile_pilot_node = AgilePilotNode(vision_based=args.vision_based, model_type=args.model_type, model_path=args.model_path, desVel=args.des_vel, keyboard=args.keyboard)
+    agile_pilot_node = AgilePilotNode(vision_based=args.vision_based, model_type=args.model_type, model_path=args.model_path, desVel=args.des_vel, keyboard=args.keyboard, seq_len=args.seq_len)
     rospy.spin()

@@ -1,15 +1,18 @@
 #!/bin/bash
-# Usage: bash test_mamba_branch.bash <BRANCH> <MODEL_TYPE> [VARIANT] [DES_VEL]
+# Usage: bash test_mamba_branch.bash <BRANCH> <MODEL_TYPE> [VARIANT] [DES_VEL] [SEQ_LEN]
 #   VARIANT: empty/"bc" → best_model.pth, "distill" → distill_best_model.pth
 #   DES_VEL: desired velocity (default: 5.0)
+#   SEQ_LEN: frames per inference (default: 1 = single-step)
 # Example: bash test_mamba_branch.bash C CNNMamba3
 # Example: bash test_mamba_branch.bash C CNNMamba3 distill
 # Example: bash test_mamba_branch.bash C CNNMamba3 distill 7.0
+# Example: bash test_mamba_branch.bash C CNNMamba3 distill 5.0 8
 
 BRANCH=$1
 MODEL_TYPE=$2
 VARIANT=${3:-""}
 DES_VEL=${4:-5.0}
+SEQ_LEN=${5:-1}
 
 BASE_DIR="/root/catkin_ws/src/vitfly-mambatest/experiments/mamba_branches/optimized_training/branch_${BRANCH}"
 if [ -n "$VARIANT" ] && [ "$VARIANT" != "bc" ]; then
@@ -69,7 +72,7 @@ python3 evaluation_node.py branch_${BRANCH}_epoch1 >> $LOG 2>&1 &
 EVAL_PID=$!
 
 # Start competition node
-python3 -u run_competition.py --vision_based --des_vel ${DES_VEL} --model_type $MODEL_TYPE --model_path $MODEL_PATH >> $LOG 2>&1 &
+python3 -u run_competition.py --vision_based --des_vel ${DES_VEL} --model_type $MODEL_TYPE --model_path $MODEL_PATH --seq-len ${SEQ_LEN} >> $LOG 2>&1 &
 COMP_PID=$!
 
 # Send start navigation repeatedly
