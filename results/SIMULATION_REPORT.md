@@ -2,7 +2,7 @@
 
 **Project**: ViT+LSTM → Mamba Cross-Architecture Knowledge Distillation
 **Environment**: ROS Noetic + Flightmare (Unity) + WSL2, 60m obstacle course
-**Date**: 2026-05-05
+**Date**: 2026-05-06
 **Evaluator**: Upstream vitfly evaluation (`obstacles[0]` collision detection, `target=60`)
 
 ---
@@ -28,20 +28,20 @@
 | Track length | 20m, **60m** | **60m** (upstream standard) |
 | Desired velocity | **5m/s**, 7m/s | **5m/s** |
 | Prediction mode | **Single-step (seq_len=1)** | **seq_len=1** |
-| Training variant | **BC**, **Distill (α=β=γ=1.0)**, Born-again | — |
+| Training variant | **BC**, **Distill (α=β=γ=1.0)**, Born-again, **Augmented BC**, BC-init Distill | — |
 | Teacher | ViT+LSTM (517-dim) | — |
 
 ### 1.3 Test Matrix Coverage
 
 ```
-                    BC @5m/s    Distill @5m/s    Teacher @5m/s    @7m/s
-Teacher (ViT+LSTM)      —             —               ✅             ✅
-A (VMamba+LSTM)        ✅             ✅               —             —
-B (MambaVision+SSM)   ❌DNF           ✅               —             —
-B+ (BPlusModel)        ✅             ✅               —             —
-C (CNN+Mamba3)         ✅             ✅               —             —
-D (STH-Mamba)          ✅             ✅               —             —
-E (DecisionMamba)      ✅        ✅ + born-again       —             ✅
+                    BC @5m/s   BC Aug @5m/s  Distill @5m/s  Teacher @5m/s  @7m/s
+Teacher (ViT+LSTM)      —           —            —              ✅            ✅
+A (VMamba+LSTM)        ✅           —            ✅              —            —
+B (MambaVision+SSM)   ❌DNF         ✅            ✅              —            —
+B+ (BPlusModel)        ✅       ✅ (1 crash)🏆   ✅              —            —
+C (CNN+Mamba3)         ✅           ✅            ✅              —            —
+D (STH-Mamba)          ✅           ✅            ✅              —            —
+E (DecisionMamba)      ✅           ✅        ✅ + born-again     —            ✅
 ```
 
 ---
@@ -67,6 +67,11 @@ E (DecisionMamba)      ✅        ✅ + born-again       —             ✅
 | — | Born-again E | 3 | 12.19s | 442 | +1 | 0 |
 | ❌ | E seq16 BC (ep100) | 4 | 13.71s | 490 | +2 | +1 |
 | ❌ | **B BC** | **DNF** | — | 434 | — | — |
+| — | B Aug BC | 3 | 12.59s | 432 | +1 | ✅ rescued |
+| 🏆 | **B+ Aug BC** | **1** 🏆 | 12.90s | 434 | **-1** ✅ | **-2** ✅ |
+| ❌ | C Aug BC | 5 | 13.03s | 430 | +3 | +2 |
+| ❌ | D Aug BC | 5 | 13.29s | 496 | +3 | +3 |
+| ❌ | E Aug BC | 4 | 13.12s | — | +2 | +1 |
 
 ### 2.2 Velocity Scaling (@ 60m)
 
@@ -113,7 +118,21 @@ Despite 4.4× better val_distill_gap (0.0037 vs 0.0172), born-again models perfo
 
 **Default α=β=γ=1.0 is optimal.** Reducing feature alignment or distillation weights degrades performance. The ground truth supervision (γ) is critical for maintaining flight quality — reducing α or β allows the teacher to overly constrain the student, harming generalization.
 
-### 2.5 Distillation Impact Summary
+### 2.5 Augmented BC (Data Augmentation)
+
+Training pipeline applied horizontal flip + Gaussian noise augmentation to BC training. Results vary significantly by architecture:
+
+| Branch | BC orig | BC Aug | Distill | Aug vs BC | Aug vs Distill |
+|--------|---------|--------|---------|-----------|----------------|
+| **B+** | 3 | **1** 🏆 | **1** | ✅ **-2** | = **ties distill!** |
+| B | DNF | 3 | 2 | ✅ rescued | ❌ -1 |
+| C | 3 | 5 | 3 | ❌ +2 | ❌ -2 |
+| D | 2 | 5 | 2 | ❌ +3 | ❌ -3 |
+| E | 3 | 4 | 1 | ❌ +1 | ❌ -3 |
+
+**Key finding**: B+ augmented BC matches B+ Distill (1 crash). For B+, the bottleneck was data diversity, not teacher knowledge — simple augmentation closes the gap completely. However, for C/D/E, augmentation degrades performance, suggesting these architectures are less robust to distribution shift.
+
+### 2.6 Distillation Impact Summary
 
 | Impact | Branches | Count |
 |--------|----------|-------|
