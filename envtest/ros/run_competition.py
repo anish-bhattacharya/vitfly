@@ -37,6 +37,7 @@ _BRANCH_MODEL_DIRS = [
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_C_cnn_mamba3/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_D_sth_mamba/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_E_decisionmamba/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/mambafusion/models'),
 ]
 for _d in _BRANCH_MODEL_DIRS:
     if _d not in sys.path:
@@ -164,6 +165,14 @@ class AgilePilotNode:
             elif model_type == 'DecisionMamba':
                 self.model = create_decision_mamba_model({}).to(self.device).float()
                 print(f"[RUN_COMPETITION] Branch E — DecisionMambaNet loaded")
+            elif model_type == 'MambaFusion':
+                from mambafusion_model import create_mambafusion_model
+                self.model = create_mambafusion_model({
+                    'mambavision_config': {'in_channels':1,'stem_dim':48,
+                        'stage_dims':(64,128,192),'depths':(2,2,2),
+                        'd_state':12,'dropout':0.1,'output_dim':512}
+                }).to(self.device).float()
+                print(f"[RUN_COMPETITION] MambaFusion loaded ({sum(p.numel() for p in self.model.parameters()):,} params)")
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()

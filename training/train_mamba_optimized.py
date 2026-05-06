@@ -40,6 +40,7 @@ sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_C_cnn_mamba3/
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_D_sth_mamba/models')
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_E_decisionmamba/models')
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_Bplus_mambavision_mamba3/models')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/mambafusion/models')
 
 # Import models
 try:
@@ -49,6 +50,7 @@ try:
     from sth_mamba_model import STHMambaNet, create_sth_mamba_model
     from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
     from bplus_model import create_bplus_model
+    from mambafusion_model import create_mambafusion_model
     MODELS_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: Could not import some models: {e}")
@@ -166,6 +168,8 @@ def create_model(branch_name, config, device, args=None):
         model = create_decision_mamba_model(config)
     elif branch_name == 'Bplus':
         model = create_bplus_model(config)
+    elif branch_name == 'Fusion':
+        model = create_mambafusion_model(config)
     else:
         raise ValueError(f"Unknown branch: {branch_name}")
     
