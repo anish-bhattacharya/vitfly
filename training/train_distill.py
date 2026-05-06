@@ -851,7 +851,7 @@ def main():
     
     # Branch
     parser.add_argument('--branch', type=str, default='B',
-                        choices=['A', 'B', 'Bplus', 'C', 'D', 'E'],
+                         choices=['A', 'B', 'Bplus', 'C', 'D', 'E', 'Fusion'],
                         help='Student branch to train')
     parser.add_argument('--all-branches', action='store_true',
                         help='Train all 6 branches sequentially')
