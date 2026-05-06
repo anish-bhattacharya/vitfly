@@ -39,12 +39,22 @@ Before running ANY simulation, identify where your test fits in the overall expe
 | Model | seq_len=1 | seq_len=4 | seq_len=8 | seq_len=16 |
 |-------|-----------|-----------|-----------|------------|
 | Teacher | ✅ 2/5 crashes | ⏳ | ⏳ | ⏳ |
-| E BC | ✅ 3 crashes | ⏳ | ⏳ | ✅ 4 crashes (overfit) |
-| E Distill | ✅ **1 crash** 🏆 | ⏳ | ⏳ | ✅ 3 crashes (seq16 distill) |
+| E BC | ✅ 3 crashes | ✅ **2 crashes** | ✅ **4 crashes** | ✅ 4 crashes |
+| E Distill | ✅ **1 crash** 🏆 | ✅ **5 crashes** ❌ | ✅ **4 crashes** ❌ | ✅ 3 crashes |
 | B+ Distill | ✅ **1 crash** 🏆 | ⏳ | ⏳ | ⏳ |
 | Others | ✅ tested | ⏳ | ⏳ | ⏳ |
 
-seq_len > 1 means the model receives N consecutive depth frames per inference. Stateful models (A, Teacher) maintain LSTM state across frames; stateless models (B/B+/C/D/E) use temporal attention/SSM across the sequence. Multi-step inference is supported via `--seq-len N` in `run_competition.py`. seq16 distill reduced crashes vs seq16 BC (3 vs 4) but didn't beat single-step (1). seq_len=4 or 8 may be the sweet spot — needs training pipeline.
+**Key finding: seq_len > 1 does NOT improve E's performance.** Multi-step training degrades both BC and distill variants. Single-step (seq_len=1) remains optimal for DecisionMamba in this setting.
+
+### Loss Weight Ablation Coverage (E Distill @ 60m)
+
+| α (feat) | β (distill) | Crashes | vs Default |
+|----------|-------------|---------|------------|
+| 1.0 | 1.0 | **1** 🏆 | — (default) |
+| 0.5 | 0.5 | **4** ❌ | +3 |
+| 1.0 | 0.5 | **5** ❌ | +4 |
+
+**Key finding: Default α=β=1.0 is optimal.** Reducing feature or distill weights degrades performance.
 
 ### Current Coverage (60m track, seq_len=1)
 
