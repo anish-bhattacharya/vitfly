@@ -75,7 +75,7 @@ class BranchFModel(nn.Module):
         self,
         cnn_encoder_config=None,
         mamba3_d_state=64,
-        mamba3_hidden=256,
+        mamba3_hidden=512,
         mamba3_layers=2,
         mamba3_headdim=32,
         mamba3_chunk_size=32,
@@ -86,18 +86,18 @@ class BranchFModel(nn.Module):
         if cnn_encoder_config is None:
             cnn_encoder_config = {
                 'in_channels': 1,
-                'output_dim': 256,
+                'output_dim': 512,
             }
 
         # Depth feature extractor
         self.cnn_encoder = create_lightweight_cnn_encoder(cnn_encoder_config)
-        cnn_output_dim = cnn_encoder_config.get('output_dim', 256)
+        cnn_output_dim = cnn_encoder_config.get('output_dim', 512)
 
         # Input refinement
         self.refine = RefineInputs()
 
         # Mamba-3 SSM head
-        # Input = cnn_features(256) + velocity(3) + quaternion(4) = 263
+        # Input = cnn_features(512) + velocity(3) + quaternion(4) = 519
         mamba3_input_dim = cnn_output_dim + 3 + 4
 
         self.mamba3_head = create_mamba3_head({
@@ -129,11 +129,11 @@ class BranchFModel(nn.Module):
         X = self.refine(X)
 
         # Step 2: Extract depth features via lightweight CNN
-        depth_feat = self.cnn_encoder(X[0])  # (B, 256)
+        depth_feat = self.cnn_encoder(X[0])  # (B, 512)
 
         # Step 3: Concatenate with metadata
         metadata = torch.cat((X[1] * 0.1, X[2]), dim=1).float()  # (B, 7)
-        x = torch.cat((depth_feat, metadata), dim=1)  # (B, 263)
+        x = torch.cat((depth_feat, metadata), dim=1)  # (B, 519)
 
         # Step 4: Temporal modeling via Mamba-3 SSM head
         x, hidden = self.mamba3_head(x)
@@ -175,7 +175,7 @@ def create_branch_f_model(config):
     return BranchFModel(
         cnn_encoder_config=config.get('cnn_encoder_config'),
         mamba3_d_state=config.get('mamba3_d_state', 64),
-        mamba3_hidden=config.get('mamba3_hidden', 256),
+        mamba3_hidden=config.get('mamba3_hidden', 512),
         mamba3_layers=config.get('mamba3_layers', 2),
         mamba3_headdim=config.get('mamba3_headdim', 32),
         mamba3_chunk_size=config.get('mamba3_chunk_size', 32),

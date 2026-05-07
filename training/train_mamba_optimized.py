@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-Optimized training script for Mamba branches B-E with maximum GPU utilization.
+Optimized training script for Mamba branches with maximum GPU utilization.
+
+Supports: A, B, C, D, E, Bplus, Fusion, Essm, F
 
 Key Features:
 1. Mixed Precision Training (FP16) with torch.cuda.amp
 2. Optimized DataLoader with parallel loading
 3. GPU memory monitoring and management
-4. Training for all 4 branches (B, C, D, E)
-5. Gradient accumulation for larger effective batch sizes
-6. Learning rate warmup and cosine annealing
-7. Checkpoint saving and validation
+4. Gradient accumulation for larger effective batch sizes
+5. Learning rate warmup and cosine annealing
+6. Checkpoint saving and validation
+7. YAML config file support
 
 Expected Performance:
 - GPU utilization > 80%
@@ -30,6 +32,7 @@ import random
 from torch.amp import autocast, GradScaler
 import subprocess
 import psutil
+import yaml
 
 # Add paths to import models
 sys.path.insert(0, '/root/vitfly')
@@ -42,6 +45,7 @@ sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_E_decisionmam
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_Bplus_mambavision_mamba3/models')
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/mambafusion/models')
 sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/essm/models')
+sys.path.insert(0, '/root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/models')
 
 # Import models
 try:
@@ -53,6 +57,7 @@ try:
     from bplus_model import create_bplus_model
     from mambafusion_model import create_mambafusion_model
     from essm_model import create_essm_model
+    from branch_f_model import create_branch_f_model
     MODELS_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: Could not import some models: {e}")
@@ -174,6 +179,8 @@ def create_model(branch_name, config, device, args=None):
         model = create_mambafusion_model(config)
     elif branch_name == 'Essm':
         model = create_essm_model(config)
+    elif branch_name == 'F':
+        model = create_branch_f_model(config)
     else:
         raise ValueError(f"Unknown branch: {branch_name}")
     
@@ -208,7 +215,7 @@ def train_epoch(model, loader, optimizer, criterion, scaler, device, epoch,
             print(f"  Warning: NaN detected in batch {batch_idx}, skipping")
             continue
         
-        with autocast(device_type='cuda', dtype=torch.float16):
+        with autocast(device_type='cuda', dtype=torch.bfloat16):
             if seq_len > 1:
                 B, S = depth.shape[:2]
                 depth_f = depth.view(B * S, 1, depth.shape[-2], depth.shape[-1])
@@ -267,7 +274,7 @@ def validate(model, loader, criterion, device, seq_len=1):
             quat = quat.to(device, non_blocking=True)
             target = target.to(device, non_blocking=True)
             
-            with autocast(device_type='cuda', dtype=torch.float16):
+            with autocast(device_type='cuda', dtype=torch.bfloat16):
                 if seq_len > 1:
                     B, S = depth.shape[:2]
                     depth_f = depth.view(B * S, 1, depth.shape[-2], depth.shape[-1])
@@ -298,14 +305,18 @@ def get_lr_scheduler(optimizer, warmup_epochs, total_epochs):
     return optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
 
 
-def train_branch(branch_name, args, train_loader, val_loader, device):
+def train_branch(branch_name, args, train_loader, val_loader, device, model_config=None):
     """Train a single branch."""
     print(f"\n{'='*60}")
     print(f"Training Branch {branch_name}")
     print(f"{'='*60}")
     
-    # Model configuration
-    config = {
+    if model_config:
+        config = model_config
+        if isinstance(config, dict) and 'architecture' in config:
+            del config['architecture']
+    else:
+        config = {
         'mambavision_config': {
             'in_channels': 1,
             'stem_dim': 48,
@@ -459,14 +470,48 @@ def main():
     
     # Branch selection
     parser.add_argument('--branches', nargs='+', default=['A', 'B', 'C', 'D', 'E'],
-                        help='Branches to train (A, B, C, D, E, Bplus)')
+                        help='Branches to train (A, B, C, D, E, Bplus, Fusion, Essm, F)')
     parser.add_argument('--sequence_length', type=int, default=1,
                         help='Sequence length for multi-step temporal training (1=standard single-frame)')
+    # Config file
+    parser.add_argument('--config', default=None,
+                       help='Path to YAML config file (overrides hardcoded defaults)')
     # Output arguments
     parser.add_argument('--save_dir', default='/root/vitfly/experiments/mamba_branches/optimized_training',
                        help='Directory to save checkpoints and logs')
     
     args = parser.parse_args()
+    
+    # Load YAML config if provided (overrides hardcoded defaults)
+    model_config_override = None
+    if args.config:
+        if os.path.exists(args.config):
+            with open(args.config, 'r') as f:
+                yaml_cfg = yaml.safe_load(f)
+            # Override training args from YAML
+            if 'training' in yaml_cfg:
+                tr = yaml_cfg['training']
+                args.epochs = tr.get('epochs', args.epochs)
+                args.batch_size = tr.get('batch_size', args.batch_size)
+                args.lr = tr.get('learning_rate', args.lr)
+                args.grad_accum_steps = tr.get('grad_accum_steps', args.grad_accum_steps)
+                args.clip_grad_norm = tr.get('clip_grad_norm', args.clip_grad_norm)
+                args.augment = tr.get('augment', args.augment)
+                args.sequence_length = tr.get('sequence_length', args.sequence_length)
+                if tr.get('scheduler', {}).get('warmup_epochs') is not None:
+                    args.warmup_epochs = tr['scheduler']['warmup_epochs']
+            # Store model config section for create_model
+            model_config_override = yaml_cfg.get('model')
+            # Override save_dir if specified
+            if yaml_cfg.get('save_dir'):
+                args.save_dir = yaml_cfg['save_dir']
+            if yaml_cfg.get('data_dir'):
+                args.data_dir = yaml_cfg['data_dir']
+            if yaml_cfg.get('num_workers'):
+                args.num_workers = yaml_cfg['num_workers']
+            print(f"Loaded config from: {args.config}")
+        else:
+            print(f"Warning: Config file not found: {args.config}")
     
     # Set seed
     set_seed(args.seed)
@@ -532,7 +577,7 @@ def main():
     # Train each branch
     results = {}
     for branch in args.branches:
-        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus', 'Fusion', 'Essm']:
+        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus', 'Fusion', 'Essm', 'F']:
             print(f"Warning: Unknown branch '{branch}', skipping...")
             continue
         
@@ -541,7 +586,7 @@ def main():
             torch.cuda.empty_cache()
         
         # Train branch
-        best_val_loss = train_branch(branch, args, train_loader, val_loader, device)
+        best_val_loss = train_branch(branch, args, train_loader, val_loader, device, model_config=model_config_override)
         results[branch] = best_val_loss
     
     # Print summary

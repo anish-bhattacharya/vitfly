@@ -1,0 +1,109 @@
+# Branch F - Experiment F4-MultiSeq: Multi-Sequence Temporal Modeling
+# ===================================================================
+# Purpose: Isolate the effect of multi-frame temporal input on Branch F.
+#   - No data augmentation
+#   - No distillation
+#   - Pure BC on expert demonstrations with SEQUENCE-LENGTH 8 inputs
+#   - Multi-frame temporal sequences (8 frames) for Mamba-3 SSM recurrence
+#
+# Reference: EXPERIMENTS.md § "F4-MultiSeq: Multi-Sequence Temporal Modeling"
+#   Research Question (RQ4): Does multi-frame temporal input improve
+#   trajectory quality?
+#   Sub-variant: F4b (seq_len=8, batch=32)
+#
+# Ablation: F4-MultiSeq vs F1-BC → isolates the SINGLE variable of
+#   sequence length (temporal recurrence). Everything else identical.
+#
+# Reference paper: Bhattacharya et al., ICRA 2025
+#   "Vision Transformers for End-to-End Vision-Based Quadrotor Obstacle Avoidance"
+
+# ─── General Settings ──────────────────────────────────────────────
+seed: 42
+device: cuda                         # cuda or cpu
+num_workers: 0                       # REQUIRED for sequence dataloader (shared tensor refs)
+pin_memory: false                    # Disabled when num_workers=0
+prefetch_factor: null                # Not used when num_workers=0
+compile: false                       # torch.compile support
+
+# ─── Paths ─────────────────────────────────────────────────────────
+data_dir: /root/vitfly/training/datasets/data_full  # Full dataset: 1234 trajectories
+save_dir: /root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/checkpoints/f4_multiseq
+log_dir: /root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/logs/f4_multiseq
+
+# ─── Model Configuration ───────────────────────────────────────────
+model:
+  architecture: branch_f
+  cnn_encoder_config:
+    in_channels: 1                   # Grayscale depth input
+    output_dim: 512                  # Feature vector dimension (matches C/E)
+  mamba3_d_state: 16                 # SSM state dimension (matches C)
+  mamba3_hidden: 512                 # Hidden dimension (matches C/E)
+  mamba3_layers: 2                   # Number of Mamba-3 blocks (matches C)
+  mamba3_headdim: 32                 # Head dimension (matches B+)
+  mamba3_chunk_size: 32             # Chunk size for SSD decomposition
+  dropout: 0.1                       # Dropout for regularization
+
+# ─── Training Hyperparameters ──────────────────────────────────────
+training:
+  epochs: 100                        # Full training schedule
+  batch_size: 32                     # Per-GPU batch size
+  grad_accum_steps: 1                # No gradient accumulation (fits GPU)
+  effective_batch_size: 32           # batch_size × grad_accum_steps
+  sequence_length: 8                 # MULTI-FRAME SEQUENCE — 8-frame temporal window (F4b variant)
+  augment: false                     # NO AUGMENTATION — isolates temporal effect only
+  clip_grad_norm: 1.0                # Gradient clipping for stability
+
+  # Optimizer
+  optimizer: adamw                   # AdamW optimizer
+  learning_rate: 0.0001              # Peak LR (1e-4) - FIXED: was 1e-3, too high for SSM
+  weight_decay: 0.0001               # Weight decay (1e-4)
+  beta1: 0.9                         # Adam beta1 (default)
+  beta2: 0.95                        # Adam beta2 (stable for bf16)
+  eps: 1e-10                         # Epsilon (tighter than default 1e-8 for bf16)
+
+  # Learning rate schedule
+  scheduler:
+    type: cosine                     # Cosine annealing
+    warmup_epochs: 5                 # Linear warmup over 5 epochs
+    min_lr_ratio: 0.0               # Decay to 0
+
+  # Loss
+  loss:
+    type: mse                        # Mean Squared Error on velocity
+    target_normalize: true           # Normalize target velocity to unit norm
+
+# ─── Dataset ───────────────────────────────────────────────────────
+dataset:
+  val_split: 0.1                     # 90/10 train/val split
+  short: 0                           # 0 = use all trajectories
+  augment_flip_prob: 0.0             # NO horizontal flip (same as F1-BC)
+  augment_noise_prob: 0.0            # NO depth noise (same as F1-BC)
+
+# ─── Mixed Precision ───────────────────────────────────────────────
+precision:
+  dtype: bfloat16                    # bf16 (Ampere+ GPUs)
+  init_scale: 65536                  # 2^16 initial scale (GradScaler)
+  growth_interval: 2000              # Scale growth interval
+
+# ─── Checkpointing ─────────────────────────────────────────────────
+checkpointing:
+  save_frequency_epochs: 25          # Full checkpoint every 25 epochs
+  save_best: true                    # Save best model by val loss
+  save_optimizer: false              # Don't save optimizer state (save space)
+  keep_last_k: 3                     # Keep only the K most recent checkpoints
+  resume_from: null                  # Start fresh
+
+# ─── Logging ───────────────────────────────────────────────────────
+logging:
+  log_frequency_batches: 50          # Log every N batches
+  print_frequency_batches: 20        # Print every N batches
+  use_tensorboard: false             # TensorBoard off by default
+  save_curves: true                  # Save training curves as .npy
+
+# ─── Validation ─────────────────────────────────────────────────────
+validation:
+  enabled: true
+  frequency_epochs: 1                # Validate every epoch
+  metrics:
+    - mse                            # Mean Squared Error
+    - velocity_mae                   # Velocity command MAE

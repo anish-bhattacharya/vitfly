@@ -1,0 +1,171 @@
+# Progressive Hierarchical Distillation (PHD) Configuration for Branch F
+# Reference papers: InDistill, EfficientSAM3-PHD, ViLAM
+#
+# 3-Stage Progressive Distillation:
+#   Stage 1: Encoder Distillation (feature-based + contrastive)
+#   Stage 2: Temporal Head Distillation (hidden state + action imitation)
+#   Stage 3: End-to-End Fine-Tuning (joint optimization)
+
+# ─── General Settings ──────────────────────────────────────────────
+seed: 42
+device: cuda                      # cuda or cpu
+num_workers: 4
+pin_memory: true
+prefetch_factor: 2
+compile: false                    # torch.compile for non-A branches
+
+# ─── Paths ─────────────────────────────────────────────────────────
+data_dir: /root/vitfly/training/datasets/data_full  # Training data (1234 trajectories)
+dataset_merged: /root/vitfly/training/datasets/data_full  # Use data_full for training
+teacher_checkpoint: /root/vitfly/experiments/mamba_branches/branch_A_vmamba_lstm/checkpoints/best_model.pth
+teacher_config:
+  vmamba:
+    in_channels: 1
+    embed_dim: 64
+    depth: 4
+    d_state: 64
+    dropout: 0.1
+    output_dim: 512
+  lstm_hidden: 128
+  lstm_layers: 2
+  dropout: 0.1
+
+student_config:
+  cnn_encoder_config:
+    in_channels: 1
+    output_dim: 256
+  mamba3_d_state: 64
+  mamba3_hidden: 256
+  mamba3_layers: 2
+  mamba3_headdim: 32
+  mamba3_chunk_size: 32
+  dropout: 0.1
+
+save_dir: /root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/checkpoints
+log_dir: /root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/logs
+
+# ─── Dataset ────────────────────────────────────────────────────────
+dataset:
+  val_split: 0.1                  # 90/10 train/val split
+  augment: true                   # Enable data augmentation
+  augment_flip_prob: 0.5          # Horizontal flip probability
+  augment_noise_prob: 0.3         # Depth noise probability
+  augment_noise_std: 0.02         # Depth noise standard deviation
+
+# ─── Stage 1: Encoder Distillation ─────────────────────────────────
+stage1:
+  enabled: true
+  epochs: 50
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.0001            # 1e-4
+  warmup_epochs: 3
+  grad_accum_steps: 1
+  clip_grad_norm: 1.0
+  freeze_teacher: true
+  freeze_student_backbone: false  # Train encoder only (Mamba head not created yet)
+
+  # Feature projection (student 256-dim → teacher 512-dim)
+  proj_hidden_dim: 128             # Projection MLP hidden dim
+
+  # Loss weights
+  loss:
+    feat_mse: 1.0                 # MSE on projected features
+    feat_cosine: 0.5              # Cosine similarity loss
+    contrastive_info_nce: 0.1     # InfoNCE contrastive loss
+    temperature: 0.07             # Temperature for InfoNCE
+
+  # Curriculum learning
+  curriculum:
+    enabled: true
+    initial_easy_ratio: 0.7       # Start with 70% easy samples
+    final_easy_ratio: 0.3         # End with 30% easy samples
+    schedule: linear              # linear or exponential
+
+  # Scheduler
+  scheduler:
+    type: cosine                  # cosine or step
+    min_lr_ratio: 0.01            # Minimum LR as fraction of peak
+    step_size: 15                 # For step scheduler
+    gamma: 0.5                    # For step scheduler
+
+# ─── Stage 2: Temporal Head Distillation ───────────────────────────
+stage2:
+  enabled: true
+  epochs: 30
+  batch_size: 32
+  learning_rate: 0.0005           # 5e-4
+  weight_decay: 0.0001
+  warmup_epochs: 2
+  grad_accum_steps: 2
+  clip_grad_norm: 1.0
+
+  # Freeze settings
+  freeze_teacher: true
+  freeze_encoder: true            # Freeze Stage 1 encoder
+  train_mamba_head: true          # Train Mamba-3 head only
+
+  # Hidden state projection (student 256-dim → teacher 128-dim LSTM hidden)
+  proj_hidden_dim: 64
+
+  # Loss weights
+  loss:
+    hidden_mse: 0.5               # MSE on hidden state alignment
+    action_imitation: 1.0         # MSE on velocity command
+
+  # Scheduler
+  scheduler:
+    type: cosine
+    min_lr_ratio: 0.01
+
+# ─── Stage 3: End-to-End Fine-Tuning ───────────────────────────────
+stage3:
+  enabled: true
+  epochs: 20
+  batch_size: 32
+  learning_rate: 0.0001           # 1e-4 (lower LR for fine-tuning)
+  weight_decay: 0.0001
+  warmup_epochs: 1
+  grad_accum_steps: 2
+  clip_grad_norm: 1.0
+
+  # Unfreeze settings
+  freeze_teacher: true            # Teacher always frozen
+  freeze_encoder: false           # Fine-tune encoder jointly
+  freeze_mamba_head: false        # Fine-tune Mamba head jointly
+
+  # Loss weights
+  loss:
+    action_imitation: 1.0         # Primary: action prediction
+    feature_alignment: 0.3        # Feature distillation (from Stage 1)
+    contrastive: 0.1              # Contrastive alignment (from Stage 1)
+
+  # Scheduler
+  scheduler:
+    type: cosine
+    min_lr_ratio: 0.001
+
+# ─── Checkpointing ─────────────────────────────────────────────────
+checkpointing:
+  save_best_per_stage: true       # Save best model after each stage
+  save_frequency_epochs: 10       # Checkpoint every N epochs
+  keep_last_k: 3                  # Keep only the K most recent checkpoints
+  save_optimizer: true            # Save optimizer state (for resume)
+  resume_from: null               # Path to resume checkpoint (null = start fresh)
+
+# ─── Logging ────────────────────────────────────────────────────────
+logging:
+  log_frequency_batches: 50       # Log every N batches
+  print_frequency_batches: 20     # Print every N batches
+  save_curves: true               # Save training curves as PNG
+  save_histograms: false          # Save activation histograms
+  use_tensorboard: false          # Enable TensorBoard logging
+
+# ─── Validation ─────────────────────────────────────────────────────
+validation:
+  enabled: true
+  frequency_epochs: 1             # Validate every N epochs
+  metrics:
+    - mse                         # Mean Squared Error
+    - cosine_similarity           # Feature cosine similarity
+    - velocity_mae                # Velocity command MAE

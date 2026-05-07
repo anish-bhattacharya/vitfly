@@ -10,7 +10,7 @@ from einops import rearrange
 
 
 class RMSNorm(nn.Module):
-    def __init__(self, d: int, eps: float = 1e-5):
+    def __init__(self, d: int, eps: float = 1e-3):
         super().__init__()
         self.eps = eps
         self.weight = nn.Parameter(torch.ones(d))
