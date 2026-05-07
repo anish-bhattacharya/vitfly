@@ -60,6 +60,8 @@ BRANCH_PATHS = {
     'E': '/root/vitfly/experiments/mamba_branches/branch_E_decisionmamba/models',
     'Fusion': '/root/vitfly/experiments/mamba_branches/mambafusion/models',
     'Essm': '/root/vitfly/experiments/mamba_branches/essm/models',
+    'F': '/root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/models',
+    'Fv4': '/root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/models',
 }
 for path in BRANCH_PATHS.values():
     sys.path.insert(0, path)
@@ -78,6 +80,8 @@ from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
 from bplus_model import BPlusModel, create_bplus_model
 from mambafusion_model import create_mambafusion_model
 from essm_model import create_essm_model
+from branch_f_model import create_branch_f_model
+from branch_f_v4_model import create_branch_f_v4_model
 
 from lazy_dataloading import create_lazy_dataloader, create_sequence_dataloader
 
@@ -94,13 +98,15 @@ VISUAL_ENCODER_ATTR = {
     'E': 'cnn_encoder',     # DecisionMambaNet.cnn_encoder → 256-dim
     'Fusion': 'vision_encoder', # MambaFusion.vision_encoder → 512-dim
     'Essm': 'encoder',            # EssmNet.encoder → 256-dim
+    'F': 'cnn_encoder',           # BranchFModel.cnn_encoder → 512-dim
+    'Fv4': 'encoder',             # BranchFV4Model.encoder → 512-dim
 }
 
 # Visual feature dimension for each branch
 VISUAL_FEATURE_DIM = {
     'A': 512, 'B': 512, 'Bplus': 512,
     'C': 512, 'D': 256, 'E': 256, 'Fusion': 512,
-    'Essm': 256,
+    'Essm': 256, 'F': 512, 'Fv4': 512,
 }
 
 TEACHER_FEATURE_DIM = 512  # LSTMNetVIT.decoder output
@@ -115,6 +121,8 @@ BRANCH_CREATORS = {
     'E': lambda cfg: create_decision_mamba_model(cfg),
     'Fusion': lambda cfg: create_mambafusion_model(cfg),
     'Essm': lambda cfg: create_essm_model(cfg),
+    'F': lambda cfg: create_branch_f_model(cfg),
+    'Fv4': lambda cfg: create_branch_f_v4_model(cfg),
 }
 
 # Default hyperparameters per branch (from BC training in train_mamba_optimized.py)

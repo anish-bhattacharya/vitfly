@@ -1,0 +1,103 @@
+# Branch F v4 Distillation - Knowledge Transfer from ViTLSTM Teacher
+# =============================================================
+# Purpose: Distill ViTLSTM teacher knowledge into Branch F v4
+#   (MobileNetV3 encoder + Mamba-3 head)
+#
+# Hypothesis: If encoder was the bottleneck, F v4 BC ≈ 3 crashes.
+#             With distillation, F v4 Distill should → 1-2 crashes.
+#
+# Reference: Branch E/B+ both achieved 1 crash with distillation.
+
+# ─── General Settings ──────────────────────────────────────────────
+seed: 42
+device: cuda
+num_workers: 4
+pin_memory: true
+prefetch_factor: 2
+
+# ─── Paths ─────────────────────────────────────────────────────────
+data_dir: /root/vitfly/training/datasets/data_full
+teacher_checkpoint: /root/vitfly/experiments/teacher_model/best_model.pth
+save_dir: /root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/checkpoints/f_v4_distill
+log_dir: /root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/logs/f_v4_distill
+
+# ─── Model Configuration ───────────────────────────────────────────
+model:
+  architecture: branch_f_v4
+  mamba3_d_state: 64
+  mamba3_hidden: 512
+  mamba3_layers: 2
+  mamba3_headdim: 32
+  mamba3_chunk_size: 32
+  dropout: 0.1
+
+# ─── Distillation Configuration ────────────────────────────────────
+distillation:
+  enabled: true
+  teacher_branch: teacher
+  alpha: 0.3
+  beta: 0.7
+  temperature: 1.0
+  feature_distill: true
+  output_distill: true
+
+# ─── Training Hyperparameters ──────────────────────────────────────
+training:
+  epochs: 100
+  batch_size: 32
+  grad_accum_steps: 1
+  sequence_length: 1
+  augment: false
+  clip_grad_norm: 1.0
+
+  optimizer: adamw
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1e-10
+
+  scheduler:
+    type: cosine
+    warmup_epochs: 5
+    min_lr_ratio: 0.0
+
+  loss:
+    type: mse
+    target_normalize: true
+
+# ─── Dataset ───────────────────────────────────────────────────────
+dataset:
+  val_split: 0.1
+  short: 0
+  augment_flip_prob: 0.0
+  augment_noise_prob: 0.0
+
+# ─── Mixed Precision ───────────────────────────────────────────────
+precision:
+  dtype: bfloat16
+  init_scale: 65536
+  growth_interval: 2000
+
+# ─── Checkpointing ─────────────────────────────────────────────────
+checkpointing:
+  save_frequency_epochs: 25
+  save_best: true
+  save_optimizer: false
+  keep_last_k: 3
+  resume_from: null
+
+# ─── Logging ───────────────────────────────────────────────────────
+logging:
+  log_frequency_batches: 50
+  print_frequency_batches: 20
+  use_tensorboard: false
+  save_curves: true
+
+# ─── Validation ─────────────────────────────────────────────────────
+validation:
+  enabled: true
+  frequency_epochs: 1
+  metrics:
+    - mse
+    - velocity_mae

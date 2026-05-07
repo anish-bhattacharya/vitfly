@@ -181,6 +181,12 @@ def create_model(branch_name, config, device, args=None):
         model = create_essm_model(config)
     elif branch_name == 'F':
         model = create_branch_f_model(config)
+    elif branch_name == 'Fv4':
+        from branch_f_v4_model import create_branch_f_v4_model
+        model = create_branch_f_v4_model(config)
+    elif branch_name == 'Fv5':
+        from branch_f_v5_model import create_branch_f_v5_model
+        model = create_branch_f_v5_model(config)
     else:
         raise ValueError(f"Unknown branch: {branch_name}")
     
@@ -577,7 +583,7 @@ def main():
     # Train each branch
     results = {}
     for branch in args.branches:
-        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus', 'Fusion', 'Essm', 'F']:
+        if branch not in ['A', 'B', 'C', 'D', 'E', 'Bplus', 'Fusion', 'Essm', 'F', 'Fv4', 'Fv5']:
             print(f"Warning: Unknown branch '{branch}', skipping...")
             continue
         
