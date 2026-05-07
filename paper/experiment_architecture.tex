@@ -1,0 +1,93 @@
+% 第四章 4.1 节 — 双Agent流水线实验架构
+% 插入位置：第四章 实验与分析 开头
+
+\section{双Agent流水线实验架构}
+
+本章所有实验均在一套基于双Agent的流水线架构上完成。该架构的设计目标是将模型训练与仿真评估解耦为两个独立执行的流水线阶段，通过异步通信机制最大化实验吞吐量。
+
+\subsection{架构设计}
+
+如图\ref{fig:pipeline}所示，整个实验系统由两个部署在不同物理环境中的Agent组成：
+
+\textbf{训练Agent}部署在AutoDL云服务器（NVIDIA RTX 5090, 32GB VRAM, Intel Xeon Platinum）上，运行Ubuntu 22.04与PyTorch 2.6。该Agent负责：模型架构设计与修改、超参数调优、BC与蒸馏训练、模型输出分布分析与验证。训练结束后，模型权重以文件形式提交至GitHub仓库。
+
+\textbf{仿真Agent}部署在本地WSL2（Windows Subsystem for Linux 2）环境中，运行Ubuntu 22.04、ROS Noetic与Flightmare仿真平台\cite{shah2017flightmare}。该Agent负责：通过git pull拉取最新模型权重、在60m障碍物赛道上执行飞行仿真测试、收集碰撞次数与分段时间等指标、将测试结果回传至GitHub仓库。
+
+两个Agent之间的通信通过GitHub仓库间接完成，形成\textbf{训练→提交→拉取→仿真→回传→分析}的闭环流水线。
+
+\begin{figure}[t]
+\centering
+\begin{verbatim}
+                    ┌──────────────────────┐
+                    │    GitHub 仓库         │
+                    │  (github.com/Liber1917 │
+                    │   /vitfly.git)         │
+                    └──────┬──────────┬──────┘
+                           │          │
+                  push ────┤          ├──── pull
+                  weights  │          │   weights
+                           ▼          ▼
+              ┌─────────────────┐  ┌──────────────────────┐
+              │  训练Agent        │  │  仿真Agent            │
+              │  (AutoDL云服务器)  │  │  (WSL2+ROS Noetic)    │
+              │                  │  │                       │
+              │ • 模型架构设计     │  │ • 模型加载与验证       │
+              │ • BC/蒸馏训练     │  │ • Flightmare 60m测试   │
+              │ • 权重管理        │  │ • 碰撞次数统计         │
+              │ • val_loss验证    │  │ • 分段时间分析         │
+              │ • 模型推送        │  │ • 结果回传            │
+              └─────────────────┘  └──────────────────────┘
+\end{verbatim}
+\caption{双Agent流水线实验架构。训练Agent与仿真Agent通过GitHub仓库进行异步解耦通信。}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{实验调度与并行化}
+
+在实验调度层面，本文进一步引入了多实验并行化机制以充分利用GPU资源。具体而言，基于NVIDIA MPS（Multi-Process Service），在单GPU上同时启动多个独立训练任务。当验证Branch F架构的三种变体时，F1-BC（纯模仿学习基线）、F2-BC-Aug（数据增强变体）和F4-MultiSeq（多序列时序建模）三个实验并行执行。
+
+表\ref{tab:pipeline_timing}展示了Branch F实验的完整时间线。从中可以看出关键的并行调度模式：
+
+\begin{table}[t]
+\centering
+\caption{Branch F典型实验周期时间线与流水线并行调度}
+\label{tab:pipeline_timing}
+\begin{tabular}{llll}
+\toprule
+时间 & Agent & 事件 & 耗时 \\
+\midrule
+10:34 & 训练 & 启动F v3训练（CNN+Mamba-3, 2.57M） & — \\
+12:52 & 训练 & F v3完成，推送权重 & 2.3h \\
+13:02 & 仿真 & F v3仿真测试（trees场景） & 10min \\
+15:40 & 训练 & NaN诊断与修复 & — \\
+16:52 & 训练 & 修复后推送 & — \\
+17:19 & 仿真 & F v3仿真结果（7cr@5m/s） & 27min \\
+19:00 & 训练 & 启动F v4训练（MobileNetV3） & — \\
+19:30 & 训练 & \textbf{并行启动} F v5训练（C head） & — \\
+20:50 & 训练 & F v4完成（val\_loss=0.271） & 1.9h \\
+21:02 & 训练 & F v5完成（val\_loss=0.259），推送 & 1.5h \\
+21:21 & 训练 & 修复仿真管线注册 & — \\
+21:23 & 仿真 & F v5首次测试（倒飞——调度bug） & 2min \\
+22:46 & 仿真 & 修复后重新测试 & — \\
+22:56 & 仿真 & F v5结果（5cr@5m/s, 9cr@7m/s） & 10min \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+从表\ref{tab:pipeline_timing}中可以观察到以下关键调度模式：
+
+\textbf{并行训练：}F v4与F v5在19:00与19:30相继启动，两个实验共享GPU资源。在MPS模式下，单个实验的epoch时间基本保持不变（约68-83s），因为瓶颈在于CPU数据加载而非GPU算力。串行执行需要约3.8h，而并行执行仅需1.5h（由最慢的F v4主导），加速比约2.5$\times$。
+
+\textbf{异步流水线：}训练Agent在20:50完成F v4训练后立即推送权重并启动下一轮实验，无需等待仿真Agent返回结果。同样，仿真Agent在完成当前测试后自动拉取最新权重。这种\textbf{写后即忘}（fire-and-forget）的异步模式由Git版本管理天然支持——训练Agent写入的权重不会因仿真Agent的读取操作而阻塞。
+
+\subsection{与AI基础设施流水线的关系}
+
+本文的双Agent实验架构与AI基础设施领域的流水线并行方法在核心思想上高度一致。
+
+\textbf{流水线并行（Pipeline Parallelism）：}PipeDream\cite{narayanan2019pipedream}将深度神经网络的训练划分为多个Stage，每个Stage在不同Worker上异步执行，通过流水线方式overlap计算与通信。本文将这一思想扩展到实验层面：训练Stage（AutoDL）与仿真Stage（WSL）构成一个两级实验流水线，GitHub仓库扮演Stage间通信通道的角色。PipeDream中的1F1B（One-Forward-One-Backward）调度策略确保不同Stage的Worker始终处于忙碌状态——在本文的架构中，训练Agent在等待仿真结果时可以启动下一组实验，仿真Agent在等待新权重时可以继续分析已有结果。
+
+\textbf{解耦训练与评估：}Best of Sim and Real\cite{bsr2025}提出在仿真中学习控制策略、在真实环境中适配感知的解耦框架。本文的双Agent设计遵循了类似的解耦原则——训练环境（AutoDL）不关心模型如何在物理仿真中执行，仿真环境（WSL）不关心模型是如何被训练出来的。这种关注点分离（Separation of Concerns）使得两个环境的优化可以独立进行。
+
+\textbf{双缓冲机制：}PipeDream-2BW\cite{narayanan2021pipedream2bw}使用双缓冲权重更新机制：当前Stage在读取旧权重进行计算的同时，下一Stage的权重正在被更新。本文的架构自然复现了这一模式：仿真Agent在Flightmare中测试F v3模型时，训练Agent正在训练F v4模型。Git的版本管理天然支持多版本并行——训练Agent提交的每个commit都对应一个权重的版本快照，仿真Agent可以选择任意版本进行测试。
+
+此外，该架构也与MLOps领域的实验溯源理念相契合。MLflow2PROV\cite{mlflow2prov2025}提出了基于Git和MLflow的端到端ML管线溯源模型。本文的Git提交历史天然记录了每次实验的完整轨迹——从训练配置到权重版本再到仿真结果，构成了一个不可篡改的实验账本（Ledger）。这使得所有实验均可追溯、可复现。
