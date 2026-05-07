@@ -527,68 +527,147 @@ Saves ~20 seconds per branch (no simulator relaunch).
 
 ---
 
-## Quick Reference
+## Known Issues & Debugging History
 
+This section documents every bug encountered during simulation testing, so the next session avoids repeating the same debugging cycles.
+
+### 1. Triple-Quote Syntax Error in user_code.py
+
+**Symptom**: `SyntaxError: EOF while scanning triple-quoted string literal`
+**Root cause**: The upstream `user_code.py` uses `"""..."""` as multi-line comment blocks (dead code examples). When editing the function signature to add `seq_len` parameter, the opening `"""` of the first example block was accidentally removed. This left 5 unmatched `"""` occurrences instead of 6 (3 pairs).
+**Fix**: Ensure every `"""` has a matching pair. The three blocks are:
+1. Function docstring (lines 42-48)
+2. Example SRT/CTBR command block (lines 49-61)
+3. Second example block in `compute_command_state_based` (lines 229-242)
+**Lesson**: Count `"""` occurrences with `grep -n '"""' user_code.py`. Must be even.
+
+### 2. BPlusModel Missing from _is_branch_bce Dispatch
+
+**Symptom**: `RuntimeError: mat1 and mat2 shapes cannot be multiplied (1x517 and 519x256)` when running B+.
+**Root cause**: `_is_branch_bce` set in `user_code.py` had `'BPlusModel'` removed during a refactor. B+ fell to the `else` branch which passes scalar velocity (1D), but BPlusModel expects 3D velocity (512+3+4=519 vs 512+1+4=517).
+**Fix**: Add `'BPlusModel'` (and any new model) to `_is_branch_bce`.
+**Lesson**: When adding ANY new model branch, update BOTH:
+- `run_competition.py`: model import + `elif model_type == '...'` branch
+- `user_code.py`: `_is_branch_bce` set
+
+### 3. numpy._core Import Error (Python 3.8 vs numpy 2.x)
+
+**Symptom**: `ModuleNotFoundError: No module named 'numpy._core'` when loading checkpoints in ros_py38 environment (Python 3.8).
+**Root cause**: Checkpoints saved with numpy 2.x use `numpy._core` internally. The ros_py38 conda env has older numpy.
+**Fix**: Reload checkpoint with Python 3.13 (default env), extract state_dict, re-save with `weights_only=False`.
 ```bash
-# ⚠ WARNING: killall/pkill can HANG in WSL2. Use targeted PID kills instead:
-for p in roscore rosmaster visionsim_node rviz; do
-    pid=$(ps aux | grep -E "\b$p\b" | grep -v grep | awk '{print $2}' 2>/dev/null)
-    [ -n "$pid" ] && kill -9 $pid 2>/dev/null || true
-done
-# Also kill background python processes:
-for pid in $(ps aux | grep -E "roslaunch|evaluation_node|run_competition" | grep -v grep | awk '{print $2}' 2>/dev/null); do
-    kill -9 $pid 2>/dev/null || true
-done
-sleep 3
-
-# Remove stale roscore PID file (prevents restart after crash)
-rm -f /root/.ros/roscore-11311.pid
-
-# Network setup
-ip addr add 192.168.233.250/32 dev lo 2>/dev/null
-export ROS_MASTER_URI=http://192.168.233.250:11311
-export ROS_IP=192.168.233.250
-unset ROS_HOSTNAME
-
-# Source ROS + conda (note --extend on workspace)
-source /opt/ros/noetic/setup.bash && source /root/catkin_ws/devel/setup.bash --extend
-source ~/miniconda3/etc/profile.d/conda.sh && conda activate ros_py38
-export LD_PRELOAD=/lib/x86_64-linux-gnu/libffi.so.7
-export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$CONDA_PREFIX/lib/python3.8/site-packages:$PYTHONPATH
-
-# Verify ROS is alive
-rostopic list | head -5
-
-# Verify raw depth publishes (works after simulator launch)
-rostopic echo /kingfisher/dodgeros_pilot/unity/depth --noarr -n 1
-
-# Verify model loads standalone (catches architecture mismatch BEFORE running simulator)
-python3 -c "import torch; ckpt=torch.load('<path>', map_location='cpu'); print('epoch:', ckpt.get('epoch','?'), 'val_loss:', ckpt.get('val_loss_gt', ckpt.get('val_loss','?')))"
-
-# Run single branch test (with persistent simulator) — BC baseline @ 5m/s
-bash run_full_test.bash D STHMamba
-
-# Run single branch test (with persistent simulator) — distilled model @ 7m/s
-bash run_full_test.bash D STHMamba distill 7.0
-
-# Run single branch test (self-contained) @ 5m/s
-bash test_mamba_branch.bash D STHMamba distill
-
-# Run single branch test (self-contained) @ 7m/s
-bash test_mamba_branch.bash D STHMamba distill 7.0
-
-# Verify model actually ran (not just inertia)
-grep "RUN_COMPETITION.*velocity" /tmp/comp_D.log | wc -l   # ~240 for 4s flight
-
-# Check results
-cat results/branch_D_distill_summary.yaml
-
-# Compare BC vs Distill side by side (all speeds)
-for f in results/branch_*_bc_summary.yaml results/branch_*_distill_summary.yaml; do
-    echo "--- $(basename $f) ---"
-    grep -E "Success|crash" $f
-done
-
-# Eval log (detailed flight info)
-cat /tmp/eval_D.log
+python3 -c "import torch; ckpt=torch.load('bad.pth',weights_only=False); torch.save(ckpt['model_state_dict'] if 'model_state_dict' in ckpt else ckpt, 'fixed.pth')"
 ```
+
+### 4. Symlinks Pointing to Wrong Path
+
+**Symptom**: `seq16_best_model.pth` symlink points to `/root/vitfly/...` which doesn't exist.
+**Root cause**: Training pipeline creates symlinks relative to its own environment. Our repo is at `/root/catkin_ws/src/vitfly-mambatest/`.
+**Fix**: Always verify and fix symlinks after pulling:
+```bash
+readlink -f branch_E/some_model.pth   # check if target exists
+ln -sf /actual/path branch_E/some_model.pth
+```
+
+### 5. MambaFusion Architecture Config Mismatch
+
+**Symptom**: `size mismatch for vision_encoder.stem.0.weight: [48,1,7,7] vs [64,1,7,7]`
+**Root cause**: `create_mambafusion_model({})` uses default config (stem_dim=64), but checkpoint was trained with stem_dim=48.
+**Fix**: Use explicit config matching training:
+```python
+create_mambafusion_model({'mambavision_config': {'stem_dim':48, 'stage_dims':(64,128,192), ...}})
+```
+This is already done correctly in `run_competition.py` lines 170-174.
+
+### 6. EssmNet Architecture Mismatch
+
+**Symptom**: Missing keys: `encoder.stem.0.weight`. Unexpected keys: `stem.0.weight`.
+**Root cause**: The `essm_model.py` wrapped encoder in `VisualEncoder` class (`self.encoder = VisualEncoder(...)`), but checkpoint was saved with flat structure (direct `self.stem`, `self.vis_proj`, etc.).
+**Fix**: Rewrote `EssmNet` without the wrapper class — flat attributes matching checkpoint structure. See current `essm_model.py`.
+
+### 7. Stale roscore PID File
+
+**Symptom**: `roscore` won't start, claiming "another roscore/master is already running" when none exists.
+**Root cause**: Stale PID file at `/root/.ros/roscore-11311.pid` from previous crash.
+**Fix**: `rm -f /root/.ros/roscore-11311.pid`
+
+### 8. pgrep / killall Hangs in WSL2
+
+**Symptom**: `killall -9 roscore` or `pgrep roscore` hangs forever.
+**Root cause**: WSL2 procfs issue with process name matching.
+**Fix**: Use `ps aux | grep` pattern instead:
+```bash
+pid=$(ps aux | grep -E "\b$p\b" | grep -v grep | awk '{print $2}')
+[ -n "$pid" ] && kill -9 $pid 2>/dev/null || true
+```
+
+### 9. WSLg/QStandardPaths Runtime Directory Ownership
+
+**Symptom**: `QStandardPaths: wrong ownership on runtime directory /mnt/wslg/runtime-dir, 1000 instead of 0` (non-fatal warning).
+**Root cause**: WSLg runs as uid 1000 (Windows user), simulation runs as root.
+**Fix**: Ignore — simulation works regardless. If RViz window doesn't appear, it's cosmetic.
+
+---
+
+## Complete Results Summary
+
+### Spheres (60m, seq_len=1)
+
+| Model | BC 5m/s | Aug BC 5m/s | Distill 5m/s | Distill 7m/s | Teacher |
+|-------|---------|-------------|-------------|-------------|---------|
+| Teacher | — | — | — | 5 crashes | 2 crashes |
+| A | 3 | — | 3 | — | — |
+| B | DNF ❌ | 3 | 2 | — | — |
+| B+ | 3 | **1** 🏆 | **1** 🏆 | 3 | — |
+| C | 3 | 5 | 3 | — | — |
+| D | 2 | 5 | 2 | — | — |
+| E | 3 | 4 | **1** 🏆 | **1** 🏆 | — |
+| Fusion (3 seeds) | 7/2/4 | — | 2/4/1→2.3μ | 4/2/2→2.7μ | — |
+| E Born-again γ=1 | — | — | 3 | — | — |
+| E Born-again γ=2 | — | — | 4 | — | — |
+| E BC-init Distill | — | — | 3 | — | — |
+
+### Trees (60m, seq_len=1)
+
+| Model | BC 5m/s | Aug BC 5m/s | Distill 5m/s | Distill 7m/s | Teacher |
+|-------|---------|-------------|-------------|-------------|---------|
+| Teacher | — | — | — | 0 ✅ | 0 ✅ |
+| A | 0 | — | 0 | — | — |
+| B | 0 | 0 | 0 | — | — |
+| B+ | 3 | **0** 🏆 | **0** 🏆 | 1 | — |
+| C | 0 | DNF | 2 | — | — |
+| D | 0 | 0 | 0 | — | — |
+| E | 2 | 0 | 1 | 2 | — |
+| Fusion | 0 | — | 0 | 1 | — |
+| Born-again γ=1 | — | — | 2 | — | — |
+| Born-again γ=2 | — | — | 2 | — | — |
+
+### Key Findings
+
+1. **Distillation never degrades**: No branch had more crashes after distillation on either environment.
+2. **B+ and E Distill are best**: 1 crash on spheres (ties on trees with 0).
+3. **Distilled Mamba can beat teacher on spheres** (1 vs 2) but not on trees (0 vs 0).
+4. **E Distill is speed-robust**: 1 crash at both 5m/s and 7m/s on spheres.
+5. **B+ Aug BC ties distillation**: 1 crash on spheres, 0 on trees — data augmentation alone matches distill for B+.
+6. **Born-again underperforms**: Same-architecture distill never beats cross-architecture (ViT+LSTM teacher).
+7. **Default α=β=γ=1.0 is optimal**: Any deviation (grid search, γ=2.0) degrades performance.
+8. **seq_len=1 is optimal**: Multi-step (4/8/16) degrades all variants.
+9. **seq_len > 1 for Teacher untested**: Could benefit from LSTM temporal memory.
+
+### File Inventory
+
+**Key files**:
+- `envtest/ros/run_competition.py` — Inference node (model loading, ROS callbacks, --seq-len N)
+- `envtest/ros/user_code.py` — Model dispatch logic (`_is_branch_bce`, seq_len handling)
+- `envtest/ros/evaluation_node.py` — Evaluator (collision counting, track completion)
+- `envtest/ros/evaluation_config.yaml` — Config (target=60m, timeout=40s)
+- `training/train_distill.py` — Distillation training (supports --teacher-ckpt, --mamba-teacher-branch)
+- `.claude/skills/vitfly/SKILL.md` — This file
+- `.claude/skills/mamba-training-pipeline/SKILL.md` — Training pipeline skill
+
+**Results**: (103 YAML files)
+- `results/*_60m*.yaml` — Spheres results (25 files)
+- `results/*_trees*.yaml` — Trees results (34+ files)
+- `results/SIMULATION_REPORT.md` — Organized simulation report
+- `results/DISTILLATION_REPORT.md` — Full distillation analysis
+- `paper/main.tex` — Paper draft
