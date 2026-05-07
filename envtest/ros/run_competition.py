@@ -53,8 +53,7 @@ try:
     from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
     from bplus_model import BPlusModel
     from branch_f_model import BranchFModel, create_branch_f_model
-    from branch_f_v4_model import BranchFV4Model
-    from branch_f_v5_model import BranchFV5Model
+    from branch_f_v5_model import BranchFV5Model, create_branch_f_v5_model
 except ImportError as _e:
     print(f"[RUN_COMPETITION] Warning: branch model import failed: {_e}")
 
@@ -187,13 +186,13 @@ class AgilePilotNode:
                 print(f"[RUN_COMPETITION] Branch F — BranchFModel loaded (Lightweight CNN + Mamba-3, {sum(p.numel() for p in self.model.parameters()):,} params)")
             elif model_type == 'BranchFV5Model':
                 self.model = BranchFV5Model().to(self.device).float()
-                print(f"[RUN_COMPETITION] Branch F v5 — BranchFV5Model loaded (Lightweight CNN + C Mamba-3 head, {sum(p.numel() for p in self.model.parameters()):,} params)")
+<<<<<<< HEAD
+                print(f"[RUN_COMPETITION] Branch Fv5 — BranchFV5Model loaded (Fv3 CNN + C's Mamba-3 head, {sum(p.numel() for p in self.model.parameters()):,} params)")
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()
 
             # Give full path if possible since the bash script runs from outside the folder
-            ckpt = torch.load(model_path, map_location=self.device)
             state_dict = ckpt['model_state_dict'] if isinstance(ckpt, dict) and 'model_state_dict' in ckpt else ckpt
 
             # Remove '_orig_mod.' prefix from torch.compile() compiled models
