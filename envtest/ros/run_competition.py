@@ -53,6 +53,8 @@ try:
     from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
     from bplus_model import BPlusModel
     from branch_f_model import BranchFModel, create_branch_f_model
+    from branch_f_v4_model import BranchFV4Model
+    from branch_f_v5_model import BranchFV5Model
 except ImportError as _e:
     print(f"[RUN_COMPETITION] Warning: branch model import failed: {_e}")
 
@@ -183,6 +185,9 @@ class AgilePilotNode:
             elif model_type == 'BranchFModel':
                 self.model = BranchFModel().to(self.device).float()
                 print(f"[RUN_COMPETITION] Branch F — BranchFModel loaded (Lightweight CNN + Mamba-3, {sum(p.numel() for p in self.model.parameters()):,} params)")
+            elif model_type == 'BranchFV5Model':
+                self.model = BranchFV5Model().to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch F v5 — BranchFV5Model loaded (Lightweight CNN + C Mamba-3 head, {sum(p.numel() for p in self.model.parameters()):,} params)")
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()
