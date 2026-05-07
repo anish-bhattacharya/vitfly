@@ -38,6 +38,7 @@ _BRANCH_MODEL_DIRS = [
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_D_sth_mamba/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_E_decisionmamba/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/mambafusion/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/essm/models'),
 ]
 for _d in _BRANCH_MODEL_DIRS:
     if _d not in sys.path:
@@ -173,6 +174,10 @@ class AgilePilotNode:
                         'd_state':12,'dropout':0.1,'output_dim':512}
                 }).to(self.device).float()
                 print(f"[RUN_COMPETITION] MambaFusion loaded ({sum(p.numel() for p in self.model.parameters()):,} params)")
+            elif model_type == 'EssmNet':
+                from essm_model import create_essm_model
+                self.model = create_essm_model({}).to(self.device).float()
+                print(f"[RUN_COMPETITION] EssmNet loaded ({sum(p.numel() for p in self.model.parameters()):,} params)")
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()
