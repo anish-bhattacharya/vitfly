@@ -39,6 +39,7 @@ _BRANCH_MODEL_DIRS = [
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_E_decisionmamba/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/mambafusion/models'),
     opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/essm/models'),
+    opj(os.path.dirname(os.path.abspath(__file__)), '../../experiments/mamba_branches/branch_F_lightweight_mamba3/models'),
 ]
 for _d in _BRANCH_MODEL_DIRS:
     if _d not in sys.path:
@@ -51,6 +52,7 @@ try:
     from sth_mamba_model import STHMambaNet, create_sth_mamba_model
     from decision_mamba_model import DecisionMambaNet, create_decision_mamba_model
     from bplus_model import BPlusModel
+    from branch_f_model import BranchFModel, create_branch_f_model
 except ImportError as _e:
     print(f"[RUN_COMPETITION] Warning: branch model import failed: {_e}")
 
@@ -178,6 +180,9 @@ class AgilePilotNode:
                 from essm_model import create_essm_model
                 self.model = create_essm_model({}).to(self.device).float()
                 print(f"[RUN_COMPETITION] EssmNet loaded ({sum(p.numel() for p in self.model.parameters()):,} params)")
+            elif model_type == 'BranchFModel':
+                self.model = BranchFModel().to(self.device).float()
+                print(f"[RUN_COMPETITION] Branch F — BranchFModel loaded (Lightweight CNN + Mamba-3, {sum(p.numel() for p in self.model.parameters()):,} params)")
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()
