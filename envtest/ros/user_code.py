@@ -106,7 +106,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     _is_vmamba_lstm = (_class == 'VMambaLSTMNet')
     _is_legacy_lstm = 'LSTMNet' in _class or _class == 'UNetConvLSTMNet'
     # Branch B/C/D/E are stateless (no LSTM hidden state)
-    _is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet', 'BPlusModel', 'MambaFusion', 'EssmNet', 'BranchFModel', 'BranchFV5Model')
+    _is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet', 'BPlusModel', 'MambaFusion', 'EssmNet', 'BranchFModel', 'BranchFV5Model', 'CNNMLPNet', 'CNNLSTMNet')
 
     if _is_legacy_lstm or _is_vmamba_lstm:
         if _class == 'LSTMNet':
