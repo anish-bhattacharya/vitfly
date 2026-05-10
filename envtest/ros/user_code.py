@@ -104,7 +104,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     # VMambaLSTMNet expects 3D velocity (B,3); legacy models expect scalar (B,1).
     _class = trained_model.__class__.__name__
     _is_vmamba_lstm = (_class == 'VMambaLSTMNet')
-    _is_legacy_lstm = 'LSTMNet' in _class or _class == 'UNetConvLSTMNet'
+    _is_legacy_lstm = ('LSTMNet' in _class and 'CNNLSTM' not in _class) or _class == 'UNetConvLSTMNet'
     # Branch B/C/D/E are stateless (no LSTM hidden state)
     _is_branch_bce = _class in ('MambaVisionSSMNet', 'CNNMamba3Net', 'STHMambaNet', 'DecisionMambaNet', 'BPlusModel', 'MambaFusion', 'EssmNet', 'BranchFModel', 'BranchFV5Model', 'CNNMLPNet', 'CNNLSTMNet')
 
