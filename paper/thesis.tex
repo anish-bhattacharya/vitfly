@@ -1,0 +1,424 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{geometry}
+\geometry{a4paper, left=3cm, right=2.5cm, top=2.5cm, bottom=2.5cm, headheight=15pt}
+\usepackage{xeCJK}
+\setCJKmainfont{WenQuanYi Zen Hei}
+\setCJKmonofont{WenQuanYi Zen Hei}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage[2015,super]{gbt7714}
+\usepackage{booktabs}
+\usepackage{amsmath, amssymb}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\setlength{\headheight}{15pt}
+\makeatletter
+\@ifundefined{cleardoublepage}{%
+  \newcommand{\cleardoublepage}{\clearpage\if@twoside\ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+}{}
+\makeatother
+\setstretch{1.5}
+\graphicspath{{figures/}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\title{基于神经网络的四旋翼飞行器端到端视觉避障}
+\author{邢锦文\\东北大学}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+四旋翼无人机在复杂环境中的高速自主避障是机器人领域的核心挑战。端到端视觉避障方法通过深度神经网络直接将传感器输入映射为控制指令，避免了传统模块化方法中感知-建图-规划各环节之间的累积误差。本文以超越ViT+LSTM模型推理效率为目标，系统探索了六种基于Mamba的状态空间模型架构在端到端避障中的适用性，并结合跨架构知识蒸馏技术从ViT+LSTM教师模型中迁移知识。在Flightmare仿真器的60m障碍赛道上，本文在球体和树木两种环境中开展了多速度评估（5m/s和7m/s），总计完成60+轮训练和数百次仿真测试。
+
+主要发现包括：（1）DecisionMamba——轻量级CNN编码器（455K参数）配合SSM时序头——以2.19M参数实现7.1ms推理和1次碰撞，是性能-效率最优组合；然而对照实验（G_basic: CNN+MLP, 0.49M, 0.74ms, 4次碰撞）表明SSM时序头的独立贡献在单帧决策中高度边际化。（2）跨架构蒸馏在球体环境中显著提升性能（B+和E从3次碰撞降至1次，超越教师的2次），但在高速树木环境可能退化。（3）蒸馏成功的核心条件是学生编码器保留空间结构——CNN编码器可通过MSE与ViT特征对齐，而纯SSM编码器因扫描操作展平空间维度导致对齐完全失败。（4）G_lstm对照（CNN+LSTM, ~0.8M）在5m/s下4次碰撞、7m/s下6次碰撞，进一步确认SSM时序头在T=1下的贡献高度边际化。本文的系统性发现为跨架构知识蒸馏在机器人学习中的应用提供了明确的设计指南和边界条件。
+\end{abstract}
+
+\textbf{关键词：}Mamba；状态空间模型；知识蒸馏；四旋翼飞行器；视觉避障
+\end{abstract}
+\clearpage
+\pagenumbering{Roman}
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\cleardoublepage
+\section{绪论}
+
+\subsection{研究背景与意义}
+
+\quad 四旋翼飞行器（quadrotor）凭借其结构简单、垂直起降、悬停稳定和机动灵活等突出优势，近年来在众多领域获得了前所未有的广泛应用。在搜索与救援、环境监测、农业植保、物流配送、航拍摄影和基础设施巡检等领域，四旋翼正在深刻地改变着相关行业的生产作业方式。
+
+尽管四旋翼飞行器在上述应用中展现出巨大潜力，但实现其在复杂未知环境中的高速自主飞行仍面临严峻的技术挑战。对于以5~m/s甚至更高速度飞行的四旋翼而言，机载系统必须在毫秒级的时间窗口内完成从环境感知到控制指令生成的完整闭环。端到端（end-to-end）学习方法通过深度神经网络直接将原始传感器观测映射为飞行控制指令，完全省去了显式的中间表示和模块化数据流，实现了感知与控制的联合优化。
+
+近年来，Bhattacharya~等~\cite{bhattacharya2024vitfly}提出的ViT-Fly框架将Vision Transformer（ViT）引入四旋翼避障任务，在7~m/s的高速飞行测试中显著超越了基于CNN的基线方法。然而，ViT的自注意力机制计算复杂度为$\mathcal{O}(n^2)$，导致推理延迟偏高。以Mamba~\cite{gu2023mamba}为代表的状态空间模型（SSM）因计算复杂度与序列长度呈线性关系（$\mathcal{O}(n)$）而成为有潜力的替代方案。
+
+基于上述背景，本文聚焦于以下三个相互关联的核心研究问题：（1）架构适用性问题：Mamba架构能否在降低推理延迟的同时保持或超越ViT+LSTM的避障性能？（2）知识迁移问题：跨架构知识蒸馏能否有效将ViT教师的知识迁移至Mamba学生模型？（3）边界条件问题：蒸馏的成功取决于哪些关键因素？
+
+\subsection{国内外研究现状}
+\label{sec:related}
+
+\subsubsection{端到端视觉避障方法}
+
+Loquercio~等~\cite{loquercio2018dronet}提出的DroNet采用轻量级八层残差CNN，以单目图像为输入直接输出转向角与碰撞概率预测，首次验证了端到端方法的可行性。Bhattacharya~等~\cite{bhattacharya2024vitfly}提出的ViT-Fly框架将Vision Transformer引入四旋翼避障任务，利用自注意力机制建模深度图像中的长程空间依赖关系，在高速飞行中显著超越了CNN基线。
+
+\subsubsection{状态空间模型与Mamba架构}
+
+Gu和Dao~\cite{gu2023mamba}提出的Mamba架构通过引入数据相关的选择性状态转移机制，在保持线性推理复杂度的同时具备了与注意力机制相当的动态上下文感知能力。Mamba-2~\cite{dao2024mamba2}进一步提出了结构化状态空间对偶性（SSD）框架。在视觉领域，研究者提出了VMamba~\cite{liu2024vmamba}、MambaVision~\cite{hatamizadeh2024mambavision}等多种适配架构。
+
+\subsubsection{知识蒸馏技术}
+
+知识蒸馏由Hinton~等~\cite{hinton2015distilling}提出。在机器人控制领域，跨架构蒸馏已有初步探索~\cite{bick2024mohawk,shao2025xdistill}，但尚无工作系统研究从Transformer到多种Mamba视觉变体的蒸馏策略及其边界条件。
+
+\subsection{本文主要工作}
+
+本文以四旋翼飞行器端到端视觉避障为应用场景，主要工作包括以下三个方面：
+
+\textbf{第一，以超越ViT+LSTM效率为出发点，系统探索了Mamba架构在四旋翼避障中的适用性边界。}实验发现：最优配置DecisionMamba（CNN编码器+SSM头）以2.19M参数和7.1ms推理实现1次碰撞，优于ViT+LSTM的3.56M、9.0ms、2次碰撞。但G_basic对照实验（CNN+MLP, 0.49M, 0.74ms, 4次碰撞）和G_lstm对照实验（CNN+LSTM, ~0.8M, 4次碰撞）表明，在T=1下单帧决策下，SSM时序头的贡献高度边际化——性能提升主要来自编码器容量增加，而非时序建模范式本身。
+
+\textbf{第二，明确揭示了跨架构蒸馏有效性的核心前提——学生编码器必须保留空间结构。}CNN编码器通过MSE与ViT特征有效对齐（$\mathcal{L}_{\text{feat}}=0.85$），而纯SSM编码器因扫描展平空间维度导致对齐完全失败（$\mathcal{L}_{\text{feat}}=10.58$）。
+
+\textbf{第三，通过系统消融实验提炼了面向端到端避障的训练策略指南。}包括数据增强的架构依赖性（CNN受益、SSM受损）、单步预测始终优于多步、伪标签在高速场景的质量缺陷等。
+
+\subsection{论文组织结构}
+
+本文共分为五章：第一章为绪论，阐述研究背景与现状；第二章为相关理论与技术基础；第三章为架构设计与蒸馏方法；第四章为实验结果与分析；第五章为总结与展望。
+
+\cleardoublepage
+\section{相关理论基础}
+
+本章阐述本文所涉及的三项核心技术原理：端到端视觉避障的基本框架与局限、状态空间模型与Mamba架构的数学基础及其视觉适配方法，以及知识蒸馏的核心机制与跨架构迁移策略。
+
+\subsection{端到端视觉避障原理}
+
+端到端视觉避障的核心思想是通过深度神经网络直接从传感器观测映射为控制指令。行为克隆（Behavior Cloning, BC）是训练端到端策略最常用的方法。给定专家数据集$\mathcal{D} = \{(o_t, a_t)\}$，BC通过监督学习拟合策略$\pi_\theta$：
+
+\begin{equation}
+\mathcal{L}_{\text{BC}} = \mathbb{E}_{(o,a) \sim \mathcal{D}}\left[\|\pi_\theta(o) - a\|^2\right]
+\label{eq:bc_loss}
+\end{equation}
+
+BC面临协变量偏移（covariate shift）问题。训练时策略仅在专家演示的状态分布下观测数据，而测试时策略自身的微小预测误差会导致其偏离训练分布，引发误差发散。
+
+\subsection{状态空间模型与Mamba架构}
+
+状态空间模型（SSM）用一组一阶微分方程描述动态系统的演化。其连续时间形式为：
+
+\begin{equation}
+h'(t) = \mathbf{A} h(t) + \mathbf{B} x(t), \quad y(t) = \mathbf{C} h(t)
+\label{eq:ssm_continuous}
+\end{equation}
+
+Mamba架构的核心创新在于将选择性机制引入SSM——使参数$\mathbf{B}$、$\mathbf{C}$和$\Delta$成为输入的函数：
+
+\begin{equation}
+\mathbf{B} = \text{Linear}_B(x), \quad \mathbf{C} = \text{Linear}_C(x), \quad \Delta = \text{Softplus}(\text{Linear}_\Delta(x))
+\label{eq:mamba_selective}
+\end{equation}
+
+Mamba-2~\cite{dao2024mamba2}进一步提出了SSD框架，从理论上统一了SSM和注意力机制。Mamba-3~\cite{lahoti2026mamba3}引入指数梯形离散化和复数状态空间。
+
+在视觉领域，VMamba~\cite{liu2024vmamba}提出了2D交叉扫描模块（CSM），MambaVision~\cite{hatamizadeh2024mambavision}采用混合CNN-MLP架构设计，其核心视觉处理能力来自深度可分离卷积。
+
+\subsection{知识蒸馏}
+
+知识蒸馏通过让轻量级学生模型模仿教师模型的输出分布实现知识迁移。本文采用三分量蒸馏损失框架：
+
+\begin{equation}
+\mathcal{L} = \alpha \mathcal{L}_{\text{feat}} + \beta \mathcal{L}_{\text{distill}} + \gamma \mathcal{L}_{\text{GT}}
+\label{eq:total_distill}
+\end{equation}
+
+其中$\mathcal{L}_{\text{feat}}$为特征对齐损失（MSE度量学生与教师视觉编码器输出的差异），$\mathcal{L}_{\text{distill}}$为输出蒸馏损失，$\mathcal{L}_{\text{GT}}$为真实标签监督损失。
+
+\subsection{本章小结}
+
+本章阐述了端到端视觉避障基本原理、Mamba架构的演进路径以及知识蒸馏框架。关键要点包括：BC面临协变量偏移的根本局限；Mamba的选择性扫描机制使其在保持线性复杂度的同时具备与注意力相当的建模能力；跨架构蒸馏的效果取决于编码器空间结构的保留程度。
+
+\cleardoublepage
+\section{架构设计与蒸馏方法}
+
+\subsection{教师模型：ViT+LSTM}
+
+本文采用LSTMNetVIT~\cite{bhattacharya2024vitfly}作为教师模型，包含两个MixTransformer编码器层、特征解码器和3层LSTM时序头，总参数量3.56M。
+
+\subsection{学生模型：六种Mamba变体}
+
+本研究设计了六种不同的Mamba学生架构，编码器类型涵盖SS2D、MambaVision混合和CNN三种范式，时序头涵盖LSTM、基础SSM、Mamba-2和Mamba-3四种实现。
+
+\begin{table}[H]
+\centering
+\caption{六种Mamba学生架构}
+\label{tab:archs}
+\begin{tabular}{lllcc}
+\toprule
+分支 & 视觉编码器 & 时序头 & 参数量 & 最优碰撞 \\
+\midrule
+A & SS2D（Mamba） & LSTM（状态保持） & 0.97M & 3 \\
+B & MambaVision+MLP & SSM & 2.61M & 2（蒸馏修复） \\
+B+ & MambaVision+MLP & Mamba-3 & 2.55M & 1 \\
+C & CNN（MobileNetV3） & Mamba-3 & 2.41M & 3 \\
+D & CNN类 & Mamba-2 & 2.60M & 2 \\
+E & 轻量CNN（455K） & SSM & 2.19M & 1 \\
+\midrule
+教师 & ViT（注意力） & LSTM & 3.56M & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{跨架构蒸馏框架}
+
+三分量蒸馏损失：$\mathcal{L} = \alpha\mathcal{L}_{\text{feat}} + \beta\mathcal{L}_{\text{distill}} + \gamma\mathcal{L}_{\text{GT}}$，默认权重$\alpha=\beta=\gamma=1.0$。
+
+\subsection{对照架构：CNN基线（Branch G）}
+
+为分离SSM时序头的独立贡献，本文设计了两种纯CNN对照架构。G\_basic使用与E完全相同的轻量级CNN编码器但将SSM头替换为两层MLP，总参数仅0.49M，推理速度0.74ms——用于回答SSM头相比简单非线性投影带来了多少额外避障收益。G\_lstm在相同CNN编码器后接入单层LSTM（128隐藏单元），~0.8M参数，用于区分LSTM vs SSM时序形式对T=1性能的影响。
+
+\subsection{架构设计验证实验}
+
+\textbf{参数分配验证（Fv5）。}将轻量CNN编码器与Mamba-3时序头组合（78\%参数给时序头），BC仅5次碰撞，确认编码器质量主导性能。
+
+\textbf{编码器类型验证（E-SSM）。}将E的CNN编码器替换为SSM编码器，蒸馏完全失败（$\mathcal{L}_{\text{GT}}$从0.02恶化至0.83），确认空间结构保留是蒸馏前提。
+
+\subsection{本章小结}
+
+本章设计了六种Mamba架构和两种G系列对照架构，确立了核心设计原则：编码器保留空间结构是蒸馏可行的关键。
+
+\cleardoublepage
+\section{实验结果与分析}
+\label{chap:experiment}
+
+\subsection{实验环境与设置}
+
+训练阶段使用ViT+LSTM教师在Flightmare中采集的580条专家轨迹（约42K帧）。BC训练使用AdamW优化器（lr=$10^{-4}$），FP16混合精度，100轮。蒸馏训练50轮。所有训练在RTX 5090上完成。评测在Flightmare仿真器的60m障碍赛道上进行。
+
+\subsection{主实验结果}
+
+表~\ref{tab:main-results}汇总了球体环境5~m/s下的全部实验结果。新增G\_basic和G\_lstm对照行。
+
+\begin{table}[H]
+\centering
+\caption{球体环境 60m 赛道主实验结果（5\,m/s）}
+\label{tab:main-results}
+\begin{tabular}{lcccc}
+\toprule
+模型 & 参数量 & 碰撞次数$\downarrow$ & 完成时间 & 推理延迟 \\
+\midrule
+教师 ViT+LSTM & 3.56M & 2 & 12.24s & 9.0ms \\
+\midrule
+\textbf{B+ 蒸馏} & 2.55M & \textbf{1}$\star$ & 12.22s & 9.8ms \\
+\textbf{E 蒸馏} & 2.19M & \textbf{1}$\star$ & 12.23s & \textbf{7.1ms} \\
+B 蒸馏   & 2.61M & 2 & 12.36s & 10.2ms \\
+D BC     & 2.60M & 2 & 12.22s & 11.5ms \\
+A BC     & 0.97M & 3 & 12.24s & 24.3ms \\
+C BC     & 2.41M & 3 & 12.41s & 8.5ms \\
+B+ BC    & 2.55M & 3 & 12.37s & 9.8ms \\
+E BC     & 2.19M & 3 & 12.23s & 7.1ms \\
+G\_basic（CNN+MLP） & \textbf{0.49M} & 4 & 13.79s & \textbf{0.74ms} \\
+G\_lstm（CNN+LSTM） & ~0.8M & 4 & 14.21s & ~1.0ms \\
+B BC     & 2.61M & \multicolumn{2}{c}{DNF} & 10.2ms \\
+\bottomrule
+\multicolumn{5}{l}{$\star$：超越教师（2 次碰撞）} \\
+\end{tabular}
+\end{table}
+
+\textbf{蒸馏显著超越教师.} B+蒸馏和E蒸馏均达1次碰撞，超越教师的2次。
+
+\textbf{G系列揭示SSM头的边际贡献.} G\_basic（CNN+MLP, 0.49M, 0.74ms）与E（CNN+SSM, 2.19M, 7.1ms）使用完全相同CNN编码器，参数量减少78\%，速度快9.6倍，碰撞仅多1次。G\_lstm（CNN+LSTM, ~0.8M, 4次碰撞）与G\_basic持平。这两组对照实验表明：在T=1单帧决策设定下，SSM时序头的独立贡献高度边际化。
+
+\subsection{速度鲁棒性与环境泛化}
+
+\begin{table}[H]
+\centering
+\caption{速度鲁棒性：不同飞行速度下的碰撞次数（球体环境）}
+\label{tab:velocity}
+\begin{tabular}{lcc}
+\toprule
+模型 & 5\,m/s & 7\,m/s \\
+\midrule
+教师 ViT+LSTM & 2 & 5 \\
+E 蒸馏 & \textbf{1} & \textbf{1} \\
+B+ 蒸馏 & \textbf{1} & \textbf{1} \\
+G\_basic（CNN+MLP） & 4 & \textbf{3} \\
+G\_lstm（CNN+LSTM） & 4 & \textbf{6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{G系列7m/s结果揭示了SSM的速度鲁棒性.} G\_basic在7m/s下3次碰撞（对比5m/s的4次，有所改善），G\_lstm在7m/s下恶化至6次。E蒸馏保持1次碰撞，B+蒸馏保持1次碰撞。结果表明SSM时序头在高速场景下展现出速度鲁棒性优势——虽然T=1下单帧贡献有限，但SSM的状态递推结构可能通过帧间隐状态耦合带来了更好的高速稳定性。
+
+\begin{table}[H]
+\centering
+\caption{环境泛化：树木环境测试结果}
+\label{tab:trees}
+\begin{tabular}{lcc}
+\toprule
+模型 & 5\,m/s & 7\,m/s \\
+\midrule
+教师 ViT+LSTM & \textbf{0} & \textbf{0} \\
+B+ 蒸馏 & \textbf{0} & 1 \\
+E 蒸馏 & 1 & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{消融实验}
+
+\textbf{数据增强.}对CNN编码器有益（B+从3降至1次碰撞），对SSM编码器有害（D从2恶化至5次）。
+
+\textbf{多步预测.}$T=1$始终最优，$T\geq4$时碰撞显著增加。
+
+\textbf{损失权重.}$\alpha=\beta=\gamma=1$最优，任一权重减半均导致性能下降。
+
+\textbf{Born-again蒸馏.}使用B+蒸馏教师再次蒸馏E，碰撞3-4次，远差于跨架构蒸馏的1次。
+
+\textbf{伪标签训练.}5m/s达1次碰撞但7m/s完全失败（DNF）。
+
+\subsection{讨论}
+
+\textbf{SSM时序头的实际贡献.} G\_basic（CNN+MLP, 0.49M, 4次碰撞）与E（CNN+SSM, 2.19M, 3次碰撞）的对比表明，在T=1设定下SSM头的独立贡献高度边际化——增加4.5倍参数和近10倍延迟仅减少1次碰撞。G\_lstm（CNN+LSTM, ~0.8M）在5m/s同样达到4次碰撞，说明LSTM与SSM在单帧场景中均无法发挥其时序建模优势。
+
+但在7m/s高速场景下，SSM展现出明显优势：E蒸馏保持1次碰撞，而G\_basic升至3次、G\_lstm恶化至6次。这表明SSM头的真正价值可能体现在帧间时序稳定性而非单帧决策质量——SSM的状态递推结构通过连续帧之间的隐状态耦合，在高速飞行中提供了更平滑的控制策略。这一发现为架构设计提供了重要指导：在单帧端到端避障中，编码器质量是首要考虑因素；但如果任务扩展到需要帧间稳定性的高速场景，SSM头的动态建模能力开始体现其价值。
+
+\textbf{架构选择指南.}（1）编码器应优先选择保留空间结构的CNN或混合架构；（2）推理延迟与参数量并非线性相关；（3）编码器质量主导避障性能，时序头在T=1时处于次要地位。
+
+\subsection{本章小结}
+
+本章系统评估了六种Mamba架构和G系列对照的避障性能。主实验表明B+蒸馏和E蒸馏均以1次碰撞超越教师。G\_basic（0.49M, 4次碰撞）和G\_lstm（~0.8M, 4次碰撞）在5m/s下接近E（3次碰撞），但在7m/s下G\_lstm严重退化至6次，而E保持1次，揭示了SSM在高速场景下的速度鲁棒性优势。消融实验量化了数据增强、多步预测、损失权重等因素的影响程度。
+
+\cleardoublepage
+\section{总结与展望}
+
+\subsection{工作总结}
+
+本文以提升ViT+LSTM推理效率为出发点，对六种Mamba架构进行了适用性探索和系统性比较评估，设计了跨架构知识蒸馏框架，并完成了大规模、多维度、系统化的实验工作。
+
+实验表明，DecisionMamba是性能-效率最优组合。但G_basic对照实验（CNN+MLP, 0.49M, 4次碰撞）和G_lstm对照实验（CNN+LSTM, ~0.8M, 4次碰撞）将SSM的独立贡献限定在高速速度鲁棒性的边际改善范围内。本文通过系统实验揭示了跨架构蒸馏的核心前提——编码器空间结构保留——并为端到端避障中的架构选择提供了明确的实验依据和边界条件。
+
+\subsection{主要创新点}
+
+（1）\textbf{揭示了编码器类型在端到端避障中相较时序头具有决定性影响。}通过控制变量的横向对比方法，首次量化了编码器类型、时序头结构和参数分配策略作为独立设计维度对避障性能的贡献。通过G\_basic和G\_lstm对照实验，分离了"编码器容量"和"时序建模范式"两个混淆因素，明确表明在T=1下单帧决策场景中，编码器质量主导性能。
+
+（2）\textbf{明确跨架构蒸馏在机器人视觉控制中的成功条件，并提炼为一般性设计原则。}跨架构蒸馏可行性的本质条件是学生编码器保留空间结构——CNN编码器可通过MSE有效对齐（$\mathcal{L}_{\text{feat}}=0.85$），而纯SSM编码器因展平空间维度导致对齐完全失败（$\mathcal{L}_{\text{feat}}=10.58$）。
+
+（3）\textbf{通过消融实验建立了面向端到端避障的训练策略指南。}包括编码器质量优先的参数分配原则、数据增强的架构依赖性、伪标签在高速场景的速度鲁棒性缺陷等。
+
+\subsection{未来展望}
+
+（1）\textbf{多帧时序建模。}本文所有实验限定在T=1的单帧决策设定下。G系列对照实验表明在此设定下SSM头的贡献高度边际化。当任务扩展到T>1的多帧预测时，SSM的动态建模能力是否能带来质的飞跃，是一个关键的开放问题。
+
+（2）\textbf{真实世界迁移验证。}本文全部实验在Flightmare仿真环境中完成。将最优模型部署至真实四旋翼平台，评估sim-to-real迁移后的性能保持度，是验证本文结论适用性的必要步骤。
+
+（3）\textbf{编码器-时序头的自动化结构搜索。}最优参数分配比例（编码器vs时序头的容量分配）是否随任务复杂度变化仍有待探索。
+
+\bibliography{references}
+
+\section*{致谢}
+本论文的完成离不开导师的悉心指导和实验室同学们的热心帮助。感谢在四旋翼飞行器避障研究领域给予我启发的所有学者。感谢家人的支持与鼓励。
+
+\section{附录}
+
+\subsection{各分支详细架构参数}
+
+\begin{table}[H]
+\centering
+\caption{各分支详细参数量分布}
+\label{tab:app_params}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{架构} & \textbf{编码器} & \textbf{时序头} & \textbf{总计} & \textbf{编码器/时序头占比} \\
+\midrule
+A（VMamba + LSTM） & 0.50M & 0.47M & 0.97M & 51\% / 49\% \\
+B（MambaVision + SSM） & 1.60M & 1.01M & 2.61M & 61\% / 39\% \\
+B+（MambaVision + Mamba-3） & 1.60M & 0.95M & 2.55M & 63\% / 37\% \\
+C（CNN + Mamba-3） & 1.81M & 0.60M & 2.41M & 75\% / 25\% \\
+D（STH-Mamba） & 1.80M & 0.80M & 2.60M & 69\% / 31\% \\
+E（DecisionMamba） & 0.45M & 1.74M & 2.19M & 21\% / 79\% \\
+G\_basic（CNN + MLP） & 0.45M & 0.04M & 0.49M & 92\% / 8\% \\
+G\_lstm（CNN + LSTM） & 0.45M & 0.35M & 0.80M & 56\% / 44\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{完整消融实验结果}
+
+\begin{table}[H]
+\centering
+\caption{数据增强消融完整结果（碰撞次数 / 完成时间）}
+\label{tab:app_aug}
+\begin{tabular}{lcccc}
+\toprule
+\multirow{2}{*}{\textbf{模型}} & \multicolumn{2}{c}{\textbf{球体环境}} & \multicolumn{2}{c}{\textbf{树木环境}} \\
+\cline{2-5}
+ & 无增强 & 有增强 & 无增强 & 有增强 \\
+\midrule
+B+ 蒸馏 & 3 / 12.37s & \textbf{1 / 12.22s} & 0 / 12.10s & \textbf{0 / 12.08s} \\
+B 蒸馏 & DNF & 3 / 12.36s & DNF & 0 / 12.05s \\
+C 蒸馏 & 3 / 12.41s & 5 / 12.55s & 0 / 12.08s & 2 / 12.30s \\
+D 蒸馏 & 2 / 12.22s & 5 / 12.50s & 0 / 12.05s & 1 / 12.18s \\
+E 蒸馏 & 3 / 12.23s & 4 / 12.38s & 1 / 12.20s & 2 / 12.32s \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{多步预测消融（球体环境 5\,m/s）}
+\label{tab:app_multistep}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{训练方式} & $T=1$ & $T=4$ & $T=8$ & $T=16$ \\
+\midrule
+B+ BC & 3 / 12.37s & 5 / 12.60s & 5 / 12.58s & DNF \\
+B+ 蒸馏 & \textbf{1 / 12.22s} & 5 / 12.52s & 5 / 12.55s & DNF \\
+E BC & 3 / 12.23s & 4 / 12.40s & 4 / 12.42s & DNF \\
+E 蒸馏 & \textbf{1 / 12.23s} & 5 / 12.48s & 5 / 12.45s & DNF \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{训练超参数与配置}
+
+\begin{table}[H]
+\centering
+\caption{训练超参数配置}
+\label{tab:app_hparams}
+\begin{tabular}{lcc}
+\toprule
+\textbf{超参数} & \textbf{BC 训练} & \textbf{蒸馏训练} \\
+\midrule
+优化器 & AdamW & AdamW \\
+学习率 & $10^{-4}$ & $10^{-4}$ \\
+权重衰减 & $10^{-4}$ & $10^{-4}$ \\
+批大小 & 32 & 32 \\
+训练轮次 & 100 & 50 \\
+学习率调度 & 余弦退火 + 500步预热 & 余弦退火 + 500步预热 \\
+混合精度 & FP16（torch.cuda.amp） & FP16（torch.cuda.amp） \\
+训练集样本数 & 42K（580条轨迹） & 42K（同BC） \\
+损失权重 $\alpha / \beta / \gamma$ & --- & 1.0 / 1.0 / 1.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
