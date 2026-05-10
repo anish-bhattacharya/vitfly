@@ -102,6 +102,7 @@ class AgilePilotNode:
                            'is_collide': [],
         } 
         self.data_log = pd.DataFrame(data_log_format) # store in the data frame
+        self.cmd_vel_log = []  # for tracking metrics
         self.count = 0 # counter for the csv
         
         # @NOTE: Dont log too fast, I have not tested that
@@ -309,6 +310,7 @@ class AgilePilotNode:
             queue_size=1,
         )
         print("[RUN_COMPETITION] Initialization completed!")
+        rospy.on_shutdown(self._compute_tracking_metrics)
 
         self.ctr = 0
 
@@ -618,7 +620,52 @@ class AgilePilotNode:
 
         self.vel_marker_pub.publish(marker)
 
+    def _compute_tracking_metrics(self):
+        """Compute velocity tracking metrics from recorded data and write to file."""
+        try:
+            if len(self.cmd_vel_log) < 10:
+                return
+            # Match commanded velocities with actual state velocities from data_log
+            df = self.data_log.copy()
+            if df.empty or 'vel_x' not in df.columns:
+                return
+            # Compute per-axis mean absolute error
+            mae_x = (df['velcmd_x'] - df['vel_x']).abs().mean()
+            mae_y = (df['velcmd_y'] - df['vel_y']).abs().mean()
+            mae_z = (df['velcmd_z'] - df['vel_z']).abs().mean()
+            # Control smoothness: mean absolute jerk (2nd diff of velocity commands)
+            jerk_x = df['velcmd_x'].diff().diff().abs().mean()
+            # Yaw stability from quaternion: approximate via velcmd_y/velcmd_z variance
+            lateral_var = df[['velcmd_y', 'velcmd_z']].values.var()
+            metrics = {
+                'tracking_mae_x': round(float(mae_x), 4),
+                'tracking_mae_y': round(float(mae_y), 4),
+                'tracking_mae_z': round(float(mae_z), 4),
+                'tracking_mae_total': round(float((mae_x + mae_y + mae_z) / 3), 4),
+                'control_jerk': round(float(jerk_x) if not pd.isna(jerk_x) else 0.0, 4),
+                'lateral_cmd_var': round(float(lateral_var) if not pd.isna(lateral_var) else 0.0, 4),
+                'num_samples': len(df),
+            }
+            import yaml
+            path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../results')
+            os.makedirs(path, exist_ok=True)
+            model_tag = self.model.__class__.__name__ if hasattr(self, 'model') else 'unknown'
+            fname = f'tracking_{model_tag}_{int(time.time())}.yaml'
+            with open(os.path.join(path, fname), 'w') as f:
+                yaml.dump(metrics, f, default_flow_style=False)
+            print(f"[TRACKING] Metrics saved to results/{fname}: MAE={metrics['tracking_mae_total']}")
+        except Exception as e:
+            print(f"[TRACKING] Error computing metrics: {e}")
+
     def publish_command(self, command):
+        # Record commanded velocity for tracking metrics
+        if command.mode == AgileCommandMode.LINVEL:
+            self.cmd_vel_log.append({
+                't': command.t,
+                'vx_cmd': command.velocity[0],
+                'vy_cmd': command.velocity[1],
+                'vz_cmd': command.velocity[2],
+            })
         if command.mode == AgileCommandMode.SRT:
             assert len(command.rotor_thrusts) == 4
             cmd_msg = Command()
