@@ -2,4 +2,13 @@
 .vscode
 checklist.md
 *.dat
-*.code-workspace
+*.code-workspace# symlinked ECC skills
+.claude/skills/academic-paper
+.claude/skills/academic-paper-reviewer
+.claude/skills/academic-pipeline
+.claude/skills/deep-research
+.claude/skills/doc-citation-checker
+.claude/skills/thesis-pipeline
+.claude/skills/superpowers
+.claude/skills/using-superpowers
+.claude/skills/autoresearch
