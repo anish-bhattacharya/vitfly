@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.0">
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="600" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- === Title === -->
+        <mxCell id="t1" value="双Agent流水线甘特图（基于实际Git提交记录）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="600" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- === Time axis labels (Hour:Min) === -->
+        <mxCell id="th0" value="" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="180" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="th1" value="19:00" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="280" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="th2" value="19:15" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=" vertex="1" parent="1">
+          <mxGeometry x="370" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="th3" value="19:30" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="460" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="th4" value="19:45" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="550" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="th5" value="20:00" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="640" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="th6" value="20:30" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="760" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="th7" value="21:00" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="880" y="45" width="40" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- === Time grid lines === -->
+        <mxCell id="gl1" value="" style="line;html=1;strokeColor=#E0E0E0;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="70" width="1" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gl2" value="" style="line;html=1;strokeColor=#E0E0E0;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="70" width="1" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gl3" value="" style="line;html=1;strokeColor=#E0E0E0;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="70" width="1" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gl4" value="" style="line;html=1;strokeColor=#E0E0E0;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="570" y="70" width="1" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gl5" value="" style="line;html=1;strokeColor=#E0E0E0;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="70" width="1" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gl6" value="" style="line;html=1;strokeColor=#E0E0E0;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="70" width="1" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="gl7" value="" style="line;html=1;strokeColor=#E0E0E0;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="70" width="1" height="280" as="geometry" />
+        </mxCell>
+
+        <!-- === Row labels === -->
+        <mxCell id="rl1" value="训练&#xa;Agent" style="text;html=1;strokeColor=none;fillColor=#4A90D9;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#FFFFFF;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="80" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="rl2" value="仿真&#xa;Agent" style="text;html=1;strokeColor=none;fillColor=#5BA58B;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#FFFFFF;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="210" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- === Training Agent bars === -->
+
+        <!-- Bar 1: E multi-seed training (ongoing from earlier) -->
+        <mxCell id="tb1" value="E distill seeds 43-45&#xa;G BC seeds 43-45" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6E4F0;strokeColor=#4A90D9;strokeWidth=1;fontSize=8;fontColor=#333;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="180" y="85" width="220" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Bar 2: B+ distill seed 42 -->
+        <mxCell id="tb2" value="B+ distill&#xa;seed 42" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3D4F0;strokeColor=#4A90D9;strokeWidth=1;fontSize=8;fontColor=#333;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="460" y="85" width="100" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Training checkpoints -->
+        <mxCell id="tc1" value="commit&#xa;432f3f9c" style="shape=triangle;whiteSpace=wrap;html=1;fillColor=#4A90D9;strokeColor=#2E5A9D;strokeWidth=1;fontSize=7;fontColor=#FFF;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="270" y="128" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tc2" value="commit&#xa;23ce5f24" style="shape=triangle;whiteSpace=wrap;html=1;fillColor=#4A90D9;strokeColor=#2E5A9D;strokeWidth=1;fontSize=7;fontColor=#FFF;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="475" y="128" width="40" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- === Simulation Agent bars === -->
+
+        <!-- Bar 3: Simulation testing parallel with training -->
+        <mxCell id="sb1" value="G_basic/G_lstm&#xa;仿真测试" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E8D4;strokeColor=#5BA58B;strokeWidth=1;fontSize=8;fontColor=#333;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="200" y="215" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Bar 4: Bug fix -->
+        <mxCell id="sb2" value="velocity bug&#xa;修复 + 测试" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3D4B3;strokeColor=#5BA58B;strokeWidth=1;fontSize=8;fontColor=#333;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="460" y="215" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Bar 5: Multi-seed sim test -->
+        <mxCell id="sb3" value="G_basic&#xa;多种子仿真" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3D4B3;strokeColor=#5BA58B;strokeWidth=1;fontSize=8;fontColor=#333;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="640" y="215" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Bar 6: E distill 7m/s tracking -->
+        <mxCell id="sb4" value="E distill&#xa;7m/s tracking" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E8D4;strokeColor=#5BA58B;strokeWidth=1;fontSize=8;fontColor=#333;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="800" y="215" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Simulation milestones -->
+        <mxCell id="sc1" value="crash data&#xa;collected" style="shape=triangle;whiteSpace=wrap;html=1;fillColor=#5BA58B;strokeColor=#3A7B6B;strokeWidth=1;fontSize=7;fontColor=#FFF;direction=north;" vertex="1" parent="1">
+          <mxGeometry x="300" y="258" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="sc2" value="bug fix&#xa;committed" style="shape=triangle;whiteSpace=wrap;html=1;fillColor=#5BA58B;strokeColor=#3A7B6B;strokeWidth=1;fontSize=7;fontColor=#FFF;direction=north;" vertex="1" parent="1">
+          <mxGeometry x="500" y="258" width="40" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- === GitHub sync markers === -->
+        <mxCell id="gh1" value="⚡ GitHub sync" style="ellipse;whiteSpace=wrap;html=1;fillColor=#333333;strokeColor=#222;fontSize=7;fontColor=#FFF;" vertex="1" parent="1">
+          <mxGeometry x="355" y="165" width="70" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="gh2" value="⚡ GitHub sync" style="ellipse;whiteSpace=wrap;html=1;fillColor=#333333;strokeColor=#222;fontSize=7;fontColor=#FFF;" vertex="1" parent="1">
+          <mxGeometry x="540" y="165" width="70" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- === Thesis update bar === -->
+        <mxCell id="thb" value="论文更新&#xa;(同步进行)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1;fontSize=8;fontColor=#333;verticalAlign=middle;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="300" width="280" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="lg1" value="图例:" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontColor=#666;align=left;" vertex="1" parent="1">
+          <mxGeometry x="20" y="320" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6E4F0;strokeColor=#4A90D9;strokeWidth=1;fontSize=7;" vertex="1" parent="1">
+          <mxGeometry x="70" y="322" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg3" value="训练任务" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="105" y="322" width="50" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E8D4;strokeColor=#5BA58B;strokeWidth=1;fontSize=7;" vertex="1" parent="1">
+          <mxGeometry x="160" y="322" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg5" value="仿真任务" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="195" y="322" width="50" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg6" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1;fontSize=7;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="322" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg7" value="文档/论文" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="285" y="322" width="50" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg8" value="" style="shape=triangle;whiteSpace=wrap;html=1;fillColor=#333;strokeColor=#222;fontSize=6;fontColor=#FFF;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="340" y="322" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg9" value="Git 提交" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="360" y="322" width="50" height="16" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
