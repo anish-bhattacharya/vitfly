@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  body { margin: 0; display: flex; justify-content: center; align-items: center; background: #fff; }
+  #chart { width: 1000px; height: 480px; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<script>
+// Timeline data: [task name, agent type, start min, duration min, detail]
+// time origin = 19:00 (0 min)
+const tasks = [
+  // Training Agent tasks
+  { name: 'E distill seeds 43-45\nG BC seeds 43-45', agent: 'training', start: 0, dur: 26, detail: '远程GPU训练' },
+  { name: 'B+ distill seed 42', agent: 'training', start: 22, dur: 10, detail: '远程GPU训练' },
+  // Simulation Agent tasks  
+  { name: 'G_basic/G_lstm\n仿真测试', agent: 'simulation', start: 5, dur: 17, detail: 'WSL2 Flightmare' },
+  { name: 'velocity bug\n修复+复测', agent: 'simulation', start: 24, dur: 16, detail: 'user_code.py fix' },
+  { name: 'G_basic\n多种子仿真', agent: 'simulation', start: 45, dur: 15, detail: '4 seeds @ 5m/s' },
+  { name: 'E distill\n7m/s tracking', agent: 'simulation', start: 65, dur: 10, detail: 'tracking metrics' },
+  // Thesis/Other
+  { name: '论文更新\n+ 图表生成', agent: 'thesis', start: 40, dur: 55, detail: '持续进行' },
+];
+
+// GitHub sync events
+const syncs = [
+  { time: 26, label: 'multi-seed\nresults push' },
+  { time: 32, label: 'B+ distill\npush' },
+  { time: 40, label: 'sim results\npush' },
+  { time: 62, label: 'all data\ncollected' },
+];
+
+const agentColors = {
+  training: { fill: '#4A90D9', stroke: '#2E5A9D', bg: '#E8F0FE' },
+  simulation: { fill: '#5BA58B', stroke: '#3A7B6B', bg: '#E8F5EE' },
+  thesis: { fill: '#F4A261', stroke: '#D47B30', bg: '#FFF5EB' },
+};
+
+const series = [];
+
+// Agent row backgrounds
+series.push({
+  type: 'custom', renderItem: (params, api) => {
+    const rowHeight = 60;
+    const yStart = 40;
+    return { type: 'group', children: [
+      { type: 'rect', shape: { x: 80, y: yStart, width: 780, height: rowHeight }, style: { fill: '#E8F0FE', opacity: 0.3 } },
+      { type: 'rect', shape: { x: 80, y: yStart + rowHeight + 15, width: 780, height: rowHeight }, style: { fill: '#E8F5EE', opacity: 0.3 } },
+      { type: 'rect', shape: { x: 80, y: yStart + 2*(rowHeight+15), width: 780, height: rowHeight }, style: { fill: '#FFF5EB', opacity: 0.3 } },
+    ]};
+  }, data: [0], z: 0,
+});
+
+// Task bars
+let idx = 0;
+for (const t of tasks) {
+  const c = agentColors[t.agent];
+  const rowIdx = { training: 0, simulation: 1, thesis: 2 }[t.agent];
+  const yBase = 40 + rowIdx * 75;
+  const xStart = 80 + t.start * 6.5;
+  const xEnd = t.dur * 6.5;
+
+  series.push({
+    type: 'custom', renderItem: (params, api) => ({
+      type: 'group', children: [
+        { type: 'rect', shape: { x: xStart, y: yBase + 8, width: xEnd, height: 44 },
+          style: { fill: c.fill, stroke: c.stroke, lineWidth: 1.5, shadowBlur: 3, shadowColor: 'rgba(0,0,0,0.1)' } },
+        { type: 'rect', shape: { x: xStart, y: yBase + 8, width: 4, height: 44 },
+          style: { fill: c.stroke } },
+        // Task name text
+        ...t.name.split('\n').map((line, li) => ({
+          type: 'text', shape: { x: xStart + 12, y: yBase + 16 + li * 16 },
+          style: { text: line, textFont: li === 0 ? 'bold 11px sans-serif' : '10px sans-serif', textFill: '#333' }
+        })),
+        // Duration label
+        { type: 'text', shape: { x: xStart + xEnd - 5, y: yBase + 32 },
+          style: { text: `${t.dur}min`, textFont: '9px sans-serif', textFill: '#666', textAlign: 'right' } }
+      ]
+    }), data: [idx], z: 2,
+  });
+  // Detail label below bar
+  series.push({
+    type: 'custom', renderItem: (params, api) => ({
+      type: 'text',
+      shape: { x: xStart + 10, y: yBase + 58 },
+      style: { text: t.detail, textFont: '9px sans-serif', textFill: '#999' }
+    }), data: [idx], z: 1,
+  });
+  idx++;
+}
+
+// GitHub sync markers
+for (const s of syncs) {
+  const xPos = 80 + s.time * 6.5;
+  series.push({
+    type: 'custom', renderItem: (params, api) => ({
+      type: 'group', children: [
+        { type: 'circle', shape: { cx: xPos, cy: 168, r: 6 },
+          style: { fill: '#333', stroke: '#222', lineWidth: 1.5 } },
+        { type: 'text', shape: { x: xPos, y: 180 },
+          style: { text: '▲', textFont: '10px sans-serif', textFill: '#333', textAlign: 'center' } },
+        ...s.label.split('\n').map((line, li) => ({
+          type: 'text', shape: { x: xPos, y: 140 + li * 12 },
+          style: { text: line, textFont: '8px sans-serif', textFill: '#666', textAlign: 'center' }
+        })),
+      ]
+    }), data: [idx], z: 3,
+  });
+  idx++;
+}
+
+const option = {
+  grid: { left: 100, right: 50, top: 40, bottom: 50 },
+  xAxis: {
+    type: 'value', min: -5, max: 130,
+    axisLabel: { 
+      formatter: v => {
+        if (v < 0) return '';
+        const h = 19 + Math.floor(v / 60);
+        const m = v % 60;
+        return `${h}:${m.toString().padStart(2, '0')}`;
+      },
+      fontSize: 10, color: '#666'
+    },
+    axisLine: { show: true, lineStyle: { color: '#ddd' } },
+    splitLine: { show: true, lineStyle: { color: '#f0f0f0', type: 'dashed' } },
+    name: '时间', nameLocation: 'center', nameGap: 30,
+  },
+  yAxis: {
+    type: 'category',
+    data: ['训练Agent\n(GPU云)', '仿真Agent\n(WSL2)', '论文/文档'],
+    axisLabel: { fontSize: 11, fontWeight: 'bold', color: '#333', margin: 10 },
+    axisLine: { show: false },
+    splitLine: { show: false },
+  },
+  series: series,
+  animation: false,
+};
+
+const chart = echarts.init(document.getElementById('chart'));
+chart.setOption(option);
+window.addEventListener('resize', () => chart.resize());
+</script>
+</body>
+</html>
