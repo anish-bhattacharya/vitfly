@@ -2,10 +2,11 @@
 \usepackage{geometry}
 \geometry{a4paper, left=3cm, right=2.5cm, top=2.5cm, bottom=2.5cm, headheight=15pt}
 \usepackage{xeCJK}
-\setCJKmainfont{WenQuanYi Zen Hei}
-\setCJKmonofont{WenQuanYi Zen Hei}
+\setCJKmainfont{SimSun}
+\setCJKsansfont{SimHei}
+\setCJKmonofont{SimSun}
 \usepackage{fontspec}
-\setmainfont{TeX Gyre Termes}
+\setmainfont{Times New Roman}
 \usepackage[2015,super]{gbt7714}
 \usepackage{booktabs}
 \usepackage{amsmath, amssymb}
@@ -29,11 +30,30 @@
 \makeatother
 \setstretch{1.5}
 \graphicspath{{figures/}}
+
+% ─── Page style ───
 \pagestyle{fancy}
 \fancyhf{}
 \fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0pt}
-\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\renewcommand{\headrulewidth}{0.5pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0.5pt}}
+
+% ─── Headers: left="东北大学本科毕业设计（论文）", right=chapter title ───
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\fancyhead[L]{\songti 东北大学本科生毕业设计（论文）}
+\fancyhead[R]{\songti \leftmark}
+
+% ─── Heading fonts & sizes ───
+% 一级标题: 黑体 小二号(18pt)
+\titleformat{\section}{\centering\sffamily\fontsize{18}{22}\selectfont}{\thesection}{1em}{}
+% 二级标题: 黑体 四号(14pt)
+\titleformat{\subsection}{\sffamily\fontsize{14}{18}\selectfont}{\thesubsection}{1em}{}
+% 三级标题: 黑体 小四号(12pt)
+\titleformat{\subsubsection}{\sffamily\fontsize{12}{15}\selectfont}{\thesubsubsection}{1em}{}
+
+% ─── Chinese font aliases ───
+\newcommand{\songti}{\CJKfamily{SimSun}}
+\newcommand{\heiti}{\CJKfamily{SimHei}}
 
 \title{基于神经网络的四旋翼飞行器端到端视觉避障}
 \author{邢锦文\\东北大学}
