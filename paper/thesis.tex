@@ -432,6 +432,15 @@ Branch E是本研究的核心发现之一。其视觉编码器为轻量级CNN（
 
 \textbf{评估指标.} （1）\textbf{碰撞次数}：全程碰撞障碍物总数，为主要评价指标；（2）\textbf{飞行时间}：完成 60m 赛道的耗时；（3）\textbf{推理延迟}：单帧前向传播时间，反映模型的实时性。
 
+\textbf{分布式实验架构.} 实验采用双Agent流水线架构：训练Agent（AutoDL云服务器，RTX 5090）负责模型设计与训练，仿真Agent（本地WSL2 + ROS Noetic + Flightmare）负责60m赛道评测。两者通过GitHub仓库异步通信，形成"训练→提交→拉取→仿真→回传"的闭环流水线，如图~\ref{fig:pipeline}所示。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/figure4.pdf}
+\caption{分布式训练-仿真流水线架构。训练Agent与仿真Agent通过GitHub仓库解耦，实现异步并行实验。}
+\label{fig:pipeline}
+\end{figure}
+
 \subsection{主实验结果}
 \label{sec:main-results}
 

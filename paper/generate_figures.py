@@ -39,6 +39,7 @@ def fig3_latency():
     bars = ax1.bar(models, latencies, color=colors, edgecolor='gray', linewidth=0.5)
     ax1.set_ylabel('Inference Latency (ms)')
     ax1.set_xlabel('Model')
+    ax1.set_xticks(range(len(models)))
     ax1.set_xticklabels(models, rotation=30)
     ax1.axhline(y=16.7, color='red', linestyle='--', linewidth=0.8, label='60Hz limit (16.7ms)')
     ax1.legend()
@@ -180,68 +181,199 @@ def fig1_overview():
 
 
 # ====================================================================
-# Architecture diagrams (arch_branch_A through E)
+# Architecture diagrams — enhanced with layer stacking
 # ====================================================================
-ARCH_DATA = {
-    'A': {'encoder': 'SS2D\n(Mamba Scan)', 'encoder_color': '#FF6B6B', 'temporal': 'LSTM\n(State)', 'temporal_color': '#FFE66D'},
-    'B': {'encoder': 'MambaVision\n(Conv+MLP)', 'encoder_color': '#45B7D1', 'temporal': 'SSM\n(d_state=16)', 'temporal_color': '#96CEB4'},
-    'B+': {'encoder': 'MambaVision\n(Conv+MLP)', 'encoder_color': '#45B7D1', 'temporal': 'Mamba-3', 'temporal_color': '#96CEB4'},
-    'C': {'encoder': 'CNN\n(MobileNetV3)', 'encoder_color': '#4ECDC4', 'temporal': 'Mamba-3\n(d_state=32)', 'temporal_color': '#96CEB4'},
-    'D': {'encoder': 'CNN-like\nEncoder', 'encoder_color': '#4ECDC4', 'temporal': 'Mamba-2\n(SSD)', 'temporal_color': '#96CEB4'},
-    'E': {'encoder': 'Light CNN\n(455K)', 'encoder_color': '#4ECDC4', 'temporal': 'SSM\n(d_state=16)', 'temporal_color': '#96CEB4'},
+
+def draw_layer_box(ax, x, y, w, h, label, color, fontsize=5.5):
+    """Draw a single layer block."""
+    ax.add_patch(mpatches.FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02",
+                                          facecolor=color, edgecolor='black', linewidth=0.5))
+    ax.text(x + w/2, y + h/2, label, ha='center', va='center', fontsize=fontsize,
+            fontweight='bold')
+
+def draw_stack(ax, x, y, w, h, layers, colors, total_height, label=''):
+    """Draw stacked layers."""
+    n = len(layers)
+    layer_h = total_height / n
+    for i, (layer, color) in enumerate(zip(layers, colors)):
+        ly = y + total_height - (i + 1) * layer_h
+        # Draw each layer with slight offset for 3D effect
+        offsets = [0, -0.003, 0.003]
+        for j, off in enumerate(offsets):
+            alpha = 0.3 if j > 0 else 1.0
+            ax.add_patch(mpatches.FancyBboxPatch((x + off, ly + off), w, layer_h - 0.005,
+                                                  boxstyle="round,pad=0.01",
+                                                  facecolor=color, edgecolor='black' if j == 0 else 'none',
+                                                  linewidth=0.3, alpha=alpha if j > 0 else 1.0))
+        # Layer label
+        lines = layer.split('\n')
+        label_y = ly + layer_h / 2 + (len(lines)-1) * 0.02
+        for li, line in enumerate(lines):
+            ax.text(x + w/2, label_y - li * 0.04, line, ha='center', va='center',
+                   fontsize=4.5, fontweight='bold')
+
+ARCH_SPECS = {
+    'A': {
+        'encoder_layers': ['Conv 3×3\n32ch', 'Conv 3×3\n64ch', 'Conv 3×3\n128ch', 'Conv 3×3\n256ch\n+SS2D×4'],
+        'encoder_colors': ['#FFB3B3', '#FF8C8C', '#FF6B6B', '#CC4444'],
+        'temporal_layers': ['LSTM\nh=128\n×3'],
+        'temporal_colors': ['#FFE66D'],
+        'note': '4-dir SS2D\nscan → 4608dim'
+    },
+    'B': {
+        'encoder_layers': ['Stem\n7×7,s4', 'DWConv+\nMLP ×2', 'DWConv+\nMLP ×2', 'DWConv+\nMLP ×2'],
+        'encoder_colors': ['#B3D9FF', '#7EC8E3', '#45B7D1', '#2E8BCC'],
+        'temporal_layers': ['SSM\nd=16\n×2'],
+        'temporal_colors': ['#96CEB4'],
+        'note': 'MambaVision\nhybrid\n512dim'
+    },
+    'B+': {
+        'encoder_layers': ['Stem\n7×7,s4', 'DWConv+\nMLP ×2', 'DWConv+\nMLP ×2', 'DWConv+\nMLP ×2'],
+        'encoder_colors': ['#B3D9FF', '#7EC8E3', '#45B7D1', '#2E8BCC'],
+        'temporal_layers': ['Mamba-3\nd=32', 'Mamba-3\nd=32'],
+        'temporal_colors': ['#96CEB4', '#7DBFA0'],
+        'note': 'MambaVision\n+ Mamba-3\n512dim'
+    },
+    'C': {
+        'encoder_layers': ['Conv 3×3\n32ch,s2', 'Conv 3×3\n64ch,s2', 'Conv 3×3\n128ch,s2', 'Conv 3×3\n256ch\nGAP'],
+        'encoder_colors': ['#B3F0D0', '#7EDCB0', '#4ECDC4', '#2EB8A0'],
+        'temporal_layers': ['Mamba-3\nd=32'],
+        'temporal_colors': ['#96CEB4'],
+        'note': 'MobileNetV3\nstyle\n1.81M encoder'
+    },
+    'D': {
+        'encoder_layers': ['Conv 3×3\n32ch', 'Conv 3×3\n64ch', 'Conv 3×3\n128ch', 'ST-Mamba\nscan'],
+        'encoder_colors': ['#E8D5F5', '#DDB0E8', '#DDA0DD', '#C080D0'],
+        'temporal_layers': ['Mamba-2\nSSD\nd=128'],
+        'temporal_colors': ['#96CEB4'],
+        'note': 'Spatial-temporal\nscan\n1.80M encoder'
+    },
+    'E': {
+        'encoder_layers': ['Conv 3×3\n32ch,s2', 'Conv 3×3\n64ch,s2', 'Conv 3×3\n128ch,s2', 'Conv 3×3\n256ch\nAP'],
+        'encoder_colors': ['#FFE0B3', '#FFCC80', '#FFB84D', '#FFA500'],
+        'temporal_layers': ['SSM\nd=16\n×2'],
+        'temporal_colors': ['#96CEB4'],
+        'note': 'Light CNN\n455K encoder\n(21%)'
+    },
 }
 
-def draw_arch(branch, data):
-    fig, ax = plt.subplots(1, 1, figsize=(4, 2.5))
+def draw_arch_v2(branch):
+    spec = ARCH_SPECS[branch]
+    fig, ax = plt.subplots(1, 1, figsize=(5.5, 3.5))
     ax.axis('off')
 
-    # Depth image input
-    ax.add_patch(mpatches.FancyBboxPatch((0.02, 0.35), 0.12, 0.3, boxstyle="round,pad=0.03",
-                                          facecolor='#E8E8E8', edgecolor='black'))
-    ax.text(0.08, 0.5, 'Depth\n60×90', ha='center', va='center', fontsize=6)
+    # Input
+    draw_layer_box(ax, 0.02, 0.35, 0.10, 0.30, 'Depth\n60×90', '#E8E8E8')
 
-    # Arrow
-    ax.annotate('', xy=(0.15, 0.5), xytext=(0.14, 0.5),
-               arrowprops=dict(arrowstyle='->', color='black', lw=1.5))
+    # Encoder stack
+    n_enc = len(spec['encoder_layers'])
+    enc_x, enc_w = 0.16, 0.20
+    enc_total_h = 0.65
+    enc_y = 0.15
+    draw_stack(ax, enc_x, enc_y, enc_w, enc_total_h/n_enc,
+               spec['encoder_layers'], spec['encoder_colors'], enc_total_h)
 
-    # Encoder
-    ax.add_patch(mpatches.FancyBboxPatch((0.16, 0.2), 0.2, 0.6, boxstyle="round,pad=0.05",
-                                          facecolor=data['encoder_color'], edgecolor='black', alpha=0.85))
-    ax.text(0.26, 0.5, data['encoder'], ha='center', va='center', fontsize=7, fontweight='bold')
+    # Feature dim note
+    ax.text(enc_x + enc_w + 0.01, 0.5, spec['note'], ha='left', va='center',
+           fontsize=4.5, fontstyle='italic', color='gray')
 
-    # Feature concat (small)
-    ax.add_patch(mpatches.FancyBboxPatch((0.4, 0.35), 0.08, 0.3, boxstyle="round,pad=0.02",
-                                          facecolor='#FFE66D', edgecolor='black'))
-    ax.text(0.44, 0.5, 'Cat\n+vel\n+quat', ha='center', va='center', fontsize=5)
+    # Concat block
+    draw_layer_box(ax, 0.42, 0.38, 0.08, 0.24, 'Concat\n+vel\n+quat', '#FFE66D', 5)
 
-    # Arrow
-    ax.annotate('', xy=(0.38, 0.5), xytext=(0.36, 0.5),
-               arrowprops=dict(arrowstyle='->', color='black', lw=1.5))
-    ax.annotate('', xy=(0.5, 0.5), xytext=(0.48, 0.5),
-               arrowprops=dict(arrowstyle='->', color='black', lw=1.5))
-
-    # Temporal head
-    ax.add_patch(mpatches.FancyBboxPatch((0.52, 0.25), 0.2, 0.5, boxstyle="round,pad=0.05",
-                                          facecolor=data['temporal_color'], edgecolor='black', alpha=0.85))
-    ax.text(0.62, 0.5, data['temporal'], ha='center', va='center', fontsize=7, fontweight='bold')
-
-    # Arrow
-    ax.annotate('', xy=(0.74, 0.5), xytext=(0.72, 0.5),
-               arrowprops=dict(arrowstyle='->', color='black', lw=1.5))
+    # Temporal stack
+    n_temp = len(spec['temporal_layers'])
+    temp_x, temp_w = 0.55, 0.18
+    temp_total_h = 0.50
+    temp_y = 0.25
+    draw_stack(ax, temp_x, temp_y, temp_w, temp_total_h/n_temp,
+               spec['temporal_layers'], spec['temporal_colors'], temp_total_h)
 
     # Output
-    ax.add_patch(mpatches.FancyBboxPatch((0.76, 0.38), 0.2, 0.24, boxstyle="round,pad=0.03",
-                                          facecolor='#E8E8E8', edgecolor='black'))
-    ax.text(0.86, 0.5, 'Velocity\n(vx,vy,vz)', ha='center', va='center', fontsize=6)
+    draw_layer_box(ax, 0.78, 0.38, 0.18, 0.24, 'Velocity\n(vx,vy,vz)', '#E8E8E8')
+
+    # Arrows
+    for src, dst in [(0.12, 0.16), (0.36, 0.42), (0.50, 0.55), (0.73, 0.78)]:
+        ax.annotate('', xy=(dst, 0.5), xytext=(src, 0.5),
+                   arrowprops=dict(arrowstyle='->', color='black', lw=1))
 
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
-    ax.set_title(f'Branch {branch}', fontsize=10, fontweight='bold')
+    ax.set_title(f'Branch {branch}', fontsize=11, fontweight='bold', y=0.98)
 
     plt.tight_layout()
     plt.savefig(f'{OUTPUT}/arch/arch_branch_{branch}.pdf', bbox_inches='tight')
     plt.close()
     print(f'arch_branch_{branch}.pdf done')
+
+
+# ====================================================================
+# FIGURE 4: Distributed Training-Simulation Pipeline
+# ====================================================================
+def fig4_pipeline():
+    fig, ax = plt.subplots(1, 1, figsize=(8, 4.5))
+    ax.axis('off')
+
+    # GitHub central box
+    ax.add_patch(mpatches.FancyBboxPatch((0.38, 0.40), 0.24, 0.20, boxstyle="round,pad=0.08",
+                                          facecolor='#333333', edgecolor='black'))
+    ax.text(0.50, 0.50, 'GitHub\nRepository', ha='center', va='center',
+           fontsize=10, fontweight='bold', color='white')
+
+    # Training Agent (left)
+    ax.add_patch(mpatches.FancyBboxPatch((0.03, 0.15), 0.28, 0.65, boxstyle="round,pad=0.08",
+                                          facecolor='#FFE66D', edgecolor='black', linewidth=1.5))
+    ax.text(0.17, 0.75, 'Training Agent', ha='center', va='center',
+           fontsize=9, fontweight='bold')
+    ax.text(0.17, 0.72, '(AutoDL Cloud GPU)', ha='center', va='center',
+           fontsize=7, color='gray')
+
+    train_steps = ['① Model Architecture\n   Design', '② BC / Distill\n   Training', '③ Weight Export\n   & Commit']
+    for i, step in enumerate(train_steps):
+        y = 0.58 - i * 0.14
+        ax.add_patch(mpatches.FancyBboxPatch((0.07, y), 0.20, 0.10, boxstyle="round,pad=0.03",
+                                              facecolor='#FFF3A0', edgecolor='black', linewidth=0.5))
+        ax.text(0.17, y + 0.05, step, ha='center', va='center', fontsize=6.5)
+
+    # Simulation Agent (right)
+    ax.add_patch(mpatches.FancyBboxPatch((0.69, 0.15), 0.28, 0.65, boxstyle="round,pad=0.08",
+                                          facecolor='#45B7D1', edgecolor='black', linewidth=1.5))
+    ax.text(0.83, 0.75, 'Simulation Agent', ha='center', va='center',
+           fontsize=9, fontweight='bold')
+    ax.text(0.83, 0.72, '(WSL2 + ROS + Flightmare)', ha='center', va='center',
+           fontsize=7, color='gray')
+
+    sim_steps = ['④ git pull\n   Weights', '⑤ Flightmare\n   Simulation Test', '⑥ Results\n   Summary.yaml']
+    for i, step in enumerate(sim_steps):
+        y = 0.58 - i * 0.14
+        ax.add_patch(mpatches.FancyBboxPatch((0.73, y), 0.20, 0.10, boxstyle="round,pad=0.03",
+                                              facecolor='#7EC8E3', edgecolor='black', linewidth=0.5))
+        ax.text(0.83, y + 0.05, step, ha='center', va='center', fontsize=6.5)
+
+    # Arrows between agents and GitHub
+    # Training → GitHub (push)
+    ax.annotate('', xy=(0.38, 0.50), xytext=(0.31, 0.50),
+               arrowprops=dict(arrowstyle='->', color='#FF6B6B', lw=2))
+    ax.text(0.345, 0.53, 'push', ha='center', fontsize=6, color='#FF6B6B', fontweight='bold')
+
+    # GitHub → Simulation (pull)
+    ax.annotate('', xy=(0.73, 0.50), xytext=(0.62, 0.50),
+               arrowprops=dict(arrowstyle='->', color='#45B7D1', lw=2))
+    ax.text(0.675, 0.53, 'pull', ha='center', fontsize=6, color='#45B7D1', fontweight='bold')
+
+    # Feedback arrow (bottom)
+    ax.annotate('', xy=(0.55, 0.10), xytext=(0.45, 0.10),
+               arrowprops=dict(arrowstyle='->', color='gray', lw=1, linestyle='dashed'))
+    ax.text(0.50, 0.07, 'Results → Next Iteration', ha='center', va='center',
+           fontsize=7, color='gray', fontstyle='italic')
+
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.set_title('Distributed Training-Simulation Pipeline', fontsize=12, fontweight='bold', y=0.98)
+
+    plt.tight_layout()
+    plt.savefig(f'{OUTPUT}/figure4.pdf', bbox_inches='tight')
+    plt.close()
+    print('figure4.pdf done')
 
 
 # ====================================================================
@@ -251,6 +383,7 @@ if __name__ == '__main__':
     fig3_latency()
     fig2_envs()
     fig1_overview()
-    for branch, data in ARCH_DATA.items():
-        draw_arch(branch, data)
+    for branch in ['A', 'B', 'B+', 'C', 'D', 'E']:
+        draw_arch_v2(branch)
+    fig4_pipeline()
     print('\nAll figures generated successfully!')
