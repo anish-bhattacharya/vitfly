@@ -156,10 +156,16 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     # Move the output tensor back to CPU before converting to numpy
     x = x.squeeze().cpu().detach().numpy()
 
-    # Normalize model output and scale to desired velocity (original baseline)
-    x[0] = np.clip(x[0], -1, 1)
-    x = x/np.linalg.norm(x)
-    command.velocity = x*desiredVel
+    # Normalize model output and scale to desired velocity
+    # Clip ALL components to [-1,1] to prevent extreme lateral/vertical
+    # values from dominating the norm and suppressing forward velocity
+    x = np.clip(x, -1, 1)
+    x_norm = np.linalg.norm(x)
+    if x_norm > 1e-6:
+        x = x / x_norm
+    else:
+        x = np.array([1.0, 0.0, 0.0])
+    command.velocity = x * desiredVel
 
     # Manual speedup - startup ramp (original baseline)
     # Only modifies forward component, preserves lateral/vertical control
