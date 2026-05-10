@@ -1,149 +1,116 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
+<head><meta charset="UTF-8">
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
-  body { margin: 0; display: flex; justify-content: center; align-items: center; background: #fff; }
-  #chart { width: 1000px; height: 480px; }
-</style>
-</head>
-<body>
-<div id="chart"></div>
+  body{margin:0;display:flex;justify-content:center;align-items:center;background:#fff}
+  #chart{width:1050px;height:400px}
+</style></head>
+<body><div id="chart"></div>
 <script>
-// Timeline data: [task name, agent type, start min, duration min, detail]
-// time origin = 19:00 (0 min)
-const tasks = [
-  // Training Agent tasks
-  { name: 'E distill seeds 43-45\nG BC seeds 43-45', agent: 'training', start: 0, dur: 26, detail: '远程GPU训练' },
-  { name: 'B+ distill seed 42', agent: 'training', start: 22, dur: 10, detail: '远程GPU训练' },
-  // Simulation Agent tasks  
-  { name: 'G_basic/G_lstm\n仿真测试', agent: 'simulation', start: 5, dur: 17, detail: 'WSL2 Flightmare' },
-  { name: 'velocity bug\n修复+复测', agent: 'simulation', start: 24, dur: 16, detail: 'user_code.py fix' },
-  { name: 'G_basic\n多种子仿真', agent: 'simulation', start: 45, dur: 15, detail: '4 seeds @ 5m/s' },
-  { name: 'E distill\n7m/s tracking', agent: 'simulation', start: 65, dur: 10, detail: 'tracking metrics' },
-  // Thesis/Other
-  { name: '论文更新\n+ 图表生成', agent: 'thesis', start: 40, dur: 55, detail: '持续进行' },
+var tasks = [
+  { name: 'E distill seeds 43-45 / G BC seeds 43-45', cat: 2, start: 0, end: 28 },
+  { name: 'B+ distill seed 42', cat: 2, start: 22, end: 34 },
+  { name: 'G_basic/G_lstm 仿真测试', cat: 1, start: 5, end: 23 },
+  { name: 'velocity bug 修复 + 复测', cat: 1, start: 24, end: 42 },
+  { name: 'G_basic 多种子仿真', cat: 1, start: 45, end: 63 },
+  { name: 'E distill 7m/s tracking', cat: 1, start: 65, end: 77 },
+  { name: '论文/图表持续更新', cat: 0, start: 38, end: 93 },
 ];
 
-// GitHub sync events
-const syncs = [
-  { time: 26, label: 'multi-seed\nresults push' },
-  { time: 32, label: 'B+ distill\npush' },
-  { time: 40, label: 'sim results\npush' },
-  { time: 62, label: 'all data\ncollected' },
+var syncd = [
+  { time: 28, label: 'multi-seed push' },
+  { time: 34, label: 'B+ distill push' },
+  { time: 63, label: 'sim results push' },
 ];
 
-const agentColors = {
-  training: { fill: '#4A90D9', stroke: '#2E5A9D', bg: '#E8F0FE' },
-  simulation: { fill: '#5BA58B', stroke: '#3A7B6B', bg: '#E8F5EE' },
-  thesis: { fill: '#F4A261', stroke: '#D47B30', bg: '#FFF5EB' },
-};
+var ccat = [
+  { fill: '#F4A261', stroke: '#D47B30' },
+  { fill: '#5BA58B', stroke: '#3A7B6B' },
+  { fill: '#4A90D9', stroke: '#2E5A9D' },
+];
+var cname = ['论文/文档', '仿真Agent', '训练Agent'];
 
-const series = [];
+var series = [];
 
-// Agent row backgrounds
-series.push({
-  type: 'custom', renderItem: (params, api) => {
-    const rowHeight = 60;
-    const yStart = 40;
-    return { type: 'group', children: [
-      { type: 'rect', shape: { x: 80, y: yStart, width: 780, height: rowHeight }, style: { fill: '#E8F0FE', opacity: 0.3 } },
-      { type: 'rect', shape: { x: 80, y: yStart + rowHeight + 15, width: 780, height: rowHeight }, style: { fill: '#E8F5EE', opacity: 0.3 } },
-      { type: 'rect', shape: { x: 80, y: yStart + 2*(rowHeight+15), width: 780, height: rowHeight }, style: { fill: '#FFF5EB', opacity: 0.3 } },
-    ]};
-  }, data: [0], z: 0,
+// Main task bars as custom series
+tasks.forEach(function(t) {
+  series.push({
+    type: 'custom',
+    renderItem: function(params, api) {
+      var y0 = api.coord([0, t.cat])[1];
+      var rh = api.size([0, 1])[1];
+      var y = y0 + rh*0.12;
+      var h = rh*0.6;
+      var x1 = api.coord([t.start, t.cat])[0];
+      var x2 = api.coord([t.end, t.cat])[0];
+      var w = Math.max(x2-x1, 5);
+      var col = ccat[t.cat];
+      var grp = [
+        { type: 'rect', shape: {x:x1,y:y,width:w,height:h}, style: {fill:col.fill,stroke:col.stroke,lineWidth:1.2} },
+        { type: 'rect', shape: {x:x1,y:y,width:4,height:h}, style: {fill:col.stroke} },
+      ];
+      var p = t.name;
+      if (p.length > 14) {
+        grp.push({ type: 'text', shape: {x:x1+10,y:y+16}, style: {text:p.substring(0,14),textFont:'bold 10px sans-serif',textFill:'#fff'} });
+        grp.push({ type: 'text', shape: {x:x1+10,y:y+32}, style: {text:p.substring(15),textFont:'9px sans-serif',textFill:'#eef'} });
+      } else {
+        grp.push({ type: 'text', shape: {x:x1+10,y:y+22}, style: {text:p,textFont:'bold 10px sans-serif',textFill:'#fff'} });
+      }
+      return {type:'group', children:grp};
+    },
+    data: [0], z: 5,
+  });
 });
 
-// Task bars
-let idx = 0;
-for (const t of tasks) {
-  const c = agentColors[t.agent];
-  const rowIdx = { training: 0, simulation: 1, thesis: 2 }[t.agent];
-  const yBase = 40 + rowIdx * 75;
-  const xStart = 80 + t.start * 6.5;
-  const xEnd = t.dur * 6.5;
-
+// Row labels
+for (var i=0;i<3;i++) {
   series.push({
-    type: 'custom', renderItem: (params, api) => ({
-      type: 'group', children: [
-        { type: 'rect', shape: { x: xStart, y: yBase + 8, width: xEnd, height: 44 },
-          style: { fill: c.fill, stroke: c.stroke, lineWidth: 1.5, shadowBlur: 3, shadowColor: 'rgba(0,0,0,0.1)' } },
-        { type: 'rect', shape: { x: xStart, y: yBase + 8, width: 4, height: 44 },
-          style: { fill: c.stroke } },
-        // Task name text
-        ...t.name.split('\n').map((line, li) => ({
-          type: 'text', shape: { x: xStart + 12, y: yBase + 16 + li * 16 },
-          style: { text: line, textFont: li === 0 ? 'bold 11px sans-serif' : '10px sans-serif', textFill: '#333' }
-        })),
-        // Duration label
-        { type: 'text', shape: { x: xStart + xEnd - 5, y: yBase + 32 },
-          style: { text: `${t.dur}min`, textFont: '9px sans-serif', textFill: '#666', textAlign: 'right' } }
-      ]
-    }), data: [idx], z: 2,
+    type: 'bar',
+    data: [{value:130, itemStyle:{color:'transparent'},
+      label:{show:true,position:'insideLeft',color:'#333',fontSize:12,fontWeight:'bold',
+        formatter:cname[i], padding:[0,0,0,40]}}],
+    barWidth:50, barGap:'30%', z:0,
+    xAxisIndex:0, yAxisIndex:0,
   });
-  // Detail label below bar
-  series.push({
-    type: 'custom', renderItem: (params, api) => ({
-      type: 'text',
-      shape: { x: xStart + 10, y: yBase + 58 },
-      style: { text: t.detail, textFont: '9px sans-serif', textFill: '#999' }
-    }), data: [idx], z: 1,
-  });
-  idx++;
 }
 
-// GitHub sync markers
-for (const s of syncs) {
-  const xPos = 80 + s.time * 6.5;
-  series.push({
-    type: 'custom', renderItem: (params, api) => ({
-      type: 'group', children: [
-        { type: 'circle', shape: { cx: xPos, cy: 168, r: 6 },
-          style: { fill: '#333', stroke: '#222', lineWidth: 1.5 } },
-        { type: 'text', shape: { x: xPos, y: 180 },
-          style: { text: '▲', textFont: '10px sans-serif', textFill: '#333', textAlign: 'center' } },
-        ...s.label.split('\n').map((line, li) => ({
-          type: 'text', shape: { x: xPos, y: 140 + li * 12 },
-          style: { text: line, textFont: '8px sans-serif', textFill: '#666', textAlign: 'center' }
-        })),
-      ]
-    }), data: [idx], z: 3,
-  });
-  idx++;
-}
+// Sync markers
+series.push({
+  type: 'scatter',
+  data: syncd.map(function(s){return{value:[s.time,2.5],label:{formatter:s.label.replace(' ','\n'),show:true,position:'top',fontSize:9,color:'#555',lineHeight:14}};}),
+  symbol:'diamond',symbolSize:18,itemStyle:{color:'#444'},z:10,
+});
 
-const option = {
-  grid: { left: 100, right: 50, top: 40, bottom: 50 },
-  xAxis: {
-    type: 'value', min: -5, max: 130,
-    axisLabel: { 
-      formatter: v => {
-        if (v < 0) return '';
-        const h = 19 + Math.floor(v / 60);
-        const m = v % 60;
-        return `${h}:${m.toString().padStart(2, '0')}`;
-      },
-      fontSize: 10, color: '#666'
+var opt = {
+  grid:{left:5,right:25,top:20,bottom:45},
+  xAxis:{
+    type:'value',min:-3,max:130,
+    axisLabel:{formatter:function(v){var h=19+Math.floor(v/60);var m=v%60;return h+':'+(m<10?'0':'')+m;},fontSize:10,color:'#666'},
+    axisLine:{show:true,lineStyle:{color:'#ccc'}},
+    splitLine:{show:true,lineStyle:{color:'#eee',type:'dashed'}},
+    axisTick:{show:false},
+  },
+  yAxis:{type:'category',data:['','',''],axisTick:{show:false},axisLine:{show:false},splitLine:{show:false},axisLabel:{show:false}},
+  series:series,
+  animation:false,
+  tooltip:{show:false},
+  toolbox:{
+    feature:{
+      saveAsImage:{
+        title:'保存为PNG',
+        pixelRatio:3,
+        backgroundColor:'#ffffff',
+        name:'gantt_chart',
+      }
     },
-    axisLine: { show: true, lineStyle: { color: '#ddd' } },
-    splitLine: { show: true, lineStyle: { color: '#f0f0f0', type: 'dashed' } },
-    name: '时间', nameLocation: 'center', nameGap: 30,
+    right:10,
+    top:5,
   },
-  yAxis: {
-    type: 'category',
-    data: ['训练Agent\n(GPU云)', '仿真Agent\n(WSL2)', '论文/文档'],
-    axisLabel: { fontSize: 11, fontWeight: 'bold', color: '#333', margin: 10 },
-    axisLine: { show: false },
-    splitLine: { show: false },
-  },
-  series: series,
-  animation: false,
 };
 
-const chart = echarts.init(document.getElementById('chart'));
-chart.setOption(option);
-window.addEventListener('resize', () => chart.resize());
-</script>
-</body>
+var c = echarts.init(document.getElementById('chart'));
+c.setOption(opt);
+window.addEventListener('resize',function(){c.resize();});
+</script></body>
 </html>
