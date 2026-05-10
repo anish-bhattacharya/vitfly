@@ -13,7 +13,7 @@ Loss Design:
   L_gt      = MSE(student_output, ground_truth)                  — standard BC
 
 Teacher: ViT+LSTM (LSTMNetVIT, best upstream model, 7m/s real flight)
-Students: 6 Mamba-based branches (A, B, B+, C, D, E)
+Students: Mamba-based branches (A, B, B+, C, D, E) + CNN baselines (G)
 
 Usage:
   # ── Ablation experiments (all on Branch B, vary loss weights) ──
@@ -62,6 +62,7 @@ BRANCH_PATHS = {
     'Essm': '/root/vitfly/experiments/mamba_branches/essm/models',
     'F': '/root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/models',
     'Fv4': '/root/vitfly/experiments/mamba_branches/branch_F_lightweight_mamba3/models',
+    'G': '/root/vitfly/experiments/mamba_branches/branch_G_cnn_baseline/models',
 }
 for path in BRANCH_PATHS.values():
     sys.path.insert(0, path)
@@ -82,6 +83,7 @@ from mambafusion_model import create_mambafusion_model
 from essm_model import create_essm_model
 from branch_f_model import create_branch_f_model
 from branch_f_v4_model import create_branch_f_v4_model
+from cnn_baseline_model import create_cnn_baseline_model, create_cnn_lstm_model
 
 from lazy_dataloading import create_lazy_dataloader, create_sequence_dataloader
 
@@ -100,13 +102,14 @@ VISUAL_ENCODER_ATTR = {
     'Essm': 'encoder',            # EssmNet.encoder → 256-dim
     'F': 'cnn_encoder',           # BranchFModel.cnn_encoder → 512-dim
     'Fv4': 'encoder',             # BranchFV4Model.encoder → 512-dim
+    'G': 'encoder',               # CNNMLPNet.encoder → 256-dim
 }
 
 # Visual feature dimension for each branch
 VISUAL_FEATURE_DIM = {
     'A': 512, 'B': 512, 'Bplus': 512,
     'C': 512, 'D': 256, 'E': 256, 'Fusion': 512,
-    'Essm': 256, 'F': 512, 'Fv4': 512,
+    'Essm': 256, 'F': 512, 'Fv4': 512, 'G': 256,
 }
 
 TEACHER_FEATURE_DIM = 512  # LSTMNetVIT.decoder output
@@ -123,6 +126,7 @@ BRANCH_CREATORS = {
     'Essm': lambda cfg: create_essm_model(cfg),
     'F': lambda cfg: create_branch_f_model(cfg),
     'Fv4': lambda cfg: create_branch_f_v4_model(cfg),
+    'G': lambda cfg: create_cnn_baseline_model(cfg),
 }
 
 # Default hyperparameters per branch (from BC training in train_mamba_optimized.py)
@@ -924,7 +928,7 @@ def main():
     # Select branches
     branches = [args.branch]
     if args.all_branches:
-        branches = ['A', 'B', 'Bplus', 'C', 'D', 'E']
+        branches = ['A', 'B', 'Bplus', 'C', 'D', 'E', 'G']
     
     # Create save dir
     os.makedirs(args.save_dir, exist_ok=True)
