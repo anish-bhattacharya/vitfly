@@ -18,6 +18,8 @@
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{caption}
+\captionsetup[figure]{labelsep=space, font={small,bf}, labelfont={bf}, textfont=normalfont}
+\captionsetup[table]{labelsep=space, font={small,bf}, labelfont={bf}, textfont=normalfont}
 \usepackage{setspace}
 \usepackage{float}
 \usepackage{fancyhdr}
@@ -39,9 +41,10 @@
 \fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0.5pt}}
 
 % ─── Headers: left="东北大学本科毕业设计（论文）", right=chapter title ───
+% 页眉字体：宋体五号(10.5pt)
 \renewcommand{\sectionmark}[1]{\markright{#1}}
-\fancyhead[L]{\songti 东北大学本科生毕业设计（论文）}
-\fancyhead[R]{\songti \leftmark}
+\fancyhead[L]{\songti\fontsize{10.5}{12}\selectfont 东北大学本科生毕业设计（论文）}
+\fancyhead[R]{\songti\fontsize{10.5}{12}\selectfont \leftmark}
 
 % ─── Heading fonts & sizes ───
 % 一级标题: 黑体 小二号(18pt)
