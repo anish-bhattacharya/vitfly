@@ -68,11 +68,11 @@ var series = [{
   z:5,
 },{
   // Dummy for legend
-  type:'bar',name:'训练Agent (AutoDL)',data:[],itemStyle:{color:'#4A90D9',opacity:0.9},
+  type:'bar',name:'训练Agent',data:[],itemStyle:{color:'#4A90D9',opacity:0.9},
 },{  
-  type:'bar',name:'GitHub 仓库',data:[],itemStyle:{color:'#666666',opacity:0.9},
+  type:'bar',name:'GitHub',data:[],itemStyle:{color:'#666666',opacity:0.9},
 },{
-  type:'bar',name:'仿真Agent (WSL2)',data:[],itemStyle:{color:'#5BA58B',opacity:0.9},
+  type:'bar',name:'仿真Agent',data:[],itemStyle:{color:'#5BA58B',opacity:0.9},
 },{
   type:'bar',name:'论文编辑',data:[],itemStyle:{color:'#E8A040',opacity:0.9},
 }];
@@ -80,19 +80,17 @@ var series = [{
 var opt = {
   backgroundColor:'transparent',
   animation:false,
-  grid:{top:36,bottom:6,left:8,right:20,containLabel:true},
+  grid:{top:48,bottom:6,left:8,right:20,containLabel:true},
   legend:{
-    top:2,
-    itemWidth:14,itemHeight:10,
+    top:4,left:'center',itemWidth:12,itemHeight:8,
     textStyle:{fontSize:9,fontFamily:'SimSun,Times New Roman,serif',color:'#333'},
-    data:['训练Agent (AutoDL)','GitHub 仓库','仿真Agent (WSL2)','论文编辑'],
+    data:['训练Agent','GitHub','仿真Agent','论文编辑'],
   },
   xAxis:{
     type:'value',min:-1,max:55,interval:5,
-    name:'时间 / Day',nameLocation:'end',
-    nameTextStyle:{fontSize:10,fontFamily:'Times New Roman,SimSun,serif',color:'#444'},
-    axisLabel:{fontSize:9,fontFamily:'Times New Roman,serif',color:'#555',
-      formatter:function(v){return 'D'+v;}},
+    name:'操作次数',nameLocation:'end',
+    nameTextStyle:{fontSize:10,fontFamily:'SimSun,serif',color:'#444'},
+    axisLabel:{fontSize:9,fontFamily:'Times New Roman,serif',color:'#555'},
     splitLine:{lineStyle:{color:'#eee'}},
     axisLine:{lineStyle:{color:'#888'}},
   },
