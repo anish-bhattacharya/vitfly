@@ -5,99 +5,100 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:transparent;display:flex;flex-direction:column;align-items:center;padding:20px}
-  #chart{width:100%;max-width:960px;height:380px}
-  .btn-row{display:flex;justify-content:center;gap:14px;margin-top:12px}
-  .btn{padding:8px 20px;border:1.5px solid #2c5282;background:#fff;color:#2c5282;font-size:13px;cursor:pointer;border-radius:2px}
-  .btn:hover{background:#2c5282;color:#fff}
+  body{background:transparent;display:flex;flex-direction:column;align-items:center;padding:10px}
+  #chart{width:100%;max-width:1000px;height:400px}
+  .fig-title{font-family:'SimSun','Times New Roman',serif;font-size:12px;color:#000;text-align:center;margin-bottom:6px;font-weight:normal}
+  .fig-title strong{font-weight:bold}
+  .btn-row{display:flex;justify-content:center;gap:14px;margin-top:10px}
+  .btn{padding:6px 16px;border:1px solid #999;background:#fff;color:#333;font-size:12px;font-family:'SimSun',serif;cursor:pointer}
+  .btn:hover{background:#eee}
 </style>
 </head>
 <body>
+<div class="fig-title"><strong>图 X &nbsp; 分布式训练-仿真流水线甘特图</strong></div>
 <div id="chart"></div>
-<div class="btn-row"><button class="btn" onclick="downloadPNG()">📷 导出透明PNG</button></div>
+<div class="btn-row"><button class="btn" onclick="downloadPNG()">导出透明 PNG</button></div>
 <script>
 var cats = ['模型架构设计','BC / 蒸馏训练','权重推送','拉取权重','仿真测试','Tracking','论文更新'];
+
+// [catIdx, color, label, start, end, legend category]
 var tasks = [
-  [0,'#4A90D9','设计',0,3],
-  [1,'#4A90D9','训练',3,10],
-  [2,'#555555','push',10,11],
-  [3,'#555555','pull',11,12],
-  [4,'#5BA58B','仿真',12,17],
-  [5,'#5BA58B','track',17,19],
-  [1,'#4A90D9','训练',19,26],
-  [2,'#555555','push',26,27],
-  [3,'#555555','pull',27,28],
-  [4,'#5BA58B','仿真',28,33],
-  [5,'#5BA58B','track',33,35],
-  [6,'#F4A261','论文',30,38],
-  [1,'#4A90D9','训练',35,42],
-  [2,'#555555','push',42,43],
-  [3,'#555555','pull',43,44],
-  [4,'#5BA58B','仿真',44,48],
-  [6,'#F4A261','论文',44,53],
+  [0,'#4A90D9','设计',0,3,'训练Agent'],
+  [1,'#4A90D9','训练',3,10,'训练Agent'],
+  [2,'#666666','push',10,11,'GitHub'],
+  [3,'#666666','pull',11,12,'GitHub'],
+  [4,'#5BA58B','仿真',12,17,'仿真Agent'],
+  [5,'#5BA58B','track',17,19,'仿真Agent'],
+  [1,'#4A90D9','训练',19,26,'训练Agent'],
+  [2,'#666666','push',26,27,'GitHub'],
+  [3,'#666666','pull',27,28,'GitHub'],
+  [4,'#5BA58B','仿真',28,33,'仿真Agent'],
+  [5,'#5BA58B','track',33,35,'仿真Agent'],
+  [6,'#E8A040','论文',30,38,'论文编辑'],
+  [1,'#4A90D9','训练',35,42,'训练Agent'],
+  [2,'#666666','push',42,43,'GitHub'],
+  [3,'#666666','pull',43,44,'GitHub'],
+  [4,'#5BA58B','仿真',44,48,'仿真Agent'],
+  [6,'#E8A040','论文',44,53,'论文编辑'],
 ];
 
-var series = tasks.map(function(t,i){
-  return {
-    type:'bar',
-    data:[{value:[t[1],t[2],t[3],t[4]], itemStyle:{color:t[1],borderRadius:[0,3,3,0]},
-           label:{show:t[4]-t[3]>1,formatter:t[2],color:'#fff',fontSize:9,fontFamily:'SimSun,serif',position:'insideLeft',offset:[5,0]}}],
-    barWidth:'45%',
-    barGap:'150%',
-    z:5,
-    stack:'s'+t[0],
-    xAxisIndex:0,
-    yAxisIndex:0,
-  };
-});
-
-// Hmm, this approach won't work either because bar series need uniform stack groups.
-// Let me just use custom series with proper API usage.
-
-// Reset
-series = [{
+var series = [{
   type:'custom',
   renderItem:function(params,api){
     var t = tasks[params.dataIndex];
     var catIdx = t[0], s = t[3], e = t[4], c = t[1], label = t[2];
     var y0 = api.coord([0,catIdx])[1];
     var rh = api.size([0,1])[1];
-    var bh = rh*0.46;
+    var bh = rh*0.44;
     var y = y0 - bh/2;
     var x1 = api.coord([s,catIdx])[0];
     var x2 = api.coord([e,catIdx])[0];
     var w = Math.max(x2-x1,2);
     var children = [
-      {type:'rect',shape:{x:x1-1,y:y-1,width:w+2,height:bh+2},
-       style:{fill:c,opacity:0.08}},
-      {type:'rect',shape:{x:x1,y:y,width:w,height:bh},
-       style:{fill:c,stroke:c,lineWidth:1}},
+      {type:'rect',shape:{x:x1,y:y,width:w,height:bh},style:{fill:c,stroke:c,lineWidth:0.8,opacity:0.9}},
     ];
-    if(w>35){
-      children.push({type:'text',shape:{x:x1+7,y:y+bh/2+3},
-                     style:{text:label,textFont:'10px sans-serif',textFill:'#fff'}});
+    if(w>30){
+      children.push({type:'text',shape:{x:x1+6,y:y+bh/2+3.5},
+                     style:{text:label,textFont:'10px SimSun,sans-serif',textFill:'#fff'}});
     }
     return {type:'group',children:children};
   },
   data:tasks,
   encode:{x:[3,4],y:0},
   z:5,
+},{
+  // Dummy for legend
+  type:'bar',name:'训练Agent (AutoDL)',data:[],itemStyle:{color:'#4A90D9',opacity:0.9},
+},{  
+  type:'bar',name:'GitHub 仓库',data:[],itemStyle:{color:'#666666',opacity:0.9},
+},{
+  type:'bar',name:'仿真Agent (WSL2)',data:[],itemStyle:{color:'#5BA58B',opacity:0.9},
+},{
+  type:'bar',name:'论文编辑',data:[],itemStyle:{color:'#E8A040',opacity:0.9},
 }];
 
 var opt = {
   backgroundColor:'transparent',
   animation:false,
-  grid:{top:12,bottom:8,left:10,right:20,containLabel:true},
+  grid:{top:36,bottom:6,left:8,right:20,containLabel:true},
+  legend:{
+    top:2,
+    itemWidth:14,itemHeight:10,
+    textStyle:{fontSize:9,fontFamily:'SimSun,Times New Roman,serif',color:'#333'},
+    data:['训练Agent (AutoDL)','GitHub 仓库','仿真Agent (WSL2)','论文编辑'],
+  },
   xAxis:{
-    type:'value',min:0,max:55,interval:5,
+    type:'value',min:-1,max:55,interval:5,
     name:'时间 / Day',nameLocation:'end',
-    nameTextStyle:{fontSize:11,color:'#444'},
-    axisLabel:{fontSize:10,color:'#555',formatter:function(v){return 'D'+v;}},
+    nameTextStyle:{fontSize:10,fontFamily:'Times New Roman,SimSun,serif',color:'#444'},
+    axisLabel:{fontSize:9,fontFamily:'Times New Roman,serif',color:'#555',
+      formatter:function(v){return 'D'+v;}},
     splitLine:{lineStyle:{color:'#eee'}},
+    axisLine:{lineStyle:{color:'#888'}},
   },
   yAxis:{
     type:'category',data:cats,
-    axisLabel:{fontSize:10.5,color:'#222'},
+    axisLabel:{fontSize:9,fontFamily:'SimSun,Times New Roman,serif',color:'#222'},
     splitLine:{show:false},
     axisLine:{lineStyle:{color:'#888'}},
   },
@@ -106,6 +107,7 @@ var opt = {
 
 var chart = echarts.init(document.getElementById('chart'));
 chart.setOption(opt);
+window.addEventListener('resize',function(){chart.resize();});
 
 function downloadPNG(){
   var u=chart.getDataURL({type:'png',pixelRatio:3,backgroundColor:'transparent'});
