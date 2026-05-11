@@ -108,12 +108,7 @@ var chart = echarts.init(document.getElementById('chart'));
 chart.setOption(opt);
 
 function downloadPNG(){
-  var w=chart.getWidth(),h=chart.getHeight();
-  var c=document.createElement('canvas');c.width=w*3;c.height=h*3;
-  var hc=echarts.init(c);
-  hc.setOption(JSON.parse(JSON.stringify(opt)));
-  var u=hc.getDataURL({type:'png',pixelRatio:3,backgroundColor:'transparent'});
-  hc.dispose();
+  var u=chart.getDataURL({type:'png',pixelRatio:3,backgroundColor:'transparent'});
   var a=document.createElement('a');a.href=u;a.download='gantt.png';a.click();
 }
 </script>
