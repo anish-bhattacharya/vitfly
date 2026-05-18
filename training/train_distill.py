@@ -167,9 +167,16 @@ class FeatureHook:
     def __init__(self):
         self.features = {}
     
-    def _hook_fn(self, name):
+    def _teacher_hook_fn(self, name):
+        """Teacher hook: detach OK since teacher is frozen."""
         def hook(module, input, output):
             self.features[name] = output.detach()
+        return hook
+    
+    def _student_hook_fn(self, name):
+        """Student hook: KEEP gradients for feature alignment loss."""
+        def hook(module, input, output):
+            self.features[name] = output
         return hook
     
     def register_teacher(self, teacher_model, teacher_branch=None):
@@ -186,7 +193,7 @@ class FeatureHook:
         else:
             encoder_module = teacher_model.decoder
         handle = encoder_module.register_forward_hook(
-            self._hook_fn('teacher_visual')
+            self._teacher_hook_fn('teacher_visual')
         )
         return handle
     
@@ -197,7 +204,7 @@ class FeatureHook:
             raise ValueError(f"No visual encoder attr defined for branch {branch}")
         encoder_module = getattr(student_model, attr)
         handle = encoder_module.register_forward_hook(
-            self._hook_fn('student_visual')
+            self._student_hook_fn('student_visual')
         )
         return handle
     
