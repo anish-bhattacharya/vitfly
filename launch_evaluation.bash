@@ -112,7 +112,9 @@ do
   python3 evaluation_node.py ${datetime}_N$i &
   PY_PID="$!"
 
-  python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "ViTLSTM" --model_path ../../models/ViTLSTM_model.pth &
+  # python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "SpatiotemporalTransformer" --model_path ../../models/SpatiTrans_model.pth &
+  python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "ViTLSTM" --model_path ../../models/MultiChannelOut.pth &
+  # python3 run_competition.py $run_competition_args --des_vel 5.0 --model_type "ViTLSTM" --model_path ../../models/ViTLSTM_model.pth &
   COMP_PID="$!"
 
   cd -

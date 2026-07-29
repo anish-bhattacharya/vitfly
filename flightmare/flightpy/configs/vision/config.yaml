@@ -1,6 +1,7 @@
 environment:
+
   level: "trees" # provided: spheres_medium or trees
-  env_folder: "environment_0" # environment_<0-100> for spheres_medium, environment_<0-100> for trees. no leading zeros.
+  env_folder: "environment_506" # environment_<0-100> for spheres_medium, environment_<0-100> for trees. no leading zeros.
   world_box: [-20, 80, -10, 10, 0.0, 15] # Bounding box applied during training, exiting this box terminates the episode. [xmin, xmax, ymin, ymax, zmin, zmax]
   goal_vel: [1.0, 0.0, 0.0] # goal velicty for tracking vx, vy, vz
   max_detection_range: 10.0 # max obstacle detection range [m], obstacles outside this range will not be detected. The number of obstacles detected is fixed to 10, if less than 10 obstacles are within detectable range, the observation is padded with 10.0

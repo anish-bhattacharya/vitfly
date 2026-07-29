@@ -193,7 +193,7 @@ class DepthInferenceNode:
                 arrow_start = (im_w//2, im_h//2)
                 arrow_end = (int(im_w/2-self.pred_vel[1]*(im_w/3)), int(im_h/2-self.pred_vel[2]*(im_h/3)))
 
-                self.dbg_im = cv2.arrowedLine( self.dbg_im, arrow_start, arrow_end, (0, 0, 255), im_h//60, tipLength=0.2)
+                # self.dbg_im = cv2.arrowedLine( self.dbg_im, arrow_start, arrow_end, (0, 0, 255), im_h//60, tipLength=0.2)
 
             if self.pred_vel is not None:
                 self.publish_pred_vel()

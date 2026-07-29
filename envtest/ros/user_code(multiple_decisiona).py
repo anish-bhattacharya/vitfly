@@ -105,7 +105,6 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
         x = x / norm
 
     command.velocity = x * desiredVel
-    command.velocity = x * desiredVel
 
     # manual speedup
     min_xvel_cmd = 1.0
