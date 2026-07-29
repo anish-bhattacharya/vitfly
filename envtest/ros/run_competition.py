@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import argparse
 
+from matplotlib import image
+
 import rospy
 from dodgeros_msgs.msg import Command
 from dodgeros_msgs.msg import QuadState
@@ -98,7 +100,9 @@ class AgilePilotNode:
             elif model_type == 'ViT':
                 self.model = ViT().to(self.device).float()
             elif model_type == 'ViTLSTM':
-                self.model = LSTMNetVIT().to(self.device).float()                
+                self.model = LSTMNetVIT().to(self.device).float()      
+            elif model_type == 'SpatiotemporalTransformer':
+                self.model = SpatiotemporalTransformer().to(self.device).float()                   
             else:
                 print(f'[RUN_COMPETITION] Invalid model_type {model_type}. Exiting.')
                 exit()
@@ -224,7 +228,12 @@ class AgilePilotNode:
         self.prevImg = deepcopy(self.last_valid_img)
         img = self.cv_bridge.imgmsg_to_cv2(img_data, desired_encoding="passthrough")
         img = np.clip(img/self.depth_im_threshold, 0, 1)
-                
+
+        # depth_uint8 = (img * 255).astype(np.uint8) #Prasad(start)
+        # edges = cv2.Canny(depth_uint8, 100, 200)
+        # edges = edges.astype(np.float32) / 255.0
+        # img = cv2.hconcat([img, edges])            #Prasad(end)
+
         if self.prevImg is None:
             self.prevImg = img
 
@@ -245,7 +254,7 @@ class AgilePilotNode:
         start_compute_time = time.time()
 
         command, (debug_img1, debug_img2), self.model_hidden_state = compute_command_vision_based(self.state, img, self.prevImg,self.desiredVel, self.model, self.model_hidden_state)
-
+        # print(f'[+++++++++++++] command output: {command.velocity[0]}')
         # publish debug images
         self.debug_img1_pub.publish(self.cv_bridge.cv2_to_imgmsg(debug_img1, encoding="passthrough"))
         self.debug_img2_pub.publish(self.cv_bridge.cv2_to_imgmsg(debug_img2, encoding="passthrough"))
@@ -276,7 +285,7 @@ class AgilePilotNode:
             )  # If you need more hz, you might need to modify this round
 
             # Save the image by the name of that instant
-            cv2.imwrite(f"{self.folder}/{str(timestamp)}.png", (self.last_valid_img*255).astype(np.uint8))
+            # cv2.imwrite(f"{self.folder}/{str(timestamp)}.png", (self.last_valid_img*255).astype(np.uint8))
 
             # Get the collision flag
             if self.col is None:
@@ -310,8 +319,8 @@ class AgilePilotNode:
             self.count += 1
 
         # Save once every 10 instances - writing every instance can be expensive
-        if self.count % 5 == 0:
-            self.data_log.to_csv(self.folder + "/data.csv")
+        # if self.count % 5 == 0:
+            # self.data_log.to_csv(self.folder + "/data.csv")
 
     def state_callback(self, state_data):
         self.state = AgileQuadState(state_data)
@@ -367,8 +376,8 @@ class AgilePilotNode:
 
                 # Save the image by the name of that instant
                 # np.save(self.folder + f"/im_{timestamp}", self.last_valid_img)
-                cv2.imwrite(f"{self.folder}/{str(timestamp)}.png", (self.last_valid_img*255).astype(np.uint8))
-                cv2.imwrite(f"{self.folder}/{str(timestamp)}_rgb.png", (self.rgb_img*255).astype(np.uint8))
+                # cv2.imwrite(f"{self.folder}/{str(timestamp)}.png", (self.last_valid_img*255).astype(np.uint8))
+                # cv2.imwrite(f"{self.folder}/{str(timestamp)}_rgb.png", (self.rgb_img*255).astype(np.uint8))
 
                 # Get the collision flag
                 col = self.if_collide(obs_data.obstacles[0])
@@ -449,7 +458,7 @@ class AgilePilotNode:
             vel_msg = TwistStamped()
             vel_msg.header.stamp = rospy.Time(command.t)
             vel_msg.twist.linear.x = command.velocity[0]
-            vel_msg.twist.linear.y = command.velocity[1]
+            vel_msg.twist.linear.y = command.velocity[1]# control command #Prasad
             vel_msg.twist.linear.z = command.velocity[2]
             vel_msg.twist.angular.x = 0.0
             vel_msg.twist.angular.y = 0.0

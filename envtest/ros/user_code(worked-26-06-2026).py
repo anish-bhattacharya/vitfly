@@ -37,7 +37,7 @@ def check_collision(line, obstacle):
     )
     return b**2 - 4 * a * c >= 0
 
-def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_model, hidden_state):
+def compute_command_vision_based(state, orig_img, prev_img,desiredVel, trained_model, hidden_state):
 
     command_mode = 2
     command = AgileCommand(command_mode)
@@ -45,7 +45,9 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     command.yawrate = 0.0
     command.mode = 2
 
-
+    # -------------------------------------------------
+    # Device
+    # -------------------------------------------------
     device = next(trained_model.parameters()).device
 
     # -------------------------------------------------
@@ -61,9 +63,13 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     img_tensor = img_tensor.unsqueeze(0)         # 1 x C x H x W
     img_tensor = img_tensor.to(device).float()
 
-    vel_tensor = torch.tensor(desiredVel, dtype=torch.float32, device=device).view(1, 1)
+    vel_tensor = torch.tensor(desiredVel,
+                              dtype=torch.float32,
+                              device=device).view(1, 1)
 
-    q_tensor = torch.tensor(q, dtype=torch.float32, device=device).view(1, -1)
+    q_tensor = torch.tensor(q,
+                            dtype=torch.float32,
+                            device=device).view(1, -1)
 
     # -------------------------------------------------
     # Forward pass
@@ -71,32 +77,36 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     trained_model.eval()
 
     with torch.no_grad():
+
         if 'LSTMNet' in trained_model.__class__.__name__:
+
+            # Initialize hidden state if needed
             if state.pos[0] < 0.5 or hidden_state is None:
                 hidden_state = (
-                    torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size, device=device),
-                    torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size, device=device)
+                    torch.zeros(trained_model.lstm.num_layers,
+                                trained_model.lstm.hidden_size,
+                                device=device),
+                    torch.zeros(trained_model.lstm.num_layers,
+                                trained_model.lstm.hidden_size,
+                                device=device)
                 )
             else:
+                # Ensure hidden state on correct device
                 hidden_state = tuple(h_.to(device) for h_ in hidden_state)
 
-            out, hidden_state = trained_model(
+            x, hidden_state = trained_model(
                 [img_tensor, vel_tensor, q_tensor, hidden_state]
             )
+
         else:
-            out, hidden_state = trained_model(
+            x, hidden_state = trained_model(
                 [img_tensor, vel_tensor, q_tensor]
             )
 
-    # ── Pick best candidate ──────────────────────────────────────
-    print(f"[VISION] Model output : {out}")
-    candidates = out.squeeze(0).detach().cpu().numpy()
-    # shape: (10, 3) — 10 rows, each is [vx, vy, vz]
-
-    best_idx = candidates[:, 0].argmax()   # highest forward speed
-    x = candidates[best_idx]               # shape: (3,) — same as before
-    # ─────────────────────────────────────────────────────────────
-
+    # -------------------------------------------------
+    # Process output
+    # -------------------------------------------------
+    x = x.squeeze().detach().cpu().numpy()
 
     x[0] = np.clip(x[0], -1, 1)
 
@@ -104,7 +114,6 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     if norm > 1e-6:
         x = x / norm
 
-    command.velocity = x * desiredVel
     command.velocity = x * desiredVel
 
     # manual speedup
@@ -140,6 +149,7 @@ def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_
     debugimg2 = orig_img.copy()
 
     return command, (debugimg1, debugimg2), hidden_state
+
 
 # helper function for vectorized expert policy (method_id = 1)
 def find_closest_zero_index(arr):

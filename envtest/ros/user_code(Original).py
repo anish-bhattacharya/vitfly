@@ -37,105 +37,87 @@ def check_collision(line, obstacle):
     )
     return b**2 - 4 * a * c >= 0
 
-def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_model, hidden_state):
 
+def compute_command_vision_based(state, orig_img, prev_img, desiredVel, trained_model, hidden_state):
+    # print("Computing command vision-based!")
+
+    """
+    # Example of SRT command
+    command_mode = 0
+    command = AgileCommand(command_mode)
+    command.t = state.t
+    command.rotor_thrusts = [1.0, 1.0, 1.0, 1.0]
+
+    # Example of CTBR command
+    command_mode = 1
+    command = AgileCommand(command_mode)
+    command.t = state.t
+    command.collective_thrust = 15.0
+    command.bodyrates = [0.0, 0.0, 0.0]
+    """
+
+    # Example of LINVEL command (velocity is expressed in world frame)
     command_mode = 2
     command = AgileCommand(command_mode)
     command.t = state.t
+    # command.velocity = [1.0, 0.0, 0.0]
     command.yawrate = 0.0
     command.mode = 2
+    
+    ###############
+    ## Load data ##
+    ###############
 
-
-    device = next(trained_model.parameters()).device
-
-    # -------------------------------------------------
-    # Prepare inputs
-    # -------------------------------------------------
-    q = np.array(state.att)
-
+    q = np.array([state.att[0], state.att[1], state.att[2], state.att[3]])
+    
     h, w = (60, 90)
-    img_resized = cv2.resize(orig_img, (w, h))
-    img_debug = orig_img.copy()
+    img = cv2.resize(orig_img, (w, h))
+    img2 = orig_img.copy() # used for generating debugimg
+    img = ToTensor()(np.array(img))
 
-    img_tensor = ToTensor()(img_resized)         # C x H x W
-    img_tensor = img_tensor.unsqueeze(0)         # 1 x C x H x W
-    img_tensor = img_tensor.to(device).float()
-
-    vel_tensor = torch.tensor(desiredVel, dtype=torch.float32, device=device).view(1, 1)
-
-    q_tensor = torch.tensor(q, dtype=torch.float32, device=device).view(1, -1)
-
-    # -------------------------------------------------
-    # Forward pass
-    # -------------------------------------------------
-    trained_model.eval()
-
-    with torch.no_grad():
-        if 'LSTMNet' in trained_model.__class__.__name__:
-            if state.pos[0] < 0.5 or hidden_state is None:
-                hidden_state = (
-                    torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size, device=device),
-                    torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size, device=device)
-                )
-            else:
-                hidden_state = tuple(h_.to(device) for h_ in hidden_state)
-
-            out, hidden_state = trained_model(
-                [img_tensor, vel_tensor, q_tensor, hidden_state]
-            )
+    if 'LSTMNet' in trained_model.__class__.__name__:
+        if trained_model.__class__.__name__ == 'LSTMNet':
+            trained_model.lstm.num_layers = 2
+            trained_model.lstm.hidden_size = 395
+        elif trained_model.__class__.__name__ == 'LSTMNetVIT':
+            trained_model.lstm.num_layers = 3
+            trained_model.lstm.hidden_size = 128
+        elif trained_model.__class__.__name__ == 'UNetConvLSTMNet':
+            trained_model.lstm.num_layers = 2
+            trained_model.lstm.hidden_size = 200
         else:
-            out, hidden_state = trained_model(
-                [img_tensor, vel_tensor, q_tensor]
-            )
+            raise Exception ("Incorrect Model specified!!")
+        if state.pos[0] < 0.5 or hidden_state is None: 
+            hidden_state = (torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float(), torch.zeros(trained_model.lstm.num_layers, trained_model.lstm.hidden_size).float())
+        with torch.no_grad():
+            x, hidden_state = trained_model([img.view(1, 1, h, w), torch.tensor(desiredVel).view(1, 1).float(), torch.tensor(q).view(1,-1).float() ,hidden_state])
 
-    # ── Pick best candidate ──────────────────────────────────────
-    print(f"[VISION] Model output : {out}")
-    candidates = out.squeeze(0).detach().cpu().numpy()
-    # shape: (10, 3) — 10 rows, each is [vx, vy, vz]
+    else:
 
-    best_idx = candidates[:, 0].argmax()   # highest forward speed
-    x = candidates[best_idx]               # shape: (3,) — same as before
-    # ─────────────────────────────────────────────────────────────
+        with torch.no_grad():
+            x, hidden_state = trained_model([img.view(1, 1, h, w), torch.tensor(desiredVel).view(1, 1).float(), torch.tensor(q).view(1,-1).float()])
 
 
+    x = x.squeeze().detach().numpy()
     x[0] = np.clip(x[0], -1, 1)
-
-    norm = np.linalg.norm(x)
-    if norm > 1e-6:
-        x = x / norm
-
-    command.velocity = x * desiredVel
-    command.velocity = x * desiredVel
+    x = x/np.linalg.norm(x)
+    command.velocity = x*desiredVel
 
     # manual speedup
     min_xvel_cmd = 1.0
     hardcoded_ctl_threshold = 2.0
     if state.pos[0] < hardcoded_ctl_threshold:
-        command.velocity[0] = max(
-            min_xvel_cmd,
-            (state.pos[0] / hardcoded_ctl_threshold) * desiredVel
-        )
+        command.velocity[0] = max(min_xvel_cmd, (state.pos[0]/hardcoded_ctl_threshold)*desiredVel)
+    
 
-    # -------------------------------------------------
-    # Debug image
-    # -------------------------------------------------
-    h2, w2 = img_debug.shape[:2]
+    # creating debug images,
+    # debugimg1 of the stabilized, cropped image with a velocity vector, and 
+    # debugimg2 of the original image with the four points used for stabilization
 
-    # arrow_start = (int(w2 / 2), int(h2 / 2))   #Prasad(Start)
-    # arrow_end = (
-    #     int(w2 / 2 - command.velocity[1] * (w2 / 3)),
-    #     int(h2 / 2 - command.velocity[2] * (h2 / 3))
-    # )                                          #Prasad(End)
-
-    arrow_start = (int(w2 / 4), int(h2 / 2))
-    arrow_end = (
-        int(w2 / 4 - command.velocity[1] * (w2 / 3)),
-        int(h2 / 2 - command.velocity[2] * (h2 / 3))
-    )
-
-    debugimg1 = cv2.arrowedLine(
-        img_debug, arrow_start, arrow_end, (0, 0, 255), 10
-    )
+    h, w = img2.shape
+    arrow_start = (int(w/2), int(h/2))    
+    arrow_end = (int(w/2-command.velocity[1]*(w/3)), int(h/2-command.velocity[2]*(h/3)))
+    debugimg1 = cv2.arrowedLine( img2, arrow_start, arrow_end, (0, 0, 255), 10, )
 
     debugimg2 = orig_img.copy()
 
